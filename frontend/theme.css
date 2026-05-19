@@ -1,0 +1,120 @@
+/* Branch Theme */
+
+:root {
+
+  --branch-blue-dark: #032f8a;
+  --branch-blue: #0b6dff;
+  --branch-cyan: #14b8e6;
+  --branch-green: #78db55;
+
+  --text-dark: #111827;
+  --text-light: #6b7280;
+
+  --background: #f7f7f7;
+  --white: #ffffff;
+
+}
+
+/* Base */
+
+body {
+  background: var(--background);
+  color: var(--text-dark);
+}
+
+/* Navbar */
+
+.navbar {
+  background: rgba(255, 255, 255, 0.85);
+
+  backdrop-filter: blur(10px);
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.brand-name {
+  background: linear-gradient(
+    90deg,
+    var(--branch-blue-dark),
+    var(--branch-blue),
+    var(--branch-cyan),
+    var(--branch-green)
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-links a {
+  color: var(--text-dark);
+
+  transition: 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--branch-blue);
+}
+
+/* Hero */
+
+.hero h1 {
+
+  background: linear-gradient(
+    90deg,
+    var(--branch-blue-dark),
+    var(--branch-blue),
+    var(--branch-cyan),
+    var(--branch-green)
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  color: var(--text-light);
+}
+
+/* Buttons */
+
+.primary-btn {
+  background: linear-gradient(
+    135deg,
+    var(--branch-blue-dark),
+    var(--branch-blue),
+    var(--branch-cyan),
+    var(--branch-green)
+  );
+
+  color: white;
+
+  box-shadow: 0 10px 30px rgba(11, 109, 255, 0.25);
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 16px 40px rgba(11, 109, 255, 0.35);
+}
+
+/* Sections */
+
+.section h2 {
+  color: var(--branch-blue-dark);
+}
+
+.section p {
+  color: var(--text-light);
+}
+
+/* Footer */
+
+footer {
+  background: linear-gradient(
+    135deg,
+    var(--branch-blue-dark),
+    #021f5c
+  );
+
+  color: white;
+}
