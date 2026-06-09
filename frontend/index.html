@@ -1,85 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Branch</title>
-
-  <!-- Main CSS -->
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Theme CSS -->
-  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- NAVBAR -->
   <nav class="navbar">
-
     <div class="logo-wrapper">
-              <img width="120px" src="./images/main-logo-icon.png" alt="Branch Symbol" />
+      <img src="./images/main-logo-icon.png" alt="logo">
       <span class="brand-name">Branch</span>
     </div>
 
     <ul class="nav-links">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a class="active" href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
     </ul>
-
   </nav>
 
-  <!-- Hero -->
-  <section class="hero" id="home">
+  <!-- HERO -->
+  <section class="hero">
 
-    <h1>Grow Faster With Branch</h1>
+    <div class="hero-left">
 
-    <p>
-      Modern growth solutions for brands that want
-      clean design, strong performance, and scalable
-      digital experiences.
-    </p>
+      <span class="hero-tag">
+        Your Growth, Our Mission
+      </span>
 
-    <button class="primary-btn">
-      Get In Contact
-    </button>
+      <h1>
+        Helping Businesses
+        Turn Ideas Into
+        <span>Successful Projects</span>
+      </h1>
 
-  </section>
+      <p>
+        Branch connects businesses, entrepreneurs,
+        and individuals with the expertise, strategy,
+        and execution needed to launch, grow,
+        and succeed.
+      </p>
 
-  <!-- About -->
-  <section class="section" id="about">
+      <div class="hero-buttons">
+        <a href="#" class="btn-primary">
+          Start a Project →
+        </a>
 
-    <h2>About Branch</h2>
+        <a href="#" class="btn-secondary">
+          See Our Work
+        </a>
+      </div>
 
-    <p>
-      Branch combines modern design with smart growth
-      strategies to help businesses scale online with
-      simplicity and clarity.
-    </p>
-
-  </section>
-
-  <!-- Contact -->
-  <section class="section" id="contact">
-
-    <h2>Contact</h2>
-
-    <p>
-      Ready to build something amazing?
-      Let’s connect and grow together.
-    </p>
-
-  </section>
-
-  <!-- Footer -->
-  <footer>
-
-    <div class="footer-brand">
-      <img src="./images/main-logo-text.png" alt="Branch Symbol" /><p>© 2026 Branch. All rights reserved.</p>
     </div>
 
-    
+    <div class="hero-right">
+      <img src="./images/hero-graphic.png" alt="Growth">
+    </div>
+
+  </section>
+
+  <!-- WHY CHOOSE US -->
+  <section class="features">
+
+    <h2>Why Choose Branch</h2>
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+        <h3>Find Opportunities</h3>
+        <p>
+          We help identify and secure
+          the right projects for growth.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Expert Guidance</h3>
+        <p>
+          Strategic planning and
+          execution from start to finish.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Real Growth</h3>
+        <p>
+          Focused on measurable
+          business success.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services">
+
+    <h2>What We Help With</h2>
+
+    <div class="service-grid">
+
+      <div class="service-card">
+        <h3>Business Development</h3>
+        <p>
+          Connecting clients with new
+          opportunities and partnerships.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <h3>Digital Solutions</h3>
+        <p>
+          Websites, branding and
+          digital experiences.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <h3>Project Management</h3>
+        <p>
+          Delivering projects on time
+          and on budget.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <h3>Growth Strategy</h3>
+        <p>
+          Helping businesses scale
+          sustainably.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+
+    <div class="stat-box">
+      <h3>50+</h3>
+      <p>Projects Delivered</p>
+    </div>
+
+    <div class="stat-box">
+      <h3>95%</h3>
+      <p>Client Satisfaction</p>
+    </div>
+
+    <div class="stat-box">
+      <h3>20+</h3>
+      <p>Business Partners</p>
+    </div>
+
+    <div class="stat-box">
+      <h3>10+</h3>
+      <p>Industries Served</p>
+    </div>
+
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <section class="testimonial">
+
+    <h2>What Our Clients Say</h2>
+
+    <div class="testimonial-card">
+      <p>
+        "Branch helped us secure new opportunities
+        and streamline our project workflow.
+        Their guidance made a huge difference."
+      </p>
+
+      <h4>— Sarah M.</h4>
+    </div>
+
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+
+    <div>
+      <h2>Ready To Build Something Great?</h2>
+      <p>
+        Whether you're launching a business,
+        growing a company, or starting a new project,
+        Branch is ready to help.
+      </p>
+    </div>
+
+    <a href="#" class="cta-btn">
+      Get Started Today
+    </a>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="footer-top">
+
+      <div>
+        <h3>Branch</h3>
+        <p>
+          Helping businesses turn opportunities
+          into successful projects.
+        </p>
+      </div>
+
+      <div>
+        <h4>Quick Links</h4>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </div>
+
+      <div>
+        <h4>Services</h4>
+        <a href="#">Business Development</a>
+        <a href="#">Digital Solutions</a>
+        <a href="#">Growth Strategy</a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 Branch. All rights reserved.
+    </div>
 
   </footer>
 
