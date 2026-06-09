@@ -1,0 +1,313 @@
+/* Reset */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px 10%;
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-left: -40px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-weight: 600;
+}
+/* Hero */
+
+.contact-hero {
+    text-align: center;
+    padding: 100px 10% 80px;
+}
+
+.contact-tag {
+    display: inline-block;
+
+    padding: 10px 18px;
+
+    border-radius: 30px;
+
+    background: rgba(11,109,255,.08);
+
+    color: var(--branch-blue);
+}
+
+.contact-hero h1 {
+    margin-top: 25px;
+    margin-bottom: 20px;
+
+    font-size: 3.5rem;
+}
+
+.contact-hero p {
+    max-width: 650px;
+    margin: auto;
+
+    line-height: 1.8;
+    color: var(--text-light);
+}
+
+/* Main Layout */
+
+.contact-section {
+    padding: 0 10% 80px;
+
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 40px;
+}
+
+/* Left Cards */
+
+.contact-left {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.info-card {
+    background: var(--white);
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,.05);
+}
+
+.info-card h3 {
+    margin-bottom: 25px;
+}
+
+.info-item {
+    margin-bottom: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.info-item span {
+    color: var(--text-light);
+}
+
+/* Form */
+
+.contact-form-card {
+    background: var(--white);
+
+    border-radius: 20px;
+
+    padding: 35px;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,.05);
+}
+
+.contact-form-card h3 {
+    margin-bottom: 25px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 14px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    outline: none;
+
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.send-btn {
+    width: 100%;
+
+    border: none;
+
+    border-radius: 12px;
+
+    padding: 16px;
+
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    background: linear-gradient(
+        90deg,
+        var(--branch-blue-dark),
+        var(--branch-blue)
+    );
+}
+
+/* Benefits */
+
+.contact-benefits {
+    padding: 0 10% 80px;
+
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 25px;
+}
+
+.benefit-card {
+    background: var(--white);
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,.05);
+}
+
+.benefit-card p {
+    margin-top: 10px;
+    color: var(--text-light);
+}
+
+/* CTA */
+
+.contact-cta {
+    padding: 60px 10%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    color: white;
+
+    background: linear-gradient(
+        90deg,
+        var(--branch-blue-dark),
+        var(--branch-blue),
+        var(--branch-green)
+    );
+}
+
+.contact-cta p {
+    margin-top: 10px;
+}
+
+.cta-button {
+    background: white;
+
+    color: var(--branch-blue);
+
+    text-decoration: none;
+
+    padding: 15px 30px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+}
+
+
+/* Footer */
+
+footer {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.footer-brand {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 12px;
+}
+
+.footer-brand img {
+    width: 150px;
+}
+
+/* Mobile */
+
+@media (max-width: 900px) {
+
+    .contact-section {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-benefits {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-cta {
+        flex-direction: column;
+        gap: 25px;
+        text-align: center;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-hero h1 {
+        font-size: 2.5rem;
+    }
+}

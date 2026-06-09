@@ -28,14 +28,15 @@ a{
 .logo-wrapper{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:0px;
 }
 
 .logo-wrapper img{
-    width:45px;
+    width:120px;
 }
 
 .brand-name{
+    margin-left: -20px;
     font-size:28px;
     font-weight:700;
 }
