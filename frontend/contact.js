@@ -2,12 +2,21 @@ document.getElementById('contactForm').addEventListener('submit', async (event) 
   event.preventDefault(); // Stop page from refreshing
   console.log("🚀 Form submit event triggered!");
 
-  const submitButton = event.target.querySelector('.send-btn');
+  const form = event.target;
+  const submitButton = form.querySelector('.send-btn');
+  const statusDiv = document.getElementById('formStatus');
+
+  // UI Loading State
   submitButton.disabled = true;
   submitButton.innerText = 'Sending...';
+  
+  if (statusDiv) {
+    statusDiv.style.display = 'none';
+    statusDiv.innerText = '';
+  }
 
   // Extract values from form fields
-  const formData = new FormData(event.target);
+  const formData = new FormData(form);
   const data = Object.fromEntries(formData.entries());
   
   console.log("📦 Form Data Collected:", data);
@@ -23,19 +32,31 @@ document.getElementById('contactForm').addEventListener('submit', async (event) 
     });
 
     console.log("📥 Server responded with status code:", response.status);
+    const result = await response.json();
 
-    if (response.ok) {
+    if (response.ok && result.success) {
       console.log("✅ Email sent successfully according to the server.");
-      alert('Thank you! Your message has been sent.');
-      event.target.reset(); // Clear the form
+      
+      // Show integrated success message
+      if (statusDiv) {
+        statusDiv.style.display = 'block';
+        statusDiv.style.color = '#16a34a'; // Beautiful green
+        statusDiv.innerText = 'Thank you! Your message has been sent successfully.';
+      }
+      form.reset(); // Clear the form
     } else {
-      const errorData = await response.json();
-      console.error("❌ Server rejected the request. Error payload:", errorData);
-      alert(`Error: ${errorData.message || 'Something went wrong.'}`);
+      console.error("❌ Server rejected the request. Error payload:", result);
+      throw new Error(result.message || 'Something went wrong on the server.');
     }
   } catch (error) {
-    console.error('💥 Critical error during fetch operation:', error);
-    alert('Failed to connect to the server. Please try again later.');
+    console.error('💥 Error during fetch operation:', error);
+    
+    // Show integrated error message
+    if (statusDiv) {
+      statusDiv.style.display = 'block';
+      statusDiv.style.color = '#dc2626'; // Alert red
+      statusDiv.innerText = error.message || 'Failed to connect to the server. Please try again later.';
+    }
   } finally {
     submitButton.disabled = false;
     submitButton.innerText = 'Send Inquiry →';

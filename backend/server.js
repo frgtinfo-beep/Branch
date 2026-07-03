@@ -1,49 +1,27 @@
 const express = require("express");
-const fs = require("fs");
 const path = require("path");
+const cors = require("cors");
 const { MongoClient, ObjectId } = require("mongodb");
 const nodemailer = require("nodemailer");
-require("dotenv").config();
+
+require("dotenv").config({ path: path.resolve(process.cwd(), "backend", ".env") });
 
 const app = express();
 const port = process.env.PORT || 3000;
-const envPath = path.resolve(process.cwd(), "backend", ".env");
 
-function loadMongoUri() {
-  if (process.env.MONGODB_URI) {
-    return process.env.MONGODB_URI;
-  }
 
-  if (!fs.existsSync(envPath)) {
-    return undefined;
-  }
-
-  const fileContents = fs.readFileSync(envPath, "utf8").replace(/^\uFEFF/, "");
-  const match = fileContents.match(/^\s*MONGODB_URI\s*=\s*(.+)\s*$/m);
-
-  return match ? match[1].trim().replace(/^['"]|['"]$/g, "") : undefined;
+if (!process.env.MONGODB_URI) {
+  throw new Error("MONGODB_URI is missing from your environment configurations.");
 }
 
-const mongoUri = loadMongoUri();
+// Global Middleware
+app.use(cors({ origin: "*", methods: ["GET", "POST", "OPTIONS"] }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "..", "frontend")));
 
-if (!mongoUri) {
-  throw new Error("MONGODB_URI is missing from backend/.env");
-}
-
-const client = new MongoClient(mongoUri);
+// MongoDB Connection Logic
+const client = new MongoClient(process.env.MONGODB_URI);
 const databaseName = process.env.MONGODB_DB || "Branch";
-
-// Production Transport: Force direct routing through Gmail SSL via Port 465
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true, 
-  auth: {
-    user: process.env.EMAIL_USER, 
-    pass: process.env.EMAIL_PASS, 
-  },
-});
-
 let database;
 
 async function getDatabase() {
@@ -54,21 +32,27 @@ async function getDatabase() {
   return database;
 }
 
-app.use(express.json());
-app.use((request, response, next) => {
-  response.setHeader("Access-Control-Allow-Origin", "*");
-  response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  if (request.method === "OPTIONS") {
-    response.sendStatus(204);
-    return;
-  }
-  next();
+// Mailer Setup (Direct routing through Gmail SSL via Port 465)
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, 
+  auth: {
+    user: process.env.EMAIL_USER, 
+    pass: process.env.EMAIL_PASS, 
+  },
 });
 
-app.use(express.static(path.join(__dirname, "..", "frontend")));
+app.get("/api/health", async (request, response) => {
+  try {
+    await getDatabase();
+    response.json({ status: "ok" });
+  } catch (error) {
+    response.status(500).json({ status: "error" });
+  }
+});
 
+// Get Projects
 app.get("/api/projects", async (request, response) => {
   try {
     const db = await getDatabase();
@@ -92,15 +76,7 @@ app.get("/api/projects", async (request, response) => {
   }
 });
 
-app.get("/api/health", async (request, response) => {
-  try {
-    await getDatabase();
-    response.json({ status: "ok" });
-  } catch (error) {
-    response.status(500).json({ status: "error" });
-  }
-});
-
+// Contact Form Handler
 app.post("/api/contact", async (request, response) => {
   const { name, email, company, projectType, budget, message } = request.body;
 
@@ -176,7 +152,8 @@ app.post("/api/contact", async (request, response) => {
   `;
 
   const mailOptions = {
-    from: `"${name}" <${email}>`, 
+    from: `"Branch Website" <${process.env.EMAIL_USER}>`, 
+    replyTo: email,
     to: "algemeen@infobranch.nl",
     subject: `💼 New Project Inquiry: ${name} (${projectType || "General"})`,
     text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || "N/A"}\nProject Type: ${projectType || "Not specified"}\nBudget: ${budget || "Not specified"}\n\nMessage:\n${message}`,
@@ -185,47 +162,14 @@ app.post("/api/contact", async (request, response) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    response.status(200).json({ message: "Email sent successfully!" });
+    response.status(200).json({ success: true, message: "Email sent successfully!" });
   } catch (error) {
     console.error("Email sending failed:", error);
-    response.status(500).json({ message: "Failed to send email backend error." });
+    response.status(500).json({ success: false, message: "Failed to send email due to a backend error." });
   }
 });
 
-const nodemailer = require("nodemailer");
-
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
-app.post("/api/contact", async (req, res) => {
-  const { name, email, message } = req.body;
-
-  try {
-    await transporter.sendMail({
-      from: `"Branch Website" <${process.env.EMAIL_USER}>`,
-      replyTo: email,
-      to: process.env.EMAIL_USER,
-      subject: `New contact from ${name}`,
-      text: `
-Name: ${name}
-Email: ${email}
-
-${message}
-`
-    });
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
+// Start Server
 app.listen(port, "0.0.0.0", () => {
   console.log(`Branch server is running on port ${port}`);
 });
