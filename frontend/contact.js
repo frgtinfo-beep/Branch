@@ -1,9 +1,3 @@
-console.log("🎯 BOOM! The HTML file is successfully talking to contact.js!");
-
-console.log({
-  EMAIL_USER: process.env.EMAIL_USER,
-  EMAIL_PASS_EXISTS: !!process.env.EMAIL_PASS,
-});
 document.getElementById('contactForm').addEventListener('submit', async (event) => {
   event.preventDefault(); // Stop page from refreshing
   console.log("🚀 Form submit event triggered!");
