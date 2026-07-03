@@ -154,7 +154,7 @@ app.post("/api/contact", async (request, response) => {
   const mailOptions = {
     from: `"Branch Website" <${process.env.EMAIL_USER}>`, 
     replyTo: email,
-    to: "algemeen@infobranch.nl",
+    to: "anthilori25@gmail.com",
     subject: `💼 New Project Inquiry: ${name} (${projectType || "General"})`,
     text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || "N/A"}\nProject Type: ${projectType || "Not specified"}\nBudget: ${budget || "Not specified"}\n\nMessage:\n${message}`,
     html: htmlContent,
