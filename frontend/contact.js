@@ -1,3 +1,4 @@
+alert("Hello! The JS file is linked properly!");
 document.getElementById('contactForm').addEventListener('submit', async (event) => {
   event.preventDefault(); // Stop page from refreshing
   console.log("🚀 Form submit event triggered!");
