@@ -1,12 +1,10 @@
 document.getElementById('contactForm').addEventListener('submit', async (event) => {
-  event.preventDefault(); // Stop page from refreshing
-  console.log("🚀 Form submit event triggered!");
+  event.preventDefault();
 
   const form = event.target;
   const submitButton = form.querySelector('.send-btn');
   const statusDiv = document.getElementById('formStatus');
 
-  // UI Loading State
   submitButton.disabled = true;
   submitButton.innerText = 'Sending...';
   
@@ -15,14 +13,10 @@ document.getElementById('contactForm').addEventListener('submit', async (event) 
     statusDiv.innerText = '';
   }
 
-  // Extract values from form fields
   const formData = new FormData(form);
   const data = Object.fromEntries(formData.entries());
-  
-  console.log("📦 Form Data Collected:", data);
 
   try {
-    console.log("📡 Attempting to send fetch request to /api/contact...");
     const response = await fetch('/api/contact', {
       method: 'POST',
       headers: {
@@ -31,35 +25,35 @@ document.getElementById('contactForm').addEventListener('submit', async (event) 
       body: JSON.stringify(data)
     });
 
-    console.log("📥 Server responded with status code:", response.status);
-    const result = await response.json();
+    const responseText = await response.text();
+    let result = {};
+    
+    try {
+      if (responseText) {
+        result = JSON.parse(responseText);
+      }
+    } catch (e) {
+      // Safely ignore parsing errors if the server sends plain text
+    }
 
-    if (response.ok && result.success) {
-      console.log("✅ Email sent successfully according to the server.");
-      
-      // Show integrated success message
+    if (response.ok) {
       if (statusDiv) {
         statusDiv.style.display = 'block';
-        statusDiv.style.color = '#16a34a'; // Beautiful green
+        statusDiv.style.color = '#16a34a';
         statusDiv.innerText = 'Thank you! Your message has been sent successfully.';
       }
-      form.reset(); // Clear the form
+      form.reset();
     } else {
-      console.error("❌ Server rejected the request. Error payload:", result);
       throw new Error(result.message || 'Something went wrong on the server.');
     }
   } catch (error) {
-    console.error('💥 Error during fetch operation:', error);
-    
-    // Show integrated error message
     if (statusDiv) {
       statusDiv.style.display = 'block';
-      statusDiv.style.color = '#dc2626'; // Alert red
+      statusDiv.style.color = '#dc2626';
       statusDiv.innerText = error.message || 'Failed to connect to the server. Please try again later.';
     }
   } finally {
     submitButton.disabled = false;
     submitButton.innerText = 'Send Inquiry →';
-    console.log("🔄 Form submission loop finalized.");
   }
 });
