@@ -4,12 +4,13 @@ const cors = require("cors");
 const { MongoClient, ObjectId } = require("mongodb");
 const nodemailer = require("nodemailer");
 
+// Configure dotenv to look directly inside your backend folder
 require("dotenv").config({ path: path.resolve(process.cwd(), "backend", ".env") });
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-
+// Enforce required environment variables early
 if (!process.env.MONGODB_URI) {
   throw new Error("MONGODB_URI is missing from your environment configurations.");
 }
@@ -32,17 +33,20 @@ async function getDatabase() {
   return database;
 }
 
-// Mailer Setup (Direct routing through Gmail SSL via Port 465)
+// Resend SMTP Mailer Setup
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  host: "smtp.resend.com",
   port: 465,
   secure: true, 
   auth: {
-    user: process.env.EMAIL_USER, 
-    pass: process.env.EMAIL_PASS, 
+    user: process.env.EMAIL_USER, // Will be literal string 'resend'
+    pass: process.env.EMAIL_PASS, // Your Resend API key (re_...)
   },
 });
 
+// --- API Endpoints ---
+
+// Health Check
 app.get("/api/health", async (request, response) => {
   try {
     await getDatabase();
@@ -71,7 +75,6 @@ app.get("/api/projects", async (request, response) => {
       })),
     );
   } catch (error) {
-    console.error("Failed to load projects:", error);
     response.status(500).json({ message: "Failed to load projects" });
   }
 });
@@ -152,9 +155,11 @@ app.post("/api/contact", async (request, response) => {
   `;
 
   const mailOptions = {
-    from: `"Branch Website" <${process.env.EMAIL_USER}>`, 
-    replyTo: email,
-    to: "anthilori25@gmail.com",
+    // NOTE: On Resend free tier, you must send FROM "onboarding@resend.dev" 
+    // unless you have verified your own custom domain name setup on Resend.
+    from: "Branch Website <onboarding@resend.dev>", 
+    replyTo: email, // Directs replies to the client's actual email address
+    to: "algemeen@infobranch.nl",
     subject: `💼 New Project Inquiry: ${name} (${projectType || "General"})`,
     text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || "N/A"}\nProject Type: ${projectType || "Not specified"}\nBudget: ${budget || "Not specified"}\n\nMessage:\n${message}`,
     html: htmlContent,
@@ -164,7 +169,6 @@ app.post("/api/contact", async (request, response) => {
     await transporter.sendMail(mailOptions);
     response.status(200).json({ success: true, message: "Email sent successfully!" });
   } catch (error) {
-    console.error("Email sending failed:", error);
     response.status(500).json({ success: false, message: "Failed to send email due to a backend error." });
   }
 });
