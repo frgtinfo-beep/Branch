@@ -192,6 +192,40 @@ app.post("/api/contact", async (request, response) => {
   }
 });
 
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+app.post("/api/contact", async (req, res) => {
+  const { name, email, message } = req.body;
+
+  try {
+    await transporter.sendMail({
+      from: `"Branch Website" <${process.env.EMAIL_USER}>`,
+      replyTo: email,
+      to: process.env.EMAIL_USER,
+      subject: `New contact from ${name}`,
+      text: `
+Name: ${name}
+Email: ${email}
+
+${message}
+`
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(port, "0.0.0.0", () => {
   console.log(`Branch server is running on port ${port}`);
 });
