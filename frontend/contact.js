@@ -5,7 +5,7 @@ document.getElementById('contactForm').addEventListener('submit', async (event) 
   submitButton.disabled = true;
   submitButton.innerText = 'Sending...';
 
-  // Extract values from form fields
+  // Extract values from form fields dynamically matching your HTML input 'name' fields
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData.entries());
 

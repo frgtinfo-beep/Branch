@@ -32,9 +32,11 @@ if (!mongoUri) {
 const client = new MongoClient(mongoUri);
 const databaseName = process.env.MONGODB_DB || "Branch";
 
+// Configured for Render environment variables (Defaults to mailtrap dynamically if missing)
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || "smtp.mailtrap.io",
   port: process.env.EMAIL_PORT || 2525,
+  secure: process.env.EMAIL_PORT == 465, // Automatically sets secure mode if using port 465 (Gmail SSL)
   auth: {
     user: process.env.EMAIL_USER, 
     pass: process.env.EMAIL_PASS, 
@@ -108,6 +110,7 @@ app.post("/api/contact", async (request, response) => {
   if (!name || !email || !message) {
     return response.status(400).json({ message: "Name, email, and message are required." });
   }
+  
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -181,7 +184,7 @@ app.post("/api/contact", async (request, response) => {
     from: `"${name}" <${email}>`, 
     to: "algemeen@infobranch.nl",
     subject: `💼 New Project Inquiry: ${name} (${projectType || "General"})`,
-    text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || "N/A"}\nProject Type: ${projectType || "Not specified"}\nBudget: ${budget || "Not specified"}\n\nMessage:\n${message}`, // Plain-text fallback
+    text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || "N/A"}\nProject Type: ${projectType || "Not specified"}\nBudget: ${budget || "Not specified"}\n\nMessage:\n${message}`,
     html: htmlContent,
   };
 
@@ -194,6 +197,7 @@ app.post("/api/contact", async (request, response) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Branch server is running on http://localhost:${port}`);
+// Added "0.0.0.0" binding for proper Render port routing 
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Branch server is running on port ${port}`);
 });
