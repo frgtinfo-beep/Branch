@@ -32,11 +32,11 @@ if (!mongoUri) {
 const client = new MongoClient(mongoUri);
 const databaseName = process.env.MONGODB_DB || "Branch";
 
-// Configured for Render environment variables (Defaults to mailtrap dynamically if missing)
+// Production Transport: Force direct routing through Gmail SSL via Port 465
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || "smtp.mailtrap.io",
-  port: process.env.EMAIL_PORT || 2525,
-  secure: process.env.EMAIL_PORT == 465, // Automatically sets secure mode if using port 465 (Gmail SSL)
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, 
   auth: {
     user: process.env.EMAIL_USER, 
     pass: process.env.EMAIL_PASS, 
@@ -50,7 +50,6 @@ async function getDatabase() {
     await client.connect();
     database = client.db(databaseName);
   }
-
   return database;
 }
 
@@ -64,9 +63,9 @@ app.use((request, response, next) => {
     response.sendStatus(204);
     return;
   }
-
   next();
 });
+
 app.use(express.static(path.join(__dirname, "..", "frontend")));
 
 app.get("/api/projects", async (request, response) => {
@@ -80,10 +79,7 @@ app.get("/api/projects", async (request, response) => {
 
     response.json(
       projects.map((project) => ({
-        id:
-          project._id instanceof ObjectId
-            ? project._id.toString()
-            : String(project._id),
+        id: project._id instanceof ObjectId ? project._id.toString() : String(project._id),
         title: project.title || "Untitled Project",
         description: project.description || "",
         imageUrl: project.imageUrl || "",
@@ -139,11 +135,10 @@ app.post("/api/contact", async (request, response) => {
       <div class="container">
         <div class="header">
           <h1>Branch Portal</h1>
-          <p>New Business Lead Recieved</p>
+          <p>New Business Lead Received</p>
         </div>
         <div class="content">
           <span class="badge">Project Inquiry</span>
-          
           <table class="grid">
             <tr>
               <td class="label">Client Name</td>
@@ -166,7 +161,6 @@ app.post("/api/contact", async (request, response) => {
               <td class="value" style="color: #16a34a; font-weight: 600;">${budget || "Not specified"}</td>
             </tr>
           </table>
-
           <div class="message-box">
             <div class="message-title">Client Message</div>
             <p class="message-text">${message}</p>
@@ -197,7 +191,6 @@ app.post("/api/contact", async (request, response) => {
   }
 });
 
-// Added "0.0.0.0" binding for proper Render port routing 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Branch server is running on port ${port}`);
 });
