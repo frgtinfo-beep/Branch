@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { MongoClient, ObjectId } = require("mongodb");
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 3000;
