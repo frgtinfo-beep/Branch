@@ -16,7 +16,6 @@
     </div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="projects.html">Projects</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
   </nav>
@@ -53,14 +52,15 @@
     <div class="contact-form-card">
       <h3>Send Us a Message</h3>
       <form id="contactForm">
-  <!-- Status Message Placeholder -->
-  <div id="formStatus" style="margin-bottom: 1rem; display: none;"></div>
+  <!-- Status Message -->
+  <div id="formStatus" style="display: none; margin-bottom: 1rem;"></div>
 
   <div class="form-row">
     <div class="form-group">
       <label for="name">Full Name</label>
       <input type="text" id="name" name="name" required>
     </div>
+
     <div class="form-group">
       <label for="email">Email</label>
       <input type="email" id="email" name="email" required>
@@ -84,16 +84,7 @@
       </select>
     </div>
 
-    <div class="form-group">
-      <label for="budget">Budget Range</label>
-      <select id="budget" name="budget">
-        <option value="">Select budget range</option>
-        <option value="< €500">&lt; €500</option>
-        <option value="€500 - €2000">€500 - €2000</option>
-        <option value="> €2000">&gt; €2000</option>
-      </select>
-    </div>
-  </div>
+
 
   <div class="form-group">
     <label for="message">Message</label>
@@ -122,13 +113,21 @@
     </div>
   </section>
 
-  <section class="contact-cta">
-    <div>
-      <h2>Have a project in mind?</h2>
-      <p>Let's connect and turn your ideas into successful results.</p>
-    </div>
-    <a href="#contactForm" class="cta-button">Start a Conversation →</a>
-  </section>
+<section class="contact-cta">
+  <div>
+    <h2>Have a project in mind?</h2>
+    <p>Let's connect and turn your ideas into successful results.</p>
+  </div>
+
+  <a
+    href="https://wa.me/31645055904?text=Hi%20Branch!%20I'd%20like%20to%20discuss%20a%20project."
+    class="cta-button"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Start a Conversation →
+  </a>
+</section>
 
   <footer>
     <div class="footer-brand">
