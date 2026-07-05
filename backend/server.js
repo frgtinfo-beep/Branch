@@ -120,8 +120,12 @@ app.get("/api/projects", async (request, response) => {
 //   }
 // });
 
-async function testEmailSetup() {
-  console.log("Attempting to send test email on startup...");
+async function verifyEmailSetup() {
+  console.log("--- EMAIL DIAGNOSTICS ---");
+  // 1. Check if variables actually exist in Render
+  console.log("EMAIL_USER check:", process.env.EMAIL_USER ? `Found (${process.env.EMAIL_USER})` : "MISSING!");
+  console.log("EMAIL_PASS check:", process.env.EMAIL_PASS ? "Found (Hidden)" : "MISSING!");
+
   try {
     const testTransporter = nodemailer.createTransport({
       service: "gmail",
@@ -131,21 +135,19 @@ async function testEmailSetup() {
       },
     });
 
-    const info = await testTransporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER, // Sending to yourself
-      subject: "🚨 Server Startup Test Email",
-      text: "If you receive this, your Nodemailer setup and App Password are working perfectly!",
-    });
-
-    console.log("✅ TEST EMAIL SUCCESS! Message ID:", info.messageId);
+    // 2. Force Nodemailer to verify the login credentials
+    console.log("Verifying connection to Google servers...");
+    await testTransporter.verify();
+    console.log("✅ LOGIN SUCCESSFUL! The server is ready to send emails.");
+    
   } catch (error) {
-    console.error("❌ TEST EMAIL FAILED! Here is the exact error:");
-    console.error(error);
+    console.error("❌ LOGIN FAILED! The server cannot connect to Gmail.");
+    console.error("Error Details:", error.message);
   }
+  console.log("-------------------------");
 }
 
-testEmailSetup();
+verifyEmailSetup();
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Branch server is running on port ${port}`);
