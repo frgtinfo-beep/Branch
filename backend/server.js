@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const { MongoClient, ObjectId } = require("mongodb");
-const { Resend } = require("resend"); // Swapped Nodemailer for Resend
+const nodemailer = require("nodemailer");
 
 require("dotenv").config({ path: path.resolve(process.cwd(), "backend", ".env") });
 
@@ -31,12 +31,17 @@ async function getDatabase() {
   return database;
 }
 
-// Initialize Resend with your API key
-const resend = new Resend(process.env.RESEND_API_KEY);
+// 1. Setup Nodemailer Transporter (Matching your Authentic Edge code)
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,        
+    pass: process.env.EMAIL_PASS 
+  }
+});
 
 // --- API Endpoints ---
 
-// Health Check
 app.get("/api/health", async (request, response) => {
   try {
     await getDatabase();
@@ -46,15 +51,10 @@ app.get("/api/health", async (request, response) => {
   }
 });
 
-// Get Projects
 app.get("/api/projects", async (request, response) => {
   try {
     const db = await getDatabase();
-    const projects = await db
-      .collection("projects")
-      .find({})
-      .sort({ createdAt: -1, _id: -1 })
-      .toArray();
+    const projects = await db.collection("projects").find({}).sort({ createdAt: -1, _id: -1 }).toArray();
 
     response.json(
       projects.map((project) => ({
@@ -69,40 +69,44 @@ app.get("/api/projects", async (request, response) => {
   }
 });
 
-// Contact Form Handler (HTTP API approach)
-app.post("/api/contact", async (request, response) => {
-  const { name, email, company, projectType, budget, message } = request.body;
+// 2. Contact Form Route
+app.post("/api/contact", async (req, res) => {
+    const { name, email, company, projectType, budget, message } = req.body;
 
-  if (!name || !email || !message) {
-    return response.status(400).json({ message: "Name, email, and message are required." });
-  }
+    if (!name || !email || !message) {
+        return res.status(400).json({ error: "Name, email, and message are required." });
+    }
 
-  try {
-    await resend.emails.send({
-      from: "Branch Website <onboarding@resend.dev>", // Required by Resend for testing
-      to: "anthilori05@gmail.com", // Delivering straight to your personal testing email
-      reply_to: email, // If you click "reply" in your inbox, it goes to the client
-      subject: `💼 New Project Inquiry: ${name} (${projectType || "General"})`,
-      html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #374151;">
-          <h2 style="color: #111827;">New Project Inquiry</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Company:</strong> ${company || "—"}</p>
-          <p><strong>Type:</strong> ${projectType || "Not specified"}</p>
-          <p><strong>Budget:</strong> ${budget || "Not specified"}</p>
-          <hr style="border: 1px solid #e5e7eb; margin: 20px 0;"/>
-          <h3 style="color: #111827;">Message:</h3>
-          <p style="white-space: pre-line; background: #f9fafb; padding: 15px; border-radius: 6px;">${message}</p>
-        </div>
-      `,
-    });
+    try {
+        // 3. Configure and send the email
+        const mailOptions = {
+            from: `"Branch Contact" <${process.env.EMAIL_USER}>`,
+            to: process.env.EMAIL_USER, // Sending to yourself for testing
+            replyTo: email, 
+            subject: `New Inquiry from ${name} (${projectType || "General"})`,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px;">
+                    <h2 style="text-transform: uppercase; letter-spacing: 2px; text-align: center;">New Project Inquiry</h2>
+                    <hr style="border: 0; border-top: 1px solid #000; margin: 20px 0;">
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Company:</strong> ${company || "—"}</p>
+                    <p><strong>Type:</strong> ${projectType || "Not specified"}</p>
+                    <p><strong>Budget:</strong> ${budget || "Not specified"}</p>
+                    <p style="background: #f9f9f9; padding: 15px; border-left: 4px solid #000; font-style: italic; margin-top: 20px;">
+                        ${message}
+                    </p>
+                </div>
+            `
+        };
 
-    response.status(200).json({ success: true, message: "Email sent successfully!" });
-  } catch (error) {
-    console.error("Resend Error:", error);
-    response.status(500).json({ success: false, message: "Failed to send email." });
-  }
+        await transporter.sendMail(mailOptions);
+        res.json({ success: true, message: "Email sent successfully" });
+
+    } catch (error) {
+        console.error("Email Sending Error:", error);
+        res.status(500).json({ success: false, error: "Internal server error" });
+    }
 });
 
 // Start Server
