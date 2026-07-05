@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const cors = require("cors");
+const cors = require('cors');
 const { MongoClient, ObjectId } = require("mongodb");
 const nodemailer = require("nodemailer");
 
@@ -8,6 +8,8 @@ require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(cors());
 
 if (!process.env.MONGODB_URI) {
   throw new Error("MONGODB_URI is missing from your environment configurations.");
