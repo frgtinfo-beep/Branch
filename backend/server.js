@@ -64,78 +64,81 @@ app.get("/api/projects", async (request, response) => {
 });
 
 // // Contact Form Handler
-// app.post("/api/contact", async (request, response) => {
-//   const { name, email, company, projectType, budget, message } = request.body;
+app.post("/api/contact", async (request, response) => {
+  const { name, email, company, projectType, budget, message } = request.body;
 
-//   if (!name || !email || !message) {
-//     return response.status(400).json({ message: "Name, email, and message are required." });
-//   }
+  if (!name || !email || !message) {
+    return response.status(400).json({ message: "Name, email, and message are required." });
+  }
 
-//   const transporter = nodemailer.createTransport({
-//     service: "gmail", 
-//     auth: {
-//       user: process.env.EMAIL_USER,
-//       pass: process.env.EMAIL_PASS, 
-//     },
-//   });
+// 2. Configure the Transporter (Explicit setup instead of 'service')
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, 
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS, 
+    },
+  });
 
-//   const mailOptions = {
-//     from: process.env.EMAIL_USER,
-//     to: process.env.EMAIL_USER,
-//     replyTo: email,
-//     subject: `💼 New Project Inquiry: ${name} (${projectType || "General"})`,
-//     html: `
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: process.env.EMAIL_USER,
+    replyTo: email,
+    subject: `💼 New Project Inquiry: ${name} (${projectType || "General"})`,
+    html: `
       
-//         New Project Inquiry
+        New Project Inquiry
         
           
-//             Name:
-//             ${name}
+            Name:
+            ${name}
           
-//             Email:
-//             ${email}
+            Email:
+            ${email}
 
-//             Company:
-//             ${company || "—"}
+            Company:
+            ${company || "—"}
           
-//             Type:
-//             ${projectType || "Not specified"}
+            Type:
+            ${projectType || "Not specified"}
           
-//             Budget:
-//             ${budget || "Not specified"}
+            Budget:
+            ${budget || "Not specified"}
           
         
-//         Message:
-//         ${message}
+        Message:
+        ${message}
       
-//     `,
-//   };
-
-//   try {
-//     await transporter.sendMail(mailOptions);
-//     response.status(200).json({ success: true, message: "Email sent successfully!" });
-//   } catch (error) {
-//     console.error("Mail Error:", error);
-//     response.status(500).json({ success: false, message: "Failed to send email. Please try again later." });
-//   }
-// });
-
-async function verifyEmailSetup() {
-  console.log("--- EMAIL DIAGNOSTICS ---");
-  // 1. Check if variables actually exist in Render
-  console.log("EMAIL_USER check:", process.env.EMAIL_USER ? `Found (${process.env.EMAIL_USER})` : "MISSING!");
-  console.log("EMAIL_PASS check:", process.env.EMAIL_PASS ? "Found (Hidden)" : "MISSING!");
+    `,
+  };
 
   try {
+    await transporter.sendMail(mailOptions);
+    response.status(200).json({ success: true, message: "Email sent successfully!" });
+  } catch (error) {
+    console.error("Mail Error:", error);
+    response.status(500).json({ success: false, message: "Failed to send email. Please try again later." });
+  }
+});
+
+// --- DIAGNOSTIC TEST SCRIPT ---
+async function verifyEmailSetup() {
+  console.log("--- EMAIL DIAGNOSTICS ---");
+  console.log("EMAIL_USER check:", process.env.EMAIL_USER ? `Found (${process.env.EMAIL_USER})` : "MISSING!");
+  
+  try {
     const testTransporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
     });
 
-    // 2. Force Nodemailer to verify the login credentials
     console.log("Verifying connection to Google servers...");
     await testTransporter.verify();
     console.log("✅ LOGIN SUCCESSFUL! The server is ready to send emails.");
