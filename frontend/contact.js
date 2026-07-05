@@ -1,59 +1,45 @@
-document.getElementById('contactForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); // Stop the page from refreshing
 
-  const form = event.target;
-  const submitButton = form.querySelector('.send-btn');
-  const statusDiv = document.getElementById('formStatus');
-
-  submitButton.disabled = true;
-  submitButton.innerText = 'Sending...';
-  
-  if (statusDiv) {
-    statusDiv.style.display = 'none';
-    statusDiv.innerText = '';
-  }
-
-  const formData = new FormData(form);
-  const data = Object.fromEntries(formData.entries());
-
-  try {
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-
-    const responseText = await response.text();
-    let result = {};
+    const statusDiv = document.getElementById('formStatus');
+    const submitBtn = document.querySelector('.send-btn');
     
-    try {
-      if (responseText) {
-        result = JSON.parse(responseText);
-      }
-    } catch (e) {
-      // Safely ignore parsing errors if the server sends plain text
-    }
+    // Show loading state
+    statusDiv.style.display = 'block';
+    statusDiv.style.color = '#1f2937'; 
+    statusDiv.innerText = "Sending your message...";
+    submitBtn.disabled = true;
 
-    if (response.ok) {
-      if (statusDiv) {
-        statusDiv.style.display = 'block';
-        statusDiv.style.color = '#16a34a';
-        statusDiv.innerText = 'Thank you! Your message has been sent successfully.';
-      }
-      form.reset();
-    } else {
-      throw new Error(result.message || 'Something went wrong on the server.');
+    // Get all form data
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        company: document.getElementById('company').value,
+        projectType: document.getElementById('projectType').value,
+        budget: document.getElementById('budget').value,
+        message: document.getElementById('message').value
+    };
+
+    try {
+        const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+            statusDiv.innerText = "Success! We will get back to you within 24 hours.";
+            statusDiv.style.color = "#16a34a"; 
+            document.getElementById('contactForm').reset();
+        } else {
+            const errorData = await response.json();
+            statusDiv.innerText = errorData.message || "Failed to send message. Please try again.";
+            statusDiv.style.color = "#dc2626"; 
+        }
+    } catch (error) {
+        statusDiv.innerText = "A network error occurred. Please check your connection.";
+        statusDiv.style.color = "#dc2626";
+    } finally {
+        submitBtn.disabled = false;
     }
-  } catch (error) {
-    if (statusDiv) {
-      statusDiv.style.display = 'block';
-      statusDiv.style.color = '#dc2626';
-      statusDiv.innerText = error.message || 'Failed to connect to the server. Please try again later.';
-    }
-  } finally {
-    submitButton.disabled = false;
-    submitButton.innerText = 'Send Inquiry →';
-  }
 });
