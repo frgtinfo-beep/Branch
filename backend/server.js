@@ -63,62 +63,89 @@ app.get("/api/projects", async (request, response) => {
   }
 });
 
-// Contact Form Handler
-app.post("/api/contact", async (request, response) => {
-  const { name, email, company, projectType, budget, message } = request.body;
+// // Contact Form Handler
+// app.post("/api/contact", async (request, response) => {
+//   const { name, email, company, projectType, budget, message } = request.body;
 
-  if (!name || !email || !message) {
-    return response.status(400).json({ message: "Name, email, and message are required." });
-  }
+//   if (!name || !email || !message) {
+//     return response.status(400).json({ message: "Name, email, and message are required." });
+//   }
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail", 
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS, 
-    },
-  });
+//   const transporter = nodemailer.createTransport({
+//     service: "gmail", 
+//     auth: {
+//       user: process.env.EMAIL_USER,
+//       pass: process.env.EMAIL_PASS, 
+//     },
+//   });
 
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: process.env.EMAIL_USER,
-    replyTo: email,
-    subject: `💼 New Project Inquiry: ${name} (${projectType || "General"})`,
-    html: `
+//   const mailOptions = {
+//     from: process.env.EMAIL_USER,
+//     to: process.env.EMAIL_USER,
+//     replyTo: email,
+//     subject: `💼 New Project Inquiry: ${name} (${projectType || "General"})`,
+//     html: `
       
-        New Project Inquiry
+//         New Project Inquiry
         
           
-            Name:
-            ${name}
+//             Name:
+//             ${name}
           
-            Email:
-            ${email}
+//             Email:
+//             ${email}
 
-            Company:
-            ${company || "—"}
+//             Company:
+//             ${company || "—"}
           
-            Type:
-            ${projectType || "Not specified"}
+//             Type:
+//             ${projectType || "Not specified"}
           
-            Budget:
-            ${budget || "Not specified"}
+//             Budget:
+//             ${budget || "Not specified"}
           
         
-        Message:
-        ${message}
+//         Message:
+//         ${message}
       
-    `,
-  };
+//     `,
+//   };
 
+//   try {
+//     await transporter.sendMail(mailOptions);
+//     response.status(200).json({ success: true, message: "Email sent successfully!" });
+//   } catch (error) {
+//     console.error("Mail Error:", error);
+//     response.status(500).json({ success: false, message: "Failed to send email. Please try again later." });
+//   }
+// });
+
+async function testEmailSetup() {
+  console.log("Attempting to send test email on startup...");
   try {
-    await transporter.sendMail(mailOptions);
-    response.status(200).json({ success: true, message: "Email sent successfully!" });
+    const testTransporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const info = await testTransporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER, // Sending to yourself
+      subject: "🚨 Server Startup Test Email",
+      text: "If you receive this, your Nodemailer setup and App Password are working perfectly!",
+    });
+
+    console.log("✅ TEST EMAIL SUCCESS! Message ID:", info.messageId);
   } catch (error) {
-    console.error("Mail Error:", error);
-    response.status(500).json({ success: false, message: "Failed to send email. Please try again later." });
+    console.error("❌ TEST EMAIL FAILED! Here is the exact error:");
+    console.error(error);
   }
-});
+}
+
+testEmailSetup();
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Branch server is running on port ${port}`);
