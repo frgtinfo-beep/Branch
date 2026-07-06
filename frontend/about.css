@@ -1,0 +1,216 @@
+/* =========================================
+   ABOUT PAGE CSS
+   ========================================= */
+
+/* --- About Hero --- */
+.about-hero {
+  position: relative;
+  width: 100%;
+  padding: 180px 20px 100px;
+  background: radial-gradient(circle at top, var(--white) 0%, var(--background) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.about-hero-content {
+  max-width: 800px;
+}
+
+.hero-tag {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--branch-cyan);
+  background: rgba(20, 184, 230, 0.1);
+  padding: 6px 16px;
+  border-radius: 50px;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.about-hero h1 {
+  font-size: 3.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 25px;
+  color: var(--text-dark);
+}
+
+.about-hero h1 span {
+  font-family: "Georgia", serif;
+  font-style: italic;
+  font-weight: 400;
+  background: linear-gradient(90deg, var(--branch-blue-dark), var(--branch-blue), var(--branch-cyan), var(--branch-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-lead {
+  font-size: 1.2rem;
+  color: var(--text-light);
+  margin-bottom: 40px;
+}
+
+.hero-quote-box {
+  background: var(--white);
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  border-left: 4px solid var(--branch-green);
+  margin-top: 40px;
+}
+
+.hero-quote-box blockquote {
+  font-family: "Georgia", serif;
+  font-size: 1.3rem;
+  font-style: italic;
+  color: var(--branch-blue-dark);
+  line-height: 1.5;
+}
+
+/* --- Story Section (Roots & Mission) --- */
+.story-section {
+  padding: 80px 20px;
+  background: var(--white);
+}
+
+.story-container {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.story-block {
+  margin-bottom: 60px;
+}
+
+.story-block h2 {
+  font-size: 2rem;
+  color: var(--branch-blue-dark);
+  margin-bottom: 20px;
+  border-bottom: 2px solid rgba(11, 109, 255, 0.1);
+  padding-bottom: 10px;
+  display: inline-block;
+}
+
+.story-block p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+}
+
+.story-block .highlight-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--branch-blue);
+  margin-top: 30px;
+}
+
+/* --- The Branch Code Section --- */
+.values-section {
+  padding: 100px 20px;
+  background: var(--background); /* Soft grey/blue background */
+}
+
+.section-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.values-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.values-header h2 {
+  font-size: 2.5rem;
+  color: var(--branch-blue-dark);
+  margin-bottom: 10px;
+}
+
+.values-header p {
+  color: var(--text-light);
+  font-size: 1.1rem;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.value-card {
+  background: var(--white);
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Accent line at the top of each card */
+.value-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--branch-cyan), var(--branch-green));
+}
+
+.value-card h3 {
+  font-size: 1.3rem;
+  color: var(--branch-blue-dark);
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.value-card p {
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* --- Closing Dedication --- */
+.closing-dedication {
+  background: #0b1121; /* Matches footer */
+  padding: 60px 20px 20px;
+  text-align: center;
+}
+
+.closing-dedication p {
+  max-width: 800px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: "Georgia", serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 900px) {
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .about-hero h1 {
+    font-size: 2.5rem;
+  }
+  .values-grid {
+    grid-template-columns: 1fr;
+  }
+  .story-block h2 {
+    font-size: 1.8rem;
+  }
+}

@@ -1,108 +1,448 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* =========================================
+   HOMEPAGE CSS
+   Contains layout and specific component 
+   styling for the index.html page.
+   ========================================= */
+
+/* --- Modern Hero Section (Gradient Background) --- */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 750px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  
+  /* Vibrant Branch Gradient Background */
+  background: linear-gradient(
+    135deg, 
+    var(--branch-blue-dark) 0%, 
+    var(--branch-blue) 25%, 
+    var(--branch-cyan) 50%, 
+    var(--branch-green) 100%
+  );
+}
+.navbar img {
+  height: 60px;
+  margin-right: -30px;
+  width: auto;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    color: #0d1b4d;
-    background-color: #f7f9fc;
-    position: relative;
-    overflow-x: hidden;
+
+/* --- The Glassmorphism Card --- */
+.hero-glass-card {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  width: 100%;
+  padding: 60px 40px;
+  text-align: center;
+  margin-top: 40px; /* Pushes it slightly down so it doesn't crowd the navbar */
+  
+  /* Frosted Glass Effect */
+  background: rgba(255, 255, 255, 0.50); /* Semi-transparent white */
+  backdrop-filter: blur(10px); /* The blur effect */
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255, 255, 255, 0.6); /* Subtle light border */
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15); /* Soft drop shadow for depth */
 }
 
-/* --- APPLE AURORA FLUID BACKGROUND --- */
-body::before, 
-body::after {
-    content: "";
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    filter: blur(120px);
-    pointer-events: none;
-    will-change: transform;
-    animation: appleFluid 25s infinite linear;
+/* --- Center Content Updates for Light Glass --- */
+.hero-content {
+  /* Removed the previous translateY transform since the card centers itself */
+  margin: 0 auto;
 }
 
-body::before {
-    background: #2f67ff;
-    opacity: 0.15;
-    top: -20%;
-    left: -10%;
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+.hero-tag {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--branch-blue-dark);
+  background: rgba(11, 109, 255, 0.1);
+  border: 1px solid rgba(11, 109, 255, 0.2);
+  padding: 6px 16px;
+  border-radius: 50px;
+  margin-bottom: 25px;
 }
 
-body::after {
-    background: #22c55e;
-    opacity: 0.12;
-    bottom: -20%;
-    right: -10%;
-    border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%;
-    animation-direction: reverse;
-    animation-duration: 35s;
+.hero h1 {
+  font-size: 5.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+  color: var(--text-dark); /* Dark text for readability on the white glass */
 }
 
-@keyframes appleFluid {
-    0% { transform: rotate(0deg) scale(1) translateZ(0); }
-    50% { transform: rotate(180deg) scale(1.3) translateZ(0); }
-    100% { transform: rotate(360deg) scale(1) translateZ(0); }
+.hero h1 span {
+  font-family: "Georgia", serif;
+  font-style: italic;
+  font-weight: 400;
+  /* Gradient applied only to the italicized text */
+  background: linear-gradient(90deg, var(--branch-blue-dark), var(--branch-blue), var(--branch-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* --- ANIMATIONS --- */
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0px); }
+.hero p {
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  color: var(--text-light);
 }
 
-@keyframes gradientPan {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .hero-glass-card {
+    padding: 40px 20px;
+  }
+  .hero h1 {
+    font-size: 3rem;
+  }
 }
 
-/* --- REMAINDER OF YOUR STYLES --- */
-a { text-decoration: none; transition: all 0.3s ease; }
+/* --- Navbar (Using your frosted glass styles) --- */
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 60px;
+  z-index: 10;
+  
+  background: rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
 
-.navbar { height: 80px; display: flex; justify-content: space-between; align-items: center; padding: 0 8%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02); }
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-.logo-wrapper { display: flex; align-items: center; }
-.logo-wrapper img { width: 120px; }
-.brand-name { margin-left: -20px; font-size: 28px; font-weight: 700; }
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 5px;
+}
 
-.nav-links { display: flex; list-style: none; gap: 40px; }
-.nav-links a { color: #111; font-weight: 600; }
-.nav-links a:hover { color: #265dff; }
+.nav-links li a {
+  font-size: 1.1rem;
+  padding: 8px 16px;
+  border-radius: 30px;
+  color: var(--text-dark);
+  transition: 0.3s ease;
+}
 
-.hero { display: flex; justify-content: space-between; align-items: center; padding: 80px 8%; gap: 60px; }
-.hero-left { flex: 1; z-index: 1; }
-.hero-right { flex: 1; text-align: center; z-index: 1; }
-.hero-right img { width: 100%; max-width: 500px; animation: float 6s ease-in-out infinite; }
+.nav-links li a:hover {
+  color: var(--branch-blue);
+  background: rgba(11, 109, 255, 0.05);
+}
 
-.hero-tag { background: #eef4ff; color: #4a6cff; padding: 10px 18px; border-radius: 30px; display: inline-block; margin-bottom: 25px; font-size: 14px; font-weight: 600; }
-.hero h1 { font-size: clamp(34px, 6vw, 58px); line-height: 1.1; margin-bottom: 25px; }
-.hero h1 span { color: #22c55e; }
-.hero p { max-width: 520px; color: #666; line-height: 1.8; margin-bottom: 30px; }
+/* --- Center Content --- */
+.hero-content {
+  max-width: 800px;
+  z-index: 2;
+  transform: translateY(40px);
+}
 
-.btn-primary { background: #2f67ff; color: white; padding: 15px 28px; border-radius: 12px; font-weight: 600; display: inline-block; transition: 0.3s; }
-.btn-primary:hover { background: #1a4cd9; transform: scale(1.05); }
+/* Tag stylized with your brand colors */
+.hero-tag {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--branch-blue-dark);
+  background: rgba(11, 109, 255, 0.1);
+  border: 1px solid rgba(11, 109, 255, 0.2);
+  padding: 6px 16px;
+  border-radius: 50px;
+  margin-bottom: 25px;
+}
 
-.btn-secondary { border: 1px solid #d9d9d9; color: #111; padding: 15px 28px; border-radius: 12px; background: transparent; display: inline-block; transition: 0.3s; }
-.btn-secondary:hover { border-color: #111; background: #f7f9fc; transform: scale(1.05); }
+.hero h1 {
+  font-size: 4.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 25px;
+  letter-spacing: -0.02em;
+  
+  background: linear-gradient(90deg, var(--branch-blue-dark), var(--branch-blue), var(--branch-cyan), var(--branch-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
-.features, .services, .testimonial { padding: 70px 8%; }
-.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
-.service-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.hero h1 span {
+  font-family: "Georgia", serif;
+  font-style: italic;
+  font-weight: 400;
+}
 
-.feature-card, .service-card, .stat-box, .testimonial-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.5); transition: 0.3s; }
-.feature-card:hover, .service-card:hover, .stat-box:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
+.hero p {
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  color: var(--text-light);
+}
 
-.cta { margin-top: 50px; background: linear-gradient(90deg, #1f56ff, #36d96b, #1f56ff); background-size: 200%; animation: gradientPan 8s ease infinite; color: white; padding: 50px 8%; display: flex; justify-content: space-between; align-items: center; }
+/* --- Standard Sections --- */
+section {
+  padding: 80px 20px;
+  text-align: center;
+}
 
-footer { background: #07152d; color: white; }
-.footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; padding: 60px 8%; }
-.footer-bottom { text-align: center; padding: 20px; border-top: 1px solid rgba(255,255,255,.1); }
+section h2 {
+  color: var(--branch-blue-dark);
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
 
-/* (Media queries remain as previously defined) */
+/* Grid Layouts for Content */
+.feature-grid, .service-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.feature-card, .service-card {
+  background: var(--white);
+  padding: 40px 30px;
+  border-radius: 16px;
+  flex: 1 1 250px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover, .service-card:hover {
+  transform: translateY(-5px);
+}
+
+.feature-card h3, .service-card h3 {
+  color: var(--branch-blue);
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.feature-card p, .service-card p {
+  color: var(--text-light);
+}
+
+/* --- Footer --- */
+footer {
+  background: linear-gradient(135deg, var(--branch-blue-dark), #021f5c);
+  color: var(--white);
+  padding: 60px 20px 20px;
+}
+
+.footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 1000px;
+  margin: 0 auto 40px;
+  text-align: left;
+  gap: 30px;
+}
+
+.footer-top h3, .footer-top h4 {
+  margin-bottom: 15px;
+}
+
+.footer-top p {
+  max-width: 300px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-top a {
+  display: block;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.footer-top a:hover {
+  color: var(--branch-cyan);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+/* --- Features & Services Sections --- */
+section.features, section.services {
+  padding: 80px 20px;
+}
+
+.section-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Left-aligned section headers */
+.section-container h2 {
+  color: var(--branch-blue-dark);
+  font-size: 2rem;
+  margin-bottom: 30px;
+  text-align: left; 
+}
+
+/* Grid Layouts */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 cards in a row */
+  gap: 20px;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2x2 grid */
+  gap: 20px;
+}
+
+/* Glassmorphism Card Styles */
+.feature-card, .service-card {
+  background: rgba(255, 255, 255, 0.6); /* Slightly transparent white */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 40px 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  text-align: center; /* Centered text inside cards */
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover, .service-card:hover {
+  transform: translateY(-5px);
+}
+
+.feature-card h3, .service-card h3 {
+  color: var(--branch-blue-dark);
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.feature-card p, .service-card p {
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .feature-grid, .service-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* --- Card Icon Styling --- */
+.card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  /* A soft, transparent version of your brand blue */
+  background: rgba(11, 109, 255, 0.1); 
+  /* Sets the SVG stroke color to your brand blue */
+  color: var(--branch-blue); 
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.card-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.feature-card:hover .card-icon,
+.service-card:hover .card-icon {
+  transform: translateY(-5px) scale(1.05);
+  background: rgba(11, 109, 255, 0.15);
+}
+/* --- CTA Banner (Moving Gradient on Scroll) --- */
+.cta-banner {
+  /* 1. Set the vibrant gradient */
+  background: linear-gradient(
+    135deg, 
+    var(--branch-blue-dark) 0%, 
+    var(--branch-cyan) 50%, 
+    var(--branch-green) 100%
+  );
+  
+  /* 2. The Magic Property: Locks the gradient to the viewport to create the scroll effect */
+  background-attachment: fixed;
+  background-size: cover;
+  
+  /* Layout styling */
+  padding: 20px 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--white);
+  margin-top: 40px;
+}
+
+.cta-content {
+  max-width: 500px;
+}
+
+.cta-content h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: var(--white);
+  letter-spacing: -0.02em;
+}
+
+.cta-content p {
+  font-size: 1.1rem;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9); /* Slightly transparent white for readability */
+  line-height: 1.6;
+}
+
+/* Make the button pop against the dark gradient */
+.cta-link {
+  display: inline-block;
+  background-color: var(--white);
+  color: var(--branch-blue-dark); 
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding: 18px 36px;
+  border-radius: 50px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  white-space: nowrap; /* Prevents the button text from wrapping */
+}
+
+.cta-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .cta-banner {
+    flex-direction: column;
+    text-align: left;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 60px 20px;
+  }
+}
