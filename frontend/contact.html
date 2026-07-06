@@ -6,26 +6,32 @@
   <title>Branch | Contact</title>
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="contact.css">
+  <link rel="stylesheet" href="homepage.css">
+
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar">
-      <div class="logo-wrapper">
-        <!-- Replaced with a placeholder plus icon similar to the second screenshot -->
-        <img width="120" src="./images/main-logo-icon.png" alt="Branch">
-        <span class="brand-name">Branch</span>
-      </div>
+<!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo-wrapper">
+      <span class="brand-name">Branch</span>
+    </div>
 
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">Our Story</a></li>
-      </ul>
+    <!-- Hamburger Menu Icon -->
+    <div class="hamburger">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </div>
 
-      <div class="nav-contact">
-        <a href="contact.html">Contact Us</a>
-      </div>
-    </nav>
+    <ul class="nav-links">
+      <li><a class="active" href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
 
   <section class="contact-hero">
     <span class="contact-tag">Get In Touch</span>
@@ -144,5 +150,13 @@
   </footer>
 
   <script src="contact.js"></script>
+    <script>
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+  </script>
 </body>
 </html>
