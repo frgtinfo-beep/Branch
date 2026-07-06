@@ -15,16 +15,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* Navbar */
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 20px 10%;
-}
-
 .logo-wrapper {
     display: flex;
     align-items: center;
@@ -35,19 +25,6 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     margin-left: -40px;
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 28px;
-
-    list-style: none;
-}
-
-.nav-links a {
-    text-decoration: none;
-    font-weight: 600;
 }
 /* Hero */
 
