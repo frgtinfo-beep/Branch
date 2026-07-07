@@ -1,7 +1,5 @@
 /* =========================================
-   HOMEPAGE CSS
-   Contains layout and specific component 
-   styling for the index.html page.
+   SECTION 1: CORE LAYOUT & HERO
    ========================================= */
 
 /* --- Modern Hero Section (Gradient Background) --- */
@@ -14,8 +12,6 @@
   align-items: center;
   justify-content: center;
   padding: 0 20px;
-  
-  /* Vibrant Branch Gradient Background */
   background: linear-gradient(
     135deg, 
     var(--branch-blue-dark) 0%, 
@@ -24,13 +20,8 @@
     var(--branch-green) 100%
   );
 }
-/* Hide hamburger icon on desktop */
-.hamburger {
-  display: none;
-  cursor: pointer;
-  color: var(--branch-blue-dark);
-}
-/* --- Navbar (Using frosted glass styles) --- */
+
+/* --- Navbar & Navigation --- */
 .navbar {
   position: absolute;
   top: 0;
@@ -59,6 +50,12 @@
   width: auto;
 }
 
+.hamburger {
+  display: none;
+  cursor: pointer;
+  color: var(--branch-blue-dark);
+}
+
 .nav-links {
   list-style: none;
   display: flex;
@@ -78,7 +75,7 @@
   background: rgba(11, 109, 255, 0.05);
 }
 
-/* --- The Glassmorphism Card --- */
+/* --- The Glassmorphism Hero Card --- */
 .hero-glass-card {
   position: relative;
   z-index: 2;
@@ -135,8 +132,11 @@
   margin: 0 auto 40px auto;
   color: var(--text-light);
 }
+/* =========================================
+   SECTION 2: COMPONENTS, FOOTER & WIDGETS
+   ========================================= */
 
-/* --- Features & Services Sections --- */
+/* --- Features & Services Grid --- */
 section.features, section.services {
   padding: 80px 20px;
 }
@@ -153,21 +153,19 @@ section.features, section.services {
   text-align: left; 
 }
 
-/* Grid Layouts */
-.feature-grid, .service-grid {
+.feature-grid {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
-.feature-grid {
-  grid-template-columns: repeat(3, 1fr);
-}
-
 .service-grid {
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
 
-/* Glassmorphism Card Styles */
+/* --- Card & Icon Styling --- */
 .feature-card, .service-card {
   background: rgba(255, 255, 255, 0.6); 
   backdrop-filter: blur(10px);
@@ -193,7 +191,6 @@ section.features, section.services {
   line-height: 1.5;
 }
 
-/* --- Card Icon Styling --- */
 .card-icon {
   display: inline-flex;
   align-items: center;
@@ -327,26 +324,82 @@ footer {
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.9rem;
 }
-
 /* =========================================
-   MOBILE RESPONSIVE MEDIA QUERIES
+   GOOGLE TRANSLATE CUSTOMIZATION FIX
    ========================================= */
+
+.translate-wrapper {
+/* i want it centered in the page */
+  position: absolute;
+  top: 20px;
+  right: 45%;
+  z-index: 1000;
+}
+
+/* Style the actual dropdown box */
+.goog-te-combo {
+  padding: 6px 12px !important;
+  margin: 0 !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(11, 109, 255, 0.2) !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  color: var(--text-dark) !important;
+  font-family: inherit !important;
+  font-size: 0.9rem !important;
+  outline: none !important;
+  cursor: pointer !important;
+}
+
+.goog-te-combo:hover {
+  border-color: var(--branch-blue) !important;
+}
+
+/* Aggressively hide all Google branding, sprite sheets, and text */
+.goog-te-gadget {
+  font-size: 0px !important; 
+  color: transparent !important;
+}
+
+.goog-te-gadget img,
+.goog-te-gadget .goog-logo-link {
+  display: none !important;
+}
+
+/* Prevent the Google top bar from pushing the page down */
+body {
+  top: 0 !important; 
+}
+
+.skiptranslate iframe {
+  display: none !important; 
+}
+
+/* Mobile Adjustment for Translate Dropdown */
 @media (max-width: 768px) {
-/* Navbar Mobile & Hamburger Menu */
+  .translate-wrapper {
+    margin-right: auto;
+    margin-left: 15px;
+  }
+}
+/* =========================================
+   SECTION 3: MOBILE RESPONSIVE QUERIES
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* Navbar Mobile & Hamburger Menu */
   .navbar {
     padding: 15px 20px;
-    flex-direction: row; /* Keeps logo and burger on the same line */
+    flex-direction: row; 
     justify-content: space-between;
   }
   
   .hamburger {
-    display: block; /* Show the burger icon */
+    display: block; 
   }
 
   .nav-links {
-    /* Turn links into a dropdown panel */
     position: absolute;
-    top: 100%; /* Pushes it right below the navbar */
+    top: 100%; 
     left: 0;
     width: 100%;
     background: rgba(255, 255, 255, 0.95);
@@ -356,12 +409,9 @@ footer {
     padding: 20px 0;
     box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    
-    /* Hidden by default */
     display: none; 
   }
 
-  /* This class is toggled by the JavaScript to show the menu */
   .nav-links.active {
     display: flex;
   }
@@ -384,12 +434,14 @@ footer {
   /* Hero Section */
   .hero {
     min-height: 100vh;
-    padding-top: 120px; /* Accounts for stacked navbar */
+    padding-top: 120px; 
   }
+
   .hero-glass-card {
     padding: 40px 20px;
     margin-top: 0;
   }
+
   .hero h1 {
     font-size: 2.8rem;
   }
@@ -412,6 +464,7 @@ footer {
     gap: 30px;
     padding: 60px 20px;
   }
+
   .cta-content h2 {
     font-size: 2rem;
   }
@@ -421,51 +474,8 @@ footer {
     flex-direction: column;
     gap: 40px;
   }
-}
-/* --- Google Translate Customization --- */
-.translate-wrapper {
-  margin-right: 15px; /* Spacing next to hamburger/links */
-  display: flex;
-  align-items: center;
-}
 
-/* Style the dropdown box */
-.goog-te-combo {
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1px solid rgba(11, 109, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.8);
-  color: var(--text-dark);
-  font-family: inherit;
-  font-size: 0.9rem;
-  outline: none;
-  cursor: pointer;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  transition: border-color 0.3s ease;
-}
-
-.goog-te-combo:hover {
-  border-color: var(--branch-blue);
-}
-
-/* Hide the Google Translate branding and top bar */
-.goog-logo-link {
-  display: none !important;
-}
-.goog-te-gadget {
-  color: transparent !important;
-  font-size: 0;
-}
-body {
-  top: 0 !important; /* Prevents Google from pushing the page down */
-}
-.skiptranslate iframe {
-  display: none !important; /* Hides the top popup bar */
-}
-
-/* Mobile Adjustment for Translate Dropdown */
-@media (max-width: 768px) {
+  /* Translate Dropdown Mobile Adjustment */
   .translate-wrapper {
     margin-right: auto;
     margin-left: 15px;

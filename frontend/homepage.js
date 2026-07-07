@@ -1,10 +1,17 @@
+// ==========================================
+// 1. API & CONFIGURATION
+// ==========================================
 const projectsList = document.getElementById("projects-list");
 const projectsState = document.getElementById("projects-state");
+
 const apiBaseUrl =
   window.location.protocol === "file:" || window.location.port === "5500"
     ? `${window.location.protocol === "file:" ? "http" : window.location.protocol.slice(0, -1)}://${window.location.hostname || "localhost"}:3000`
     : "";
 
+// ==========================================
+// 2. DYNAMIC PROJECT RENDERING
+// ==========================================
 function createProjectRow(project, index) {
   const row = document.createElement("div");
   row.className = `project-row${index % 2 === 1 ? " reverse" : ""}`;
@@ -27,8 +34,7 @@ function createProjectRow(project, index) {
   title.textContent = project.title || "Untitled Project";
 
   const description = document.createElement("p");
-  description.textContent =
-    project.description || "No project description available yet.";
+  description.textContent = project.description || "No project description available yet.";
 
   content.append(title, description);
   row.append(image, content);
@@ -62,19 +68,30 @@ async function loadProjects() {
   }
 }
 
+// Initialize project loading if elements exist on page
 if (projectsList && projectsState) {
   loadProjects();
 }
-function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'en', // Your website's default language
-        includedLanguages: 'en,nl,fr,de,es', // Optional: Limit the languages (English, Dutch, French, German, Spanish). Remove this line for all languages.
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-      }, 'google_translate_element');
-    }
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
 
-    hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
+// ==========================================
+// 3. RESTORED FUNCTIONS (FROM HTML FILE)
+// ==========================================
+
+// Mobile Navbar Hamburger Toggle
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+
+if (hamburger && navLinks) {
+  hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+  });
+}
+
+// Google Translate Initialization Widget
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'en,nl,fr,de,es', // English, Dutch, French, German, Spanish
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+}

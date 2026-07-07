@@ -1,8 +1,7 @@
 /* =========================================
-   ABOUT PAGE CSS
+   SECTION 1: ABOUT HERO & HEADER
    ========================================= */
 
-/* --- About Hero --- */
 .about-hero {
   position: relative;
   width: 100%;
@@ -69,9 +68,13 @@
   font-style: italic;
   color: var(--branch-blue-dark);
   line-height: 1.5;
+  margin: 0;
 }
 
-/* --- Story Section (Roots & Mission) --- */
+/* =========================================
+   SECTION 2: OUR STORY & ROOTS
+   ========================================= */
+
 .story-section {
   padding: 80px 20px;
   background: var(--white);
@@ -109,10 +112,13 @@
   margin-top: 30px;
 }
 
-/* --- The Branch Code Section --- */
+/* =========================================
+   SECTION 3: THE BRANCH CODE & DEDICATION
+   ========================================= */
+
 .values-section {
   padding: 100px 20px;
-  background: var(--background); /* Soft grey/blue background */
+  background: var(--background); 
 }
 
 .section-container {
@@ -157,7 +163,7 @@
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
-/* Accent line at the top of each card */
+/* Gradient Accent line at the top of each card */
 .value-accent {
   position: absolute;
   top: 0;
@@ -179,9 +185,9 @@
   line-height: 1.6;
 }
 
-/* --- Closing Dedication --- */
+/* Closing Dedication (matches footer color) */
 .closing-dedication {
-  background: #0b1121; /* Matches footer */
+  background: #0b1121; 
   padding: 60px 20px 20px;
   text-align: center;
 }
@@ -196,7 +202,10 @@
   line-height: 1.6;
 }
 
-/* --- Responsive Adjustments --- */
+/* =========================================
+   SECTION 4: MOBILE RESPONSIVE QUERIES
+   ========================================= */
+
 @media (max-width: 900px) {
   .values-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -207,10 +216,12 @@
   .about-hero h1 {
     font-size: 2.5rem;
   }
-  .values-grid {
-    grid-template-columns: 1fr;
-  }
+  
   .story-block h2 {
     font-size: 1.8rem;
+  }
+
+  .values-grid {
+    grid-template-columns: 1fr;
   }
 }

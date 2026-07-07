@@ -4,23 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us | Branch</title>
-  <link rel="icon" type="image/png" href="/Branch/frontend/images/logo_icon.png">
-  
-  <!-- Link your global theme CSS and the new about CSS -->
+  <link rel="icon" href="./images/Ontwerp zonder titel-3.png" type="image/x-icon">
+
   <link rel="stylesheet" href="theme.css">
-  <link rel="stylesheet" href="about.css">
   <link rel="stylesheet" href="homepage.css">
+  <link rel="stylesheet" href="about.css">
 </head>
 <body>
 
-<!-- Navbar -->
   <nav class="navbar">
     <div class="logo-wrapper">
       <span class="brand-name">Branch</span>
     </div>
-    <div id="google_translate_element"></div>
 
-    <!-- Hamburger Menu Icon -->
+    <div class="translate-wrapper">
+      <div id="google_translate_element"></div>
+    </div>
+
     <div class="hamburger">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -30,18 +30,16 @@
     </div>
 
     <ul class="nav-links">
-      <li><a class="active" href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a class="active" href="about.html">About</a></li> <li><a href="contact.html">Contact</a></li>
     </ul>
   </nav>
 
-  <!-- About Hero Section -->
   <header class="about-hero">
     <div class="about-hero-content">
       <span class="hero-tag">About Us</span>
       <h1>We don't just build businesses. <br><span>We help people grow.</span></h1>
-      <p class="hero-lead">Branch helps entrepreneurs and businesses turn ideas into something real — with the strategy, structure and execution to grow sustainably.</p>
+      <p class="hero-lead">Branch helps entrepreneurs and businesses turn ideas into something real  with the strategy, structure and execution to grow sustainably.</p>
       
       <div class="hero-quote-box">
         <blockquote>"A branch never grows by itself. It grows because something beneath it keeps giving it life."</blockquote>
@@ -49,27 +47,25 @@
     </div>
   </header>
 
-  <!-- Our Story Section -->
   <section class="story-section">
     <div class="story-container">
       
       <div class="story-block">
         <h2>Our Roots</h2>
         <p>Branch didn't start with a business plan. It started with people. A mother who gave everything so her children could grow. A sport that taught discipline long before it taught anything about winning. Mentors who shared hard truths at the right time. And a friend who planted a seed without ever knowing how big the tree would become.</p>
-        <p>Basketball taught us that character matters more than talent, that discipline outlasts motivation, and that no one wins alone — on the court you're never a collection of individuals, you're a team. We carried that mentality straight into entrepreneurship.</p>
+        <p>Basketball taught us that character matters more than talent, that discipline outlasts motivation, and that no one wins alone  on the court you're never a collection of individuals, you're a team. We carried that mentality straight into entrepreneurship.</p>
         <p>Along the way we met founders with brilliant ideas that never grew. Not because the idea was weak or the work wasn't there, but because no one ever taught them how to build. How to turn scattered ideas into one system. How to create a brand people remember. How to keep something running even when you're not in the room. Those questions became Branch.</p>
       </div>
 
       <div class="story-block">
         <h2>Our Mission</h2>
-        <p>An entrepreneur needs a complete ecosystem to grow — not just one strong branch. So we help founders think, build strategy, develop brands, create content with purpose, and put the systems in place that let a business keep growing. We sell more than a service. We build trust, and trust creates growth.</p>
-        <p class="highlight-text">Building businesses is good. But helping people grow — that's the mission.</p>
+        <p>An entrepreneur needs a complete ecosystem to grow  not just one strong branch. So we help founders think, build strategy, develop brands, create content with purpose, and put the systems in place that let a business keep growing. We sell more than a service. We build trust, and trust creates growth.</p>
+        <p class="highlight-text">Building businesses is good. But helping people grow  that's the mission.</p>
       </div>
 
     </div>
   </section>
 
-  <!-- The Branch Code Section -->
   <section class="values-section">
     <div class="section-container">
       <div class="values-header">
@@ -117,12 +113,10 @@
     </div>
   </section>
 
-  <!-- Closing Dedication -->
   <section class="closing-dedication">
-    <p>Built for everyone who ever planted a seed in someone else's life, knowing they might never sit in the shade of the tree.</p>
+    <p>"Built for everyone who ever planted a seed in someone else's life, knowing they might never sit in the shade of the tree."</p>
   </section>
 
-  <!-- Footer -->
   <footer>
     <div class="footer-top">
       <div class="footer-col">
@@ -146,16 +140,9 @@
       &copy; 2026 Branch. All rights reserved.
     </div>
   </footer>
-    <script>
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
 
-    hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
-  </script>
-  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script src="about.js"></script>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
 </html>
