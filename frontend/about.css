@@ -202,6 +202,16 @@
   line-height: 1.6;
 }
 
+i[class^="fa-"] {
+  margin-right: 8px;
+}
+
+/* Make the icons in the values grid a bit larger */
+.value-card h3 i {
+  color: var(--branch-cyan); /* e.g., a green or accent color */
+  font-size: 1.2rem; 
+}
+
 /* =========================================
    SECTION 4: MOBILE RESPONSIVE QUERIES
    ========================================= */
