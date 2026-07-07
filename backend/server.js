@@ -79,7 +79,7 @@ app.post("/api/contact", async (request, response) => {
         // --- 1. Send Notification to Admin (You) ---
         await transporter.sendMail({
             from: `"Branch Inquiries" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER, // Sending to yourself
+            to: "contact@infobranch.nl", // Sending to yourself
             replyTo: email, 
             subject: `💼 New Project Inquiry: ${name}`,
             html: `
