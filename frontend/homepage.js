@@ -1,91 +1,66 @@
-// ==========================================
-// 1. API & CONFIGURATION
-// ==========================================
-const projectsList = document.getElementById("projects-list");
-const projectsState = document.getElementById("projects-state");
+    // 1. Mobile Hamburger Menu Logic
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
 
-const apiBaseUrl =
-  window.location.protocol === "file:" || window.location.port === "5500"
-    ? `${window.location.protocol === "file:" ? "http" : window.location.protocol.slice(0, -1)}://${window.location.hostname || "localhost"}:3000`
-    : "";
-
-// ==========================================
-// 2. DYNAMIC PROJECT RENDERING
-// ==========================================
-function createProjectRow(project, index) {
-  const row = document.createElement("div");
-  row.className = `project-row${index % 2 === 1 ? " reverse" : ""}`;
-
-  const image = document.createElement("div");
-  image.className = "project-image";
-
-  if (project.imageUrl) {
-    image.classList.add("has-image");
-    image.style.backgroundImage = `url('${project.imageUrl}')`;
-  } else {
-    image.classList.add("is-empty");
-    image.textContent = "Project image";
-  }
-
-  const content = document.createElement("div");
-  content.className = "project-content";
-
-  const title = document.createElement("h2");
-  title.textContent = project.title || "Untitled Project";
-
-  const description = document.createElement("p");
-  description.textContent = project.description || "No project description available yet.";
-
-  content.append(title, description);
-  row.append(image, content);
-
-  return row;
-}
-
-async function loadProjects() {
-  try {
-    const response = await fetch(`${apiBaseUrl}/api/projects`);
-
-    if (!response.ok) {
-      throw new Error("Request failed");
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'branch-blue-dark': '#032f8a',
+            'branch-blue': '#0bddff',
+            'branch-cyan': '#14b8e6',
+            'branch-green': '#78db55',
+            'background': '#f7f7f7',
+            'text-dark': '#111827',
+            'text-light': '#6b7280',
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          }
+        }
+      }
     }
 
-    const projects = await response.json();
-
-    if (!projects.length) {
-      projectsState.textContent = "No projects have been added yet.";
-      return;
+    if(hamburger && navLinks) {
+      hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('hidden');
+        navLinks.classList.toggle('flex');
+        navLinks.classList.toggle('flex-col');
+        navLinks.classList.toggle('absolute');
+        navLinks.classList.toggle('top-full');
+        navLinks.classList.toggle('left-0');
+        navLinks.classList.toggle('w-full');
+        navLinks.classList.toggle('bg-white/95');
+        navLinks.classList.toggle('backdrop-blur-xl');
+        navLinks.classList.toggle('p-6');
+        navLinks.classList.toggle('shadow-2xl');
+      });
     }
 
-    projectsState.remove();
+    // 2. Intersection Observer for Scroll Animations
+    document.addEventListener("DOMContentLoaded", function() {
+      const reveals = document.querySelectorAll(".reveal");
 
-    projects.forEach((project, index) => {
-      projectsList.appendChild(createProjectRow(project, index));
+      const revealOptions = {
+        threshold: 0.15, // Triggers when 15% of the element is visible
+        rootMargin: "0px 0px -50px 0px" // Triggers slightly before it enters the viewport completely
+      };
+
+      const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) {
+            return;
+          } else {
+            entry.target.classList.add("active");
+            observer.unobserve(entry.target); // Stops observing once the animation completes
+          }
+        });
+      }, revealOptions);
+
+      reveals.forEach(reveal => {
+        revealOnScroll.observe(reveal);
+      });
     });
-  } catch (error) {
-    projectsState.textContent = "Unable to load projects right now.";
-    console.error(error);
-  }
-}
-
-// Initialize project loading if elements exist on page
-if (projectsList && projectsState) {
-  loadProjects();
-}
-
-// ==========================================
-// 3. RESTORED FUNCTIONS (FROM HTML FILE)
-// ==========================================
-
-// Mobile Navbar Hamburger Toggle
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.nav-links');
-
-if (hamburger && navLinks) {
-  hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-  });
-}
 
 // Google Translate Initialization Widget
 function googleTranslateElementInit() {

@@ -7,42 +7,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" href="./images/Ontwerp zonder titel-3.png" type="image/x-icon">
 
-  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Tailwind Configuration -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'branch-blue-dark': '#032f8a',
-            'branch-blue': '#0bddff',
-            'branch-cyan': '#14b8e6',
-            'branch-green': '#78db55',
-            'background': '#f7f7f7',
-            'text-dark': '#111827',
-            'text-light': '#6b7280',
-          },
-          fontFamily: {
-            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Custom Styles for Animations & Gradients -->
   <style type="text/tailwindcss">
     @layer utilities {
       /* Parallax Gradient Backgrounds */
       .bg-brand-gradient {
         background: linear-gradient(135deg, #032f8a 0%, #0bddff 25%, #14b8e6 50%, #78db55 100%);
-        background-attachment: fixed; /* Creates the Parallax effect */
+        background-attachment: fixed;
       }
       .bg-cta-gradient {
         background: linear-gradient(135deg, #032f8a 0%, #14b8e6 50%, #78db55 100%);
-        background-attachment: fixed; /* Creates the Parallax effect */
+        background-attachment: fixed;
       }
       .text-brand-gradient {
         background: linear-gradient(90deg, #032f8a, #0bddff, #14b8e6, #78db55);
@@ -87,10 +63,9 @@
 </head>
 <body class="bg-background text-text-dark font-sans leading-relaxed overflow-x-hidden">
 
-  <!-- STICKY NAVBAR -->
   <nav class="fixed top-0 left-0 w-full flex justify-between items-center px-5 md:px-[60px] py-4 z-50 bg-white/80 backdrop-blur-md border-b border-black/5 shadow-sm transition-all duration-300">
     <div class="flex items-center gap-2.5">
-      <span class="font-semibold text-[1.4rem] text-brand-gradient">Branch</span>
+      <span class="font-semibold text-[1.4rem] text-brand-gradient" translate="no">Branch</span>
     </div>
 
     <div class="absolute top-5 right-auto md:right-[45%] ml-[15px] md:ml-0 z-[1000]">
@@ -112,10 +87,8 @@
     </ul>
   </nav>
 
-  <!-- PARALLAX HERO SECTION -->
   <section class="relative h-screen min-h-[750px] w-full flex items-center justify-center px-5 bg-brand-gradient pt-[120px] md:pt-0 overflow-hidden">
     
-    <!-- FLOATING HERO GLASS CARD -->
     <div class="relative z-10 max-w-[900px] w-full px-5 md:px-10 py-10 md:py-[60px] text-center mt-0 md:mt-10 bg-white/30 backdrop-blur-xl border-[1.5px] border-white/60 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] animate-float reveal active">
       <div class="mx-auto">
         <h1 class="text-white text-[2.8rem] md:text-[5rem] font-semibold leading-tight tracking-tight mb-5">
@@ -136,14 +109,12 @@
     </div>
   </section>
 
-  <!-- FEATURES SECTION -->
   <section class="py-[100px] px-5 bg-background relative z-20">
     <div class="max-w-[1100px] mx-auto">
-      <h2 class="text-branch-blue-dark text-[2rem] md:text-[2.5rem] mb-12 text-left font-bold reveal">Why Choose Branch</h2>
+      <h2 class="text-branch-blue-dark text-[2rem] md:text-[2.5rem] mb-12 text-left font-bold reveal">Why Choose <span class="text-branch-cyan" translate="no"> Branch</span></h2>
       
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         
-        <!-- Feature Card 1 (Slides up first) -->
         <div class="group bg-white/80 backdrop-blur-md px-6 py-10 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/80 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] reveal delay-100">
           <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-branch-blue/10 text-branch-blue mb-6 transition-all duration-500 group-hover:-translate-y-1 group-hover:scale-110 group-hover:bg-branch-blue group-hover:text-white group-hover:rotate-3">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
@@ -152,7 +123,6 @@
           <p class="text-text-light text-[1rem] leading-relaxed">We help identify and secure the right projects for strategic growth.</p>
         </div>
 
-        <!-- Feature Card 2 (Slides up second) -->
         <div class="group bg-white/80 backdrop-blur-md px-6 py-10 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/80 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] reveal delay-200">
           <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-branch-blue/10 text-branch-blue mb-6 transition-all duration-500 group-hover:-translate-y-1 group-hover:scale-110 group-hover:bg-branch-blue group-hover:text-white group-hover:rotate-3">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
@@ -161,7 +131,6 @@
           <p class="text-text-light text-[1rem] leading-relaxed">End-to-end strategic planning and high-level project execution.</p>
         </div>
 
-        <!-- Feature Card 3 (Slides up third) -->
         <div class="group bg-white/80 backdrop-blur-md px-6 py-10 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/80 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] reveal delay-300">
           <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-branch-blue/10 text-branch-blue mb-6 transition-all duration-500 group-hover:-translate-y-1 group-hover:scale-110 group-hover:bg-branch-blue group-hover:text-white group-hover:rotate-3">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
@@ -174,7 +143,6 @@
     </div>
   </section>
 
-  <!-- PARALLAX CTA BANNER -->
   <section class="bg-cta-gradient bg-cover py-[80px] px-5 md:px-[100px] flex flex-col md:flex-row justify-between items-center text-white gap-7 md:gap-0 reveal shadow-inner">
     <div class="max-w-[500px] text-center md:text-left">
       <h2 class="text-[2rem] md:text-[2.5rem] font-bold mb-4 text-white tracking-tight">Ready To Build Something Great?</h2>
@@ -185,12 +153,11 @@
     </a>
   </section>
 
-  <!-- FOOTER -->
   <footer class="bg-[#02143b] text-white pt-[80px] pb-5 px-5">
     <div class="flex flex-col md:flex-row justify-between max-w-[1100px] mx-auto mb-12 text-left gap-10 md:gap-[30px] reveal">
       
       <div class="flex-1 min-w-[200px]">
-        <h3 class="mb-[20px] font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-branch-cyan to-branch-green">Branch</h3>
+        <h3 class="mb-[20px] font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-branch-cyan to-branch-green" translate="no">Branch</h3>
         <p class="max-w-[300px] text-white/70 leading-relaxed">Helping businesses turn strategic opportunities into successful, scalable projects.</p>
       </div>
 
@@ -213,55 +180,8 @@
       &copy; 2026 Branch. All rights reserved.
     </div>
   </footer>
-
-  <!-- Scroll Reveal Script & Mobile Menu Logic -->
-  <script>
-    // 1. Mobile Hamburger Menu Logic
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-
-    if(hamburger && navLinks) {
-      hamburger.addEventListener('click', () => {
-        navLinks.classList.toggle('hidden');
-        navLinks.classList.toggle('flex');
-        navLinks.classList.toggle('flex-col');
-        navLinks.classList.toggle('absolute');
-        navLinks.classList.toggle('top-full');
-        navLinks.classList.toggle('left-0');
-        navLinks.classList.toggle('w-full');
-        navLinks.classList.toggle('bg-white/95');
-        navLinks.classList.toggle('backdrop-blur-xl');
-        navLinks.classList.toggle('p-6');
-        navLinks.classList.toggle('shadow-2xl');
-      });
-    }
-
-    // 2. Intersection Observer for Scroll Animations
-    document.addEventListener("DOMContentLoaded", function() {
-      const reveals = document.querySelectorAll(".reveal");
-
-      const revealOptions = {
-        threshold: 0.15, // Triggers when 15% of the element is visible
-        rootMargin: "0px 0px -50px 0px" // Triggers slightly before it enters the viewport completely
-      };
-
-      const revealOnScroll = new IntersectionObserver(function(entries, observer) {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting) {
-            return;
-          } else {
-            entry.target.classList.add("active");
-            observer.unobserve(entry.target); // Stops observing once the animation completes
-          }
-        });
-      }, revealOptions);
-
-      reveals.forEach(reveal => {
-        revealOnScroll.observe(reveal);
-      });
-    });
-  </script>
   
+  <script src="homepage.js"></script>
   <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
