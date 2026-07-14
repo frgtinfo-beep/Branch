@@ -6,25 +6,62 @@
   <title>About Us | Branch</title>
   <link rel="icon" href="./images/Ontwerp zonder titel-3.png" type="image/x-icon">
 
-  <!-- Font Awesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <link rel="stylesheet" href="theme.css">
-  <link rel="stylesheet" href="homepage.css">
-  <link rel="stylesheet" href="about.css">
-</head>
-<body>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-  <nav class="navbar">
-    <div class="logo-wrapper">
-      <span class="brand-name">Branch</span>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'branch-blue-dark': '#032f8a',
+            'branch-blue': '#0b6dff',
+            'branch-cyan': '#14b8e6',
+            'branch-green': '#78db55',
+            'background': '#f7f7f7',
+            'text-dark': '#111827',
+            'text-light': '#6b7280',
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .text-brand-gradient {
+        background: linear-gradient(90deg, #032f8a, #0b6dff, #14b8e6, #78db55);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+
+    /* Google Translate Fixes */
+    .goog-te-combo {
+      @apply px-3 py-1.5 m-0 rounded-full border border-branch-blue/20 bg-white/80 text-text-dark text-sm outline-none cursor-pointer hover:border-branch-blue !important;
+    }
+    .goog-te-gadget { font-size: 0px !important; color: transparent !important; }
+    .goog-te-gadget img, .goog-te-gadget .goog-logo-link { display: none !important; }
+    body { top: 0 !important; }
+    .skiptranslate iframe { display: none !important; }
+  </style>
+</head>
+<body class="bg-background text-text-dark font-sans leading-relaxed">
+
+  <nav class="absolute top-0 left-0 w-full flex justify-between items-center px-5 md:px-[60px] py-4 z-10 bg-white/100 backdrop-blur-md border-b border-black/5">
+    <div class="flex items-center gap-2.5">
+      <span class="font-semibold text-[1.4rem] text-brand-gradient">Branch</span>
     </div>
 
-    <div class="translate-wrapper">
+    <div class="absolute top-5 right-auto md:right-[45%] ml-[15px] md:ml-0 z-[1000]">
       <div id="google_translate_element"></div>
     </div>
 
-    <div class="hamburger">
+    <div class="block md:hidden cursor-pointer text-branch-blue-dark">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -32,115 +69,140 @@
       </svg>
     </div>
 
-    <ul class="nav-links">
-      <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
-      <li><a class="active" href="about.html"><i class="fa-solid fa-circle-info"></i> About</a></li> 
-      <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+    <ul class="hidden md:flex gap-1.5 list-none">
+      <li><a href="index.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5"><i class="fa-solid fa-house mr-1"></i> Home</a></li>
+      <li><a href="about.html" class="text-[1.1rem] px-4 py-2 rounded-full transition-all duration-300 text-branch-blue bg-branch-blue/5"><i class="fa-solid fa-circle-info mr-1"></i> About</a></li> 
+      <li><a href="contact.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5"><i class="fa-solid fa-envelope mr-1"></i> Contact</a></li>
     </ul>
   </nav>
 
-  <header class="about-hero">
-    <div class="about-hero-content">
-      <span class="hero-tag"><i class="fa-solid fa-seedling"></i> About Us</span>
-      <h1>We don't just build businesses. <br><span>We help people grow.</span></h1>
-      <p class="hero-lead">Branch helps entrepreneurs and businesses turn ideas into something real with the strategy, structure and execution to grow sustainably.</p>
+  <header class="relative w-full pt-[180px] pb-[100px] px-5 bg-[radial-gradient(circle_at_top,_#ffffff_0%,_#f7f7f7_100%)] flex flex-col items-center text-center">
+    <div class="max-w-[800px]">
+      <span class="inline-block text-[0.85rem] font-semibold text-branch-cyan bg-branch-cyan/10 px-4 py-1.5 rounded-full mb-6 uppercase tracking-widest">
+        <i class="fa-solid fa-seedling mr-2"></i> About Us
+      </span>
+      <h1 class="text-[2.5rem] md:text-[3.5rem] font-semibold leading-[1.1] mb-6 text-text-dark">
+        We don't just build businesses. <br>
+        <span class="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-branch-blue-dark via-branch-blue to-branch-green">We help people grow.</span>
+      </h1>
+      <p class="text-[1.2rem] text-text-light mb-10">
+        Branch helps entrepreneurs and businesses turn ideas into something real with the strategy, structure and execution to grow sustainably.
+      </p>
       
-      <div class="hero-quote-box">
-        <blockquote><i class="fa-solid fa-quote-left"></i> "A branch never grows by itself. It grows because something beneath it keeps giving it life." <i class="fa-solid fa-quote-right"></i></blockquote>
+      <div class="bg-white p-[30px] md:p-[30px_40px] rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] border-l-4 border-branch-green mt-10 text-left md:text-center">
+        <blockquote class="font-serif text-[1.3rem] italic text-branch-blue-dark leading-relaxed m-0">
+          <i class="fa-solid fa-quote-left mr-2"></i> "A branch never grows by itself. It grows because something beneath it keeps giving it life." <i class="fa-solid fa-quote-right ml-2"></i>
+        </blockquote>
       </div>
     </div>
   </header>
 
-  <section class="story-section">
-    <div class="story-container">
+  <section class="py-[80px] px-5 bg-white">
+    <div class="max-w-[750px] mx-auto">
       
-      <div class="story-block">
-        <h2><i class="fa-solid fa-tree"></i> Our Roots</h2>
-        <p>Branch didn't start with a business plan. It started with people. A mother who gave everything so her children could grow. A sport that taught discipline long before it taught anything about winning. Mentors who shared hard truths at the right time. And a friend who planted a seed without ever knowing how big the tree would become.</p>
-        <p>Basketball taught us that character matters more than talent, that discipline outlasts motivation, and that no one wins alone on the court you're never a collection of individuals, you're a team. We carried that mentality straight into entrepreneurship.</p>
-        <p>Along the way we met founders with brilliant ideas that never grew. Not because the idea was weak or the work wasn't there, but because no one ever taught them how to build. How to turn scattered ideas into one system. How to create a brand people remember. How to keep something running even when you're not in the room. Those questions became Branch.</p>
+      <div class="mb-[60px]">
+        <h2 class="text-[1.8rem] md:text-[2rem] text-branch-blue-dark mb-5 border-b-2 border-branch-blue/10 pb-2.5 inline-block font-bold">
+          <i class="fa-solid fa-tree mr-2"></i> Our Roots
+        </h2>
+        <p class="text-[1.1rem] leading-[1.8] text-text-dark mb-5">Branch didn't start with a business plan. It started with people. A mother who gave everything so her children could grow. A sport that taught discipline long before it taught anything about winning. Mentors who shared hard truths at the right time. And a friend who planted a seed without ever knowing how big the tree would become.</p>
+        <p class="text-[1.1rem] leading-[1.8] text-text-dark mb-5">Basketball taught us that character matters more than talent, that discipline outlasts motivation, and that no one wins alone on the court you're never a collection of individuals, you're a team. We carried that mentality straight into entrepreneurship.</p>
+        <p class="text-[1.1rem] leading-[1.8] text-text-dark mb-5">Along the way we met founders with brilliant ideas that never grew. Not because the idea was weak or the work wasn't there, but because no one ever taught them how to build. How to turn scattered ideas into one system. How to create a brand people remember. How to keep something running even when you're not in the room. Those questions became Branch.</p>
       </div>
 
-      <div class="story-block">
-        <h2><i class="fa-solid fa-bullseye"></i> Our Mission</h2>
-        <p>An entrepreneur needs a complete ecosystem to grow not just one strong branch. So we help founders think, build strategy, develop brands, create content with purpose, and put the systems in place that let a business keep growing. We sell more than a service. We build trust, and trust creates growth.</p>
-        <p class="highlight-text"><i class="fa-solid fa-arrow-trend-up"></i> Building businesses is good. But helping people grow that's the mission.</p>
+      <div class="mb-[60px]">
+        <h2 class="text-[1.8rem] md:text-[2rem] text-branch-blue-dark mb-5 border-b-2 border-branch-blue/10 pb-2.5 inline-block font-bold">
+          <i class="fa-solid fa-bullseye mr-2"></i> Our Mission
+        </h2>
+        <p class="text-[1.1rem] leading-[1.8] text-text-dark mb-5">An entrepreneur needs a complete ecosystem to grow not just one strong branch. So we help founders think, build strategy, develop brands, create content with purpose, and put the systems in place that let a business keep growing. We sell more than a service. We build trust, and trust creates growth.</p>
+        <p class="text-[1.25rem] font-semibold text-branch-blue mt-[30px]">
+          <i class="fa-solid fa-arrow-trend-up mr-2"></i> Building businesses is good. But helping people grow that's the mission.
+        </p>
       </div>
 
     </div>
   </section>
 
-  <section class="values-section">
-    <div class="section-container">
-      <div class="values-header">
-        <h2><i class="fa-solid fa-book-open"></i> The Branch Code</h2>
-        <p>What we stand for every single day.</p>
+  <section class="py-[100px] px-5 bg-background">
+    <div class="max-w-[1100px] mx-auto">
+      <div class="text-center mb-[50px]">
+        <h2 class="text-[2rem] md:text-[2.5rem] text-branch-blue-dark mb-2.5 font-bold">
+          <i class="fa-solid fa-book-open mr-2"></i> The Branch Code
+        </h2>
+        <p class="text-text-light text-[1.1rem]">What we stand for every single day.</p>
       </div>
 
-      <div class="values-grid">
-        <div class="value-card">
-          <div class="value-accent"></div>
-          <h3><i class="fa-solid fa-shield-heart"></i> Faith before fear</h3>
-          <p>We start with belief, seeing and trusting your vision before we ever talk certainty.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
+        
+        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
+          <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-shield-heart text-branch-cyan text-[1.2rem] mr-2"></i> Faith before fear</h3>
+          <p class="text-text-light leading-relaxed">We start with belief, seeing and trusting your vision before we ever talk certainty.</p>
         </div>
 
-        <div class="value-card">
-          <div class="value-accent"></div>
-          <h3><i class="fa-solid fa-scale-balanced"></i> Character before money</h3>
-          <p>Money follows character. Not the other way around.</p>
+        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
+          <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-scale-balanced text-branch-cyan text-[1.2rem] mr-2"></i> Character before money</h3>
+          <p class="text-text-light leading-relaxed">Money follows character. Not the other way around.</p>
         </div>
 
-        <div class="value-card">
-          <div class="value-accent"></div>
-          <h3><i class="fa-solid fa-users"></i> People before profit</h3>
-          <p>People are never a means. People are the mission.</p>
+        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
+          <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-users text-branch-cyan text-[1.2rem] mr-2"></i> People before profit</h3>
+          <p class="text-text-light leading-relaxed">People are never a means. People are the mission.</p>
         </div>
 
-        <div class="value-card">
-          <div class="value-accent"></div>
-          <h3><i class="fa-solid fa-anchor"></i> Discipline before motivation</h3>
-          <p>Motivation comes and goes. Discipline stays.</p>
+        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
+          <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-anchor text-branch-cyan text-[1.2rem] mr-2"></i> Discipline before motivation</h3>
+          <p class="text-text-light leading-relaxed">Motivation comes and goes. Discipline stays.</p>
         </div>
 
-        <div class="value-card">
-          <div class="value-accent"></div>
-          <h3><i class="fa-solid fa-handshake-angle"></i> Build together</h3>
-          <p>Alone you may go faster. Together we go further, and we leave people better than we found them.</p>
+        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
+          <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-handshake-angle text-branch-cyan text-[1.2rem] mr-2"></i> Build together</h3>
+          <p class="text-text-light leading-relaxed">Alone you may go faster. Together we go further, and we leave people better than we found them.</p>
         </div>
 
-        <div class="value-card">
-          <div class="value-accent"></div>
-          <h3><i class="fa-solid fa-hand-holding-heart"></i> Every meeting adds value</h3>
-          <p>Not just to a business. To a person.</p>
+        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
+          <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-hand-holding-heart text-branch-cyan text-[1.2rem] mr-2"></i> Every meeting adds value</h3>
+          <p class="text-text-light leading-relaxed">Not just to a business. To a person.</p>
         </div>
+
       </div>
     </div>
   </section>
 
-  <section class="closing-dedication">
-    <p><i class="fa-solid fa-sun" style="margin-right: 10px;"></i> "Built for everyone who ever planted a seed in someone else's life, knowing they might never sit in the shade of the tree."</p>
+  <section class="bg-[#0b1121] pt-[60px] pb-5 px-5 text-center">
+    <p class="max-w-[800px] mx-auto text-white/70 font-serif italic text-[1.2rem] leading-relaxed">
+      <i class="fa-solid fa-sun mr-2.5"></i> "Built for everyone who ever planted a seed in someone else's life, knowing they might never sit in the shade of the tree."
+    </p>
   </section>
 
-  <footer>
-    <div class="footer-top">
-      <div class="footer-col">
-        <h3><i class="fa-solid fa-leaf"></i> Branch</h3>
-        <p>Helping businesses turn opportunities into successful projects.</p>
+  <footer class="bg-gradient-to-br from-branch-blue-dark to-[#021f5c] text-white pt-[60px] pb-5 px-5">
+    <div class="flex flex-col md:flex-row justify-between max-w-[1100px] mx-auto mb-10 text-left gap-10 md:gap-[30px]">
+      
+      <div class="flex-1 min-w-[200px]">
+        <h3 class="mb-[15px] font-bold text-lg"><i class="fa-solid fa-leaf mr-2"></i> Branch</h3>
+        <p class="max-w-[300px] text-white/80">Helping businesses turn opportunities into successful projects.</p>
       </div>
-      <div class="footer-col">
-        <h4>Quick Links</h4>
-        <a href="index.html"><i class="fa-solid fa-chevron-right"></i> Home</a>
-        <a href="about.html"><i class="fa-solid fa-chevron-right"></i> About</a>
-        <a href="contact.html"><i class="fa-solid fa-chevron-right"></i> Contact</a>
+
+      <div class="flex-1 min-w-[200px]">
+        <h4 class="mb-[15px] font-bold">Quick Links</h4>
+        <a href="index.html" class="block text-white/80 mb-2.5 transition-colors duration-300 hover:text-branch-cyan"><i class="fa-solid fa-chevron-right mr-2 text-[0.8em]"></i> Home</a>
+        <a href="about.html" class="block text-white/80 mb-2.5 transition-colors duration-300 hover:text-branch-cyan"><i class="fa-solid fa-chevron-right mr-2 text-[0.8em]"></i> About</a>
+        <a href="contact.html" class="block text-white/80 mb-2.5 transition-colors duration-300 hover:text-branch-cyan"><i class="fa-solid fa-chevron-right mr-2 text-[0.8em]"></i> Contact</a>
       </div>
-      <div class="footer-col">
-        <h4>Services</h4>
-        <a href="#"><i class="fa-solid fa-chevron-right"></i> Business Development</a>
-        <a href="#"><i class="fa-solid fa-chevron-right"></i> Digital Solutions</a>
-        <a href="#"><i class="fa-solid fa-chevron-right"></i> Growth Strategy</a>
+
+      <div class="flex-1 min-w-[200px]">
+        <h4 class="mb-[15px] font-bold">Services</h4>
+        <a href="#" class="block text-white/80 mb-2.5 transition-colors duration-300 hover:text-branch-cyan"><i class="fa-solid fa-chevron-right mr-2 text-[0.8em]"></i> Business Development</a>
+        <a href="#" class="block text-white/80 mb-2.5 transition-colors duration-300 hover:text-branch-cyan"><i class="fa-solid fa-chevron-right mr-2 text-[0.8em]"></i> Digital Solutions</a>
+        <a href="#" class="block text-white/80 mb-2.5 transition-colors duration-300 hover:text-branch-cyan"><i class="fa-solid fa-chevron-right mr-2 text-[0.8em]"></i> Growth Strategy</a>
       </div>
     </div>
-    <div class="footer-bottom">
+
+    <div class="text-center pt-5 border-t border-white/10 text-white/60 text-[0.9rem]">
       &copy; 2026 Branch. All rights reserved.
     </div>
   </footer>
