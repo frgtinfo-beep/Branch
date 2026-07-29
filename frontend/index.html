@@ -50,15 +50,6 @@
     .animate-float {
       animation: float 6s ease-in-out infinite;
     }
-
-    /* Google Translate Fixes */
-    .goog-te-combo {
-      @apply px-3 py-1.5 m-0 rounded-full border border-branch-blue/20 bg-white/80 text-text-dark text-sm outline-none cursor-pointer hover:border-branch-blue !important;
-    }
-    .goog-te-gadget { font-size: 0px !important; color: transparent !important; }
-    .goog-te-gadget img, .goog-te-gadget .goog-logo-link { display: none !important; }
-    body { top: 0 !important; }
-    .skiptranslate iframe { display: none !important; }
   </style>
 </head>
 <body class="bg-background text-text-dark font-sans leading-relaxed overflow-x-hidden">
@@ -68,22 +59,43 @@
       <span class="font-semibold text-[1.4rem] text-brand-gradient" translate="no">Branch</span>
     </div>
 
-    <div class="absolute top-5 right-auto md:right-[45%] ml-[15px] md:ml-0 z-[1000]">
-      <div id="google_translate_element"></div>
+    <!-- Right Controls Container -->
+    <div class="flex items-center gap-4 ml-auto md:ml-0 md:order-2">
+      <!-- Built-in Custom Language Picker -->
+      <div class="relative" id="language-dropdown-container">
+        <button id="language-btn" class="flex items-center gap-2 text-[0.95rem] font-medium text-gray-700 hover:text-branch-blue transition-colors px-3 py-1.5 rounded-full hover:bg-gray-100/60 focus:outline-none">
+          <i class="fa-solid fa-globe text-base text-gray-500"></i>
+          <span id="current-lang-text">English</span>
+          <i id="lang-arrow" class="fa-solid fa-chevron-down text-[0.7rem] text-gray-400 transition-transform duration-200"></i>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="language-menu" class="hidden absolute right-0 mt-2 w-44 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.12)] border border-gray-100 py-2 z-50 transition-all">
+          <button class="lang-option w-full text-left px-4 py-2 text-sm font-medium text-branch-blue bg-blue-50/60 flex justify-between items-center transition-colors hover:bg-gray-50" data-lang="en">
+            <span>English</span>
+            <i class="fa-solid fa-check text-xs check-icon"></i>
+          </button>
+          <button class="lang-option w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 flex justify-between items-center transition-colors" data-lang="nl">
+            <span>Nederlands</span>
+            <i class="fa-solid fa-check text-xs check-icon hidden"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Hamburger Menu for Mobile -->
+      <div class="block md:hidden cursor-pointer text-branch-blue-dark hamburger">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </div>
     </div>
 
-    <div class="block md:hidden cursor-pointer text-branch-blue-dark hamburger">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
-    </div>
-
-    <ul class="hidden md:flex gap-1.5 list-none nav-links">
-      <li><a href="index.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5">Home</a></li>
-      <li><a href="about.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5">About</a></li> 
-      <li><a href="contact.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5">Contact</a></li>
+    <ul class="hidden md:flex gap-1.5 list-none nav-links md:order-1">
+      <li><a href="index.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5" data-i18n="nav_home">Home</a></li>
+      <li><a href="about.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5" data-i18n="nav_about">About</a></li> 
+      <li><a href="contact.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5" data-i18n="nav_contact">Contact</a></li>
     </ul>
   </nav>
 
@@ -91,17 +103,17 @@
     
     <div class="relative z-10 max-w-[900px] w-full px-5 md:px-10 py-10 md:py-[60px] text-center mt-0 md:mt-10 bg-white/30 backdrop-blur-xl border-[1.5px] border-white/60 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] animate-float reveal active">
       <div class="mx-auto">
-        <h1 class="text-white text-[2.8rem] md:text-[5rem] font-semibold leading-tight tracking-tight mb-5">
+        <h1 class="text-white text-[2.8rem] md:text-[5rem] font-semibold leading-tight tracking-tight mb-5" data-i18n="hero_title">
           Turn Ideas Into <br>
           <span class="font-serif italic font-normal text-branch-blue-dark">Successful Projects</span>
         </h1>
 
-        <p class="text-text-dark text-[1.1rem] max-w-[600px] mx-auto mb-10 font-medium">
+        <p class="text-text-dark text-[1.1rem] max-w-[600px] mx-auto mb-10 font-medium" data-i18n="hero_desc">
           Branch connects businesses, entrepreneurs, and individuals with the expertise, strategy, and execution needed to launch, grow, and succeed.
         </p>
 
         <div>
-          <a href="contact.html" class="inline-block py-4 px-8 rounded-full text-base font-medium text-white transition-all duration-300 hover:-translate-y-1 bg-branch-blue-dark shadow-lg hover:shadow-2xl hover:bg-[#021f5c]">
+          <a href="contact.html" class="inline-block py-4 px-8 rounded-full text-base font-medium text-white transition-all duration-300 hover:-translate-y-1 bg-branch-blue-dark shadow-lg hover:shadow-2xl hover:bg-[#021f5c]" data-i18n="hero_cta">
             Start a Project &rarr;
           </a>
         </div>
@@ -111,7 +123,7 @@
 
   <section class="py-[100px] px-5 bg-background relative z-20">
     <div class="max-w-[1100px] mx-auto">
-      <h2 class="text-branch-blue-dark text-[2rem] md:text-[2.5rem] mb-12 text-left font-bold reveal">Why Choose <span class="text-branch-cyan" translate="no"> Branch</span></h2>
+      <h2 class="text-branch-blue-dark text-[2rem] md:text-[2.5rem] mb-12 text-left font-bold reveal" data-i18n="why_title">Why Choose <span class="text-branch-cyan" translate="no"> Branch</span></h2>
       
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         
@@ -119,24 +131,24 @@
           <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-branch-blue/10 text-branch-blue mb-6 transition-all duration-500 group-hover:-translate-y-1 group-hover:scale-110 group-hover:bg-branch-blue group-hover:text-white group-hover:rotate-3">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
           </div>
-          <h3 class="text-branch-blue-dark mb-3 text-[1.25rem] font-bold tracking-tight">Find Opportunities</h3>
-          <p class="text-text-light text-[1rem] leading-relaxed">We help identify and secure the right projects for strategic growth.</p>
+          <h3 class="text-branch-blue-dark mb-3 text-[1.25rem] font-bold tracking-tight" data-i18n="card1_title">Find Opportunities</h3>
+          <p class="text-text-light text-[1rem] leading-relaxed" data-i18n="card1_desc">We help identify and secure the right projects for strategic growth.</p>
         </div>
 
         <div class="group bg-white/80 backdrop-blur-md px-6 py-10 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/80 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] reveal delay-200">
           <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-branch-blue/10 text-branch-blue mb-6 transition-all duration-500 group-hover:-translate-y-1 group-hover:scale-110 group-hover:bg-branch-blue group-hover:text-white group-hover:rotate-3">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
           </div>
-          <h3 class="text-branch-blue-dark mb-3 text-[1.25rem] font-bold tracking-tight">Expert Guidance</h3>
-          <p class="text-text-light text-[1rem] leading-relaxed">End-to-end strategic planning and high-level project execution.</p>
+          <h3 class="text-branch-blue-dark mb-3 text-[1.25rem] font-bold tracking-tight" data-i18n="card2_title">Expert Guidance</h3>
+          <p class="text-text-light text-[1rem] leading-relaxed" data-i18n="card2_desc">End-to-end strategic planning and high-level project execution.</p>
         </div>
 
         <div class="group bg-white/80 backdrop-blur-md px-6 py-10 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/80 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] reveal delay-300">
           <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-branch-blue/10 text-branch-blue mb-6 transition-all duration-500 group-hover:-translate-y-1 group-hover:scale-110 group-hover:bg-branch-blue group-hover:text-white group-hover:rotate-3">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
           </div>
-          <h3 class="text-branch-blue-dark mb-3 text-[1.25rem] font-bold tracking-tight">Real Growth</h3>
-          <p class="text-text-light text-[1rem] leading-relaxed">Laser-focused on delivering measurable, long-term business success.</p>
+          <h3 class="text-branch-blue-dark mb-3 text-[1.25rem] font-bold tracking-tight" data-i18n="card3_title">Real Growth</h3>
+          <p class="text-text-light text-[1rem] leading-relaxed" data-i18n="card3_desc">Laser-focused on delivering measurable, long-term business success.</p>
         </div>
 
       </div>
@@ -145,10 +157,10 @@
 
   <section class="bg-cta-gradient bg-cover py-[80px] px-5 md:px-[100px] flex flex-col md:flex-row justify-between items-center text-white gap-7 md:gap-0 reveal shadow-inner">
     <div class="max-w-[500px] text-center md:text-left">
-      <h2 class="text-[2rem] md:text-[2.5rem] font-bold mb-4 text-white tracking-tight">Ready To Build Something Great?</h2>
-      <p class="text-[1.1rem] m-0 text-white/90 leading-relaxed">Whether you're launching a business, growing a company, or starting a new project, Branch is ready to help.</p>
+      <h2 class="text-[2rem] md:text-[2.5rem] font-bold mb-4 text-white tracking-tight" data-i18n="cta_title">Ready To Build Something Great?</h2>
+      <p class="text-[1.1rem] m-0 text-white/90 leading-relaxed" data-i18n="cta_desc">Whether you're launching a business, growing a company, or starting a new project, Branch is ready to help.</p>
     </div>
-    <a href="contact.html" class="inline-block bg-white text-branch-blue-dark font-bold text-[1.1rem] py-[18px] px-[40px] rounded-full whitespace-nowrap shadow-[0_10px_20px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+    <a href="contact.html" class="inline-block bg-white text-branch-blue-dark font-bold text-[1.1rem] py-[18px] px-[40px] rounded-full whitespace-nowrap shadow-[0_10px_20px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]" data-i18n="cta_button">
       Get Started Today
     </a>
   </section>
@@ -158,31 +170,32 @@
       
       <div class="flex-1 min-w-[200px]">
         <h3 class="mb-[20px] font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-branch-cyan to-branch-green" translate="no">Branch</h3>
-        <p class="max-w-[300px] text-white/70 leading-relaxed">Helping businesses turn strategic opportunities into successful, scalable projects.</p>
+        <p class="max-w-[300px] text-white/70 leading-relaxed" data-i18n="footer_about">Helping businesses turn strategic opportunities into successful, scalable projects.</p>
       </div>
 
       <div class="flex-1 min-w-[200px]">
-        <h4 class="mb-[20px] font-bold tracking-wide text-white/90 uppercase text-sm">Quick Links</h4>
-        <a href="#" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform">Home</a><br>
-        <a href="#" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform">About</a><br>
-        <a href="contact.html" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform">Contact</a>
+        <h4 class="mb-[20px] font-bold tracking-wide text-white/90 uppercase text-sm" data-i18n="footer_quicklinks">Quick Links</h4>
+        <a href="index.html" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform" data-i18n="nav_home">Home</a><br>
+        <a href="about.html" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform" data-i18n="nav_about">About</a><br>
+        <a href="contact.html" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform" data-i18n="nav_contact">Contact</a>
       </div>
 
       <div class="flex-1 min-w-[200px]">
-        <h4 class="mb-[20px] font-bold tracking-wide text-white/90 uppercase text-sm">Services</h4>
-        <a href="#" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform">Business Development</a><br>
-        <a href="#" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform">Digital Solutions</a><br>
-        <a href="#" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform">Growth Strategy</a>
+        <h4 class="mb-[20px] font-bold tracking-wide text-white/90 uppercase text-sm" data-i18n="footer_services">Services</h4>
+        <a href="#" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform" data-i18n="service_1">Business Development</a><br>
+        <a href="#" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform" data-i18n="service_2">Digital Solutions</a><br>
+        <a href="#" class="block text-white/70 mb-3 transition-colors duration-300 hover:text-branch-cyan hover:translate-x-1 inline-block transform" data-i18n="service_3">Growth Strategy</a>
       </div>
     </div>
 
     <div class="text-center pt-8 border-t border-white/10 text-white/40 text-[0.9rem] font-medium reveal">
-      &copy; 2026 Branch. All rights reserved.
+      &copy; 2026 Branch. <span data-i18n="footer_rights">All rights reserved.</span>
     </div>
   </footer>
   
   <script src="homepage.js"></script>
-  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <!-- EXTERNAL TRANSLATION SCRIPT -->
+  <script src="translations.js"></script>
 
 </body>
 </html>

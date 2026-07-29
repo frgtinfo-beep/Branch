@@ -5,14 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Branch | Contact</title>
   <link rel="icon" href="./images/Ontwerp zonder titel-3.png" type="image/x-icon">
-  
-  <!-- Font Awesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Tailwind Configuration for your Brand Colors -->
   <script>
     tailwind.config = {
       theme: {
@@ -34,7 +28,6 @@
     }
   </script>
 
-  <!-- Custom Styles for Gradients & Google Translate Overrides -->
   <style type="text/tailwindcss">
     @layer utilities {
       .text-brand-gradient {
@@ -43,60 +36,66 @@
         -webkit-text-fill-color: transparent;
       }
     }
-
-    /* Google Translate Fixes */
-    .goog-te-combo {
-      @apply px-3 py-1.5 m-0 rounded-full border border-branch-blue/20 bg-white/80 text-text-dark text-sm outline-none cursor-pointer hover:border-branch-blue !important;
-    }
-    .goog-te-gadget { font-size: 0px !important; color: transparent !important; }
-    .goog-te-gadget img, .goog-te-gadget .goog-logo-link { display: none !important; }
-    body { top: 0 !important; }
-    .skiptranslate iframe { display: none !important; }
     html { scroll-behavior: smooth; }
   </style>
 </head>
 <body class="bg-background text-text-dark font-sans min-h-screen">
 
-  <!-- NAVBAR -->
   <nav class="absolute top-0 left-0 w-full flex justify-between items-center px-5 md:px-[60px] py-4 z-10 bg-white/100 backdrop-blur-md border-b border-black/5">
     <div class="flex items-center gap-2.5">
       <span class="font-bold text-[1.5rem] text-brand-gradient" translate="no">Branch</span>
     </div>
 
-    <div class="absolute top-5 right-auto md:right-[45%] ml-[15px] md:ml-0 z-[1000]">
-      <div id="google_translate_element"></div>
+    <!-- Right Controls Container -->
+    <div class="flex items-center gap-4 ml-auto md:ml-0 md:order-2">
+      <!-- Built-in Custom Language Picker -->
+      <div class="relative" id="language-dropdown-container">
+        <button id="language-btn" class="flex items-center gap-2 text-[0.95rem] font-medium text-gray-700 hover:text-branch-blue transition-colors px-3 py-1.5 rounded-full hover:bg-gray-100/60 focus:outline-none">
+          <i class="fa-solid fa-globe text-base text-gray-500"></i>
+          <span id="current-lang-text">English</span>
+          <i id="lang-arrow" class="fa-solid fa-chevron-down text-[0.7rem] text-gray-400 transition-transform duration-200"></i>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="language-menu" class="hidden absolute right-0 mt-2 w-44 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.12)] border border-gray-100 py-2 z-50 transition-all">
+          <button class="lang-option w-full text-left px-4 py-2 text-sm font-medium text-branch-blue bg-blue-50/60 flex justify-between items-center transition-colors hover:bg-gray-50" data-lang="en">
+            <span>English</span>
+            <i class="fa-solid fa-check text-xs check-icon"></i>
+          </button>
+          <button class="lang-option w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 flex justify-between items-center transition-colors" data-lang="nl">
+            <span>Nederlands</span>
+            <i class="fa-solid fa-check text-xs check-icon hidden"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Hamburger -->
+      <div class="block md:hidden cursor-pointer text-branch-blue-dark hamburger">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </div>
     </div>
 
-    <div class="block md:hidden cursor-pointer text-branch-blue-dark hamburger">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
-    </div>
-
-    <ul class="hidden md:flex gap-1.5 list-none nav-links">
-      <li><a href="index.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5"><i class="fa-solid fa-house mr-1"></i> Home</a></li>
-      <li><a href="about.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5"><i class="fa-solid fa-circle-info mr-1"></i> About</a></li> 
-      <!-- Active state applied to Contact -->
-      <li><a href="contact.html" class="text-[1.1rem] px-4 py-2 rounded-full transition-all duration-300 text-branch-blue bg-branch-blue/5"><i class="fa-solid fa-envelope mr-1"></i> Contact</a></li>
+    <ul class="hidden md:flex gap-1.5 list-none nav-links md:order-1">
+      <li><a href="index.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5" data-i18n="nav_home"><i class="fa-solid fa-house mr-1"></i> Home</a></li>
+      <li><a href="about.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5" data-i18n="nav_about"><i class="fa-solid fa-circle-info mr-1"></i> About</a></li> 
+      <li><a href="contact.html" class="text-[1.1rem] px-4 py-2 rounded-full transition-all duration-300 text-branch-blue bg-branch-blue/5" data-i18n="nav_contact"><i class="fa-solid fa-envelope mr-1"></i> Contact</a></li>
     </ul>
   </nav>
 
-  <!-- HERO SECTION -->
   <section class="text-center pt-[120px] md:pt-[150px] pb-[60px] md:pb-[80px] px-5 md:px-[10%]">
-    <span class="inline-block px-[18px] py-[10px] rounded-[30px] bg-branch-blue/10 text-branch-blue font-medium text-[13px] md:text-sm">Get In Touch</span>
-    <h1 class="mt-[25px] mb-[20px] text-[clamp(30px,9vw,56px)] font-bold text-text-dark leading-tight">Let's Build Something Together</h1>
-    <p class="max-w-[650px] mx-auto text-text-light leading-[1.8] text-[16px] md:text-lg">Tell us about your project and we'll get back to you within 24 hours.</p>
+    <span class="inline-block px-[18px] py-[10px] rounded-[30px] bg-branch-blue/10 text-branch-blue font-medium text-[13px] md:text-sm" data-i18n="contact_badge">Get In Touch</span>
+    <h1 class="mt-[25px] mb-[20px] text-[clamp(30px,9vw,56px)] font-bold text-text-dark leading-tight" data-i18n="contact_title">Let's Build Something Together</h1>
+    <p class="max-w-[650px] mx-auto text-text-light leading-[1.8] text-[16px] md:text-lg" data-i18n="contact_desc">Tell us about your project and we'll get back to you within 24 hours.</p>
   </section>
 
-  <!-- MAIN CONTACT SECTION -->
   <section class="px-5 md:px-[10%] pb-[60px] md:pb-[80px] grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-[30px] md:gap-[40px]">
-    
-    <!-- LEFT CARDS -->
     <div class="flex flex-col gap-[25px]">
       <div class="bg-white rounded-[20px] p-6 md:p-[30px] shadow-[0_10px_25px_rgba(0,0,0,0.05)]">
-        <h3 class="mb-[25px] font-bold text-lg text-text-dark">Contact Information</h3>
+        <h3 class="mb-[25px] font-bold text-lg text-text-dark" data-i18n="info_title">Contact Information</h3>
         <div class="mb-5 flex flex-col gap-1.5">
           <strong class="text-text-dark font-semibold">KVK number</strong>
           <span class="text-text-light">42001190</span>
@@ -116,110 +115,97 @@
       </div>
 
       <div class="bg-white rounded-[20px] p-6 md:p-[30px] shadow-[0_10px_25px_rgba(0,0,0,0.05)]">
-        <h3 class="mb-[25px] font-bold text-lg text-text-dark">Business Hours</h3>
+        <h3 class="mb-[25px] font-bold text-lg text-text-dark" data-i18n="hours_title">Business Hours</h3>
         <div class="flex flex-col gap-1.5">
-          <strong class="text-text-dark font-semibold">Monday – Friday</strong>
+          <strong class="text-text-dark font-semibold" data-i18n="monday_friday">Monday – Friday</strong>
           <span class="text-text-light">9:00 AM – 6:00 PM CET</span>
         </div>
       </div>
     </div>
 
-    <!-- CONTACT FORM -->
     <div class="bg-white rounded-[20px] p-6 md:p-[35px] shadow-[0_10px_25px_rgba(0,0,0,0.05)]">
-      <h3 class="mb-[25px] font-bold text-xl text-text-dark">Send Us a Message</h3>
+      <h3 class="mb-[25px] font-bold text-xl text-text-dark" data-i18n="message_title">Send Us a Message</h3>
       <form id="contactForm">
-        <!-- Status Message -->
         <div id="formStatus" class="hidden mb-4 p-3 rounded-xl font-medium"></div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-5">
           <div class="flex flex-col mb-5">
-            <label for="name" class="mb-2 font-semibold text-text-dark">Full Name</label>
+            <label for="name" class="mb-2 font-semibold text-text-dark" data-i18n="label_name">Full Name</label>
             <input type="text" id="name" name="name" required class="p-[14px] border border-gray-200 rounded-[12px] outline-none text-base focus:border-branch-blue transition-colors">
           </div>
 
           <div class="flex flex-col mb-5">
-            <label for="email" class="mb-2 font-semibold text-text-dark">Email</label>
+            <label for="email" class="mb-2 font-semibold text-text-dark" data-i18n="label_email">Email</label>
             <input type="email" id="email" name="email" required class="p-[14px] border border-gray-200 rounded-[12px] outline-none text-base focus:border-branch-blue transition-colors">
           </div>
         </div>
 
         <div class="flex flex-col mb-5">
-          <label for="company" class="mb-2 font-semibold text-text-dark">Company (optional)</label>
+          <label for="company" class="mb-2 font-semibold text-text-dark" data-i18n="label_company">Company (optional)</label>
           <input type="text" id="company" name="company" class="p-[14px] border border-gray-200 rounded-[12px] outline-none text-base focus:border-branch-blue transition-colors">
         </div>
 
         <div class="flex flex-col mb-5">
-          <label for="projectType" class="mb-2 font-semibold text-text-dark">Project Type</label>
-          <select id="projectType" name="projectType" class="p-[14px] border border-gray-200 rounded-[12px] outline-none text-base focus:border-branch-blue transition-colors bg-white">
-            <option value="">Select project type</option>
-            <option value="Web Development">Web Development</option>
-            <option value="Mobile App">Mobile App</option>
-            <option value="Social Media Marketing">Social Media Marketing</option>
-            <option value="Content Creation">Content Creation</option>
-            <option value="Other">Other</option>
-          </select>
+          <label for="projectType" class="mb-2 font-semibold text-text-dark" data-i18n="label_project">Sector type</label>
+          <!-- client type in what sector open field -->
+          <input type="text" id="projectType" name="projectType" required class="p-[14px] border border-gray-200 rounded-[12px] outline-none text-base focus:border-branch-blue transition-colors">
+
         </div>
 
         <div class="flex flex-col mb-5">
-          <label for="message" class="mb-2 font-semibold text-text-dark">Message</label>
+          <label for="message" class="mb-2 font-semibold text-text-dark" data-i18n="label_message">Message</label>
           <textarea id="message" name="message" rows="6" required class="p-[14px] border border-gray-200 rounded-[12px] outline-none text-base resize-y focus:border-branch-blue transition-colors"></textarea>
         </div>
 
         <button type="submit" class="w-full border-none rounded-[12px] p-4 text-white font-semibold cursor-pointer bg-gradient-to-r from-branch-blue-dark to-branch-blue hover:shadow-lg transition-all hover:-translate-y-0.5">
-          Send Inquiry →
+          <span data-i18n="btn_send">Send Inquiry →</span>
         </button>
       </form>
     </div>
   </section>
 
-  <!-- BENEFITS SECTION -->
   <section class="px-5 md:px-[10%] pb-[60px] md:pb-[80px] grid grid-cols-1 md:grid-cols-3 gap-[20px] md:gap-[25px]">
     <div class="bg-white rounded-[20px] p-6 md:p-[30px] text-center shadow-[0_10px_25px_rgba(0,0,0,0.05)]">
-      <h3 class="font-bold text-lg text-text-dark">Quick Response</h3>
-      <p class="mt-2.5 text-text-light">We respond within 24 hours.</p>
+      <h3 class="font-bold text-lg text-text-dark" data-i18n="benefit1_title">Quick Response</h3>
+      <p class="mt-2.5 text-text-light" data-i18n="benefit1_desc">We respond within 24 hours.</p>
     </div>
     <div class="bg-white rounded-[20px] p-6 md:p-[30px] text-center shadow-[0_10px_25px_rgba(0,0,0,0.05)]">
-      <h3 class="font-bold text-lg text-text-dark">Tailored Solutions</h3>
-      <p class="mt-2.5 text-text-light">Every project is unique.</p>
+      <h3 class="font-bold text-lg text-text-dark" data-i18n="benefit2_title">Tailored Solutions</h3>
+      <p class="mt-2.5 text-text-light" data-i18n="benefit2_desc">Every project is unique.</p>
     </div>
     <div class="bg-white rounded-[20px] p-6 md:p-[30px] text-center shadow-[0_10px_25px_rgba(0,0,0,0.05)]">
-      <h3 class="font-bold text-lg text-text-dark">Long-Term Partnership</h3>
-      <p class="mt-2.5 text-text-light">Focused on sustainable growth.</p>
+      <h3 class="font-bold text-lg text-text-dark" data-i18n="benefit3_title">Long-Term Partnership</h3>
+      <p class="mt-2.5 text-text-light" data-i18n="benefit3_desc">Focused on sustainable growth.</p>
     </div>
   </section>
 
-  <!-- CTA SECTION -->
   <section class="px-5 md:px-[10%] py-[40px] md:py-[60px] flex flex-col md:flex-row justify-between items-center gap-[25px] md:gap-0 text-white bg-gradient-to-r from-branch-blue-dark via-branch-blue to-branch-green text-center md:text-left">
     <div>
-      <h2 class="text-[1.5rem] md:text-[2rem] font-bold">Have a project in mind?</h2>
-      <p class="mt-2.5 text-white/90 text-lg">Let's connect and turn your ideas into successful results.</p>
+      <h2 class="text-[1.5rem] md:text-[2rem] font-bold" data-i18n="cta_contact_title">Have a project in mind?</h2>
+      <p class="mt-2.5 text-white/90 text-lg" data-i18n="cta_contact_desc">Let's connect and turn your ideas into successful results.</p>
     </div>
 
     <a href="https://wa.me/31645055904?text=Hi%20Branch!%20I'd%20like%20to%20discuss%20a%20project." 
        class="bg-white text-branch-blue px-[30px] py-[15px] rounded-[12px] font-semibold transition-all hover:shadow-lg hover:-translate-y-0.5 w-full md:w-auto max-w-[280px] md:max-w-none text-center" 
        target="_blank" 
        rel="noopener noreferrer">
-      Start a Conversation →
+      <span data-i18n="btn_conversation">Start a Conversation →</span>
     </a>
   </section>
 
-  <!-- FOOTER -->
   <footer class="py-[40px] px-5 text-center bg-white border-t border-gray-100">
     <div class="flex flex-col md:flex-row justify-center items-center gap-[10px] md:gap-[12px]">
       <img src="./images/main-logo-text.png" alt="Branch" class="w-[120px] md:w-[150px]">
-      <p class="text-text-light text-sm md:text-base">© 2026 Branch. All rights reserved.</p>
+      <p class="text-text-light text-sm md:text-base">&copy; 2026 <span class="font-semibold" translate="no">Branch</span>. <span data-i18n="footer_rights">All rights reserved.</span></p>
     </div>
   </footer>
 
   <script src="contact.js"></script>
   <script>
-    // Note: I included your mobile menu logic here in case it isn't fully handled by contact.js
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
 
     hamburger.addEventListener('click', () => {
-      // In Tailwind, instead of toggling an 'active' class, 
-      // you usually toggle 'hidden' and 'flex' classes on the container.
       navLinks.classList.toggle('hidden');
       navLinks.classList.toggle('flex');
       navLinks.classList.toggle('flex-col');
@@ -232,6 +218,7 @@
       navLinks.classList.toggle('shadow-lg');
     });
   </script>
-  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <!-- NEW EXTERNAL TRANSLATION SCRIPT -->
+  <script src="translations.js"></script>
 </body>
 </html>
