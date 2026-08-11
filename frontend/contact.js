@@ -3,11 +3,11 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
     console.log("Form submission triggered.");
 
     const statusDiv = document.getElementById('formStatus');
-    const submitBtn = document.querySelector('.send-btn');
-    
+    const submitBtn = document.querySelector('#contactForm button[type="submit"]');
+
     // Show loading state
     statusDiv.style.display = 'block';
-    statusDiv.style.color = '#1f2937'; 
+    statusDiv.style.color = '#1f2937';
     statusDiv.innerText = "Sending your message...";
     submitBtn.disabled = true;
 
@@ -17,7 +17,6 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
         email: document.getElementById('email').value,
         company: document.getElementById('company').value,
         projectType: document.getElementById('projectType').value,
-        budget: document.getElementById('budget').value,
         message: document.getElementById('message').value
     };
 
@@ -62,9 +61,3 @@ function googleTranslateElementInit() {
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE
       }, 'google_translate_element');
     }
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-
-    hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });

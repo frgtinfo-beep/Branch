@@ -1,43 +1,6 @@
-    // 1. Mobile Hamburger Menu Logic
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
+    // Mobile hamburger menu logic now lives in the shared nav.js (loaded on every page)
 
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'branch-blue-dark': '#032f8a',
-            'branch-blue': '#0bddff',
-            'branch-cyan': '#14b8e6',
-            'branch-green': '#78db55',
-            'background': '#f7f7f7',
-            'text-dark': '#111827',
-            'text-light': '#6b7280',
-          },
-          fontFamily: {
-            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
-          }
-        }
-      }
-    }
-
-    if(hamburger && navLinks) {
-      hamburger.addEventListener('click', () => {
-        navLinks.classList.toggle('hidden');
-        navLinks.classList.toggle('flex');
-        navLinks.classList.toggle('flex-col');
-        navLinks.classList.toggle('absolute');
-        navLinks.classList.toggle('top-full');
-        navLinks.classList.toggle('left-0');
-        navLinks.classList.toggle('w-full');
-        navLinks.classList.toggle('bg-white/95');
-        navLinks.classList.toggle('backdrop-blur-xl');
-        navLinks.classList.toggle('p-6');
-        navLinks.classList.toggle('shadow-2xl');
-      });
-    }
-
-    // 2. Intersection Observer for Scroll Animations
+    // Intersection Observer for Scroll Animations
     document.addEventListener("DOMContentLoaded", function() {
       const reveals = document.querySelectorAll(".reveal");
 

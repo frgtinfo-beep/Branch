@@ -4,8 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us | Branch</title>
+  <meta name="description" content="Branch was built on faith before fear, character before money, and people before profit. Meet the team helping entrepreneurs turn ideas into real growth.">
+  <link rel="canonical" href="https://infobranch.nl/about.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Branch">
+  <meta property="og:title" content="About Us | Branch">
+  <meta property="og:description" content="Branch was built on faith before fear, character before money, and people before profit. Meet the team helping entrepreneurs turn ideas into real growth.">
+  <meta property="og:url" content="https://infobranch.nl/about.html">
+  <meta property="og:image" content="https://infobranch.nl/images/logo-text.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="About Us | Branch">
+  <meta name="twitter:description" content="Branch was built on faith before fear, character before money, and people before profit. Meet the team helping entrepreneurs turn ideas into real growth.">
+  <meta name="twitter:image" content="https://infobranch.nl/images/logo-text.png">
   <link rel="icon" href="./images/Ontwerp zonder titel-3.png" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -21,69 +37,70 @@
             'text-light': '#6b7280',
           },
           fontFamily: {
-            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
           }
         }
       }
     }
   </script>
 
-  <style type="text/tailwindcss">
-    @layer utilities {
-      .text-brand-gradient {
-        background: linear-gradient(90deg, #032f8a, #0b6dff, #14b8e6, #78db55);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-    }
-  </style>
 </head>
 <body class="bg-background text-text-dark font-sans leading-relaxed">
 
-  <nav class="absolute top-0 left-0 w-full flex justify-between items-center px-5 md:px-[60px] py-4 z-10 bg-white/100 backdrop-blur-md border-b border-black/5">
-    <div class="flex items-center gap-2.5">
-      <span class="font-semibold text-[1.4rem] text-brand-gradient" translate="no">Branch</span>
-    </div>
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-white focus:text-branch-blue-dark focus:font-bold focus:px-4 focus:py-2 focus:shadow-lg">Skip to content</a>
 
-    <!-- Right Controls Container -->
-    <div class="flex items-center gap-4 ml-auto md:ml-0 md:order-2">
-      <!-- Built-in Custom Language Picker -->
-      <div class="relative" id="language-dropdown-container">
-        <button id="language-btn" class="flex items-center gap-2 text-[0.95rem] font-medium text-gray-700 hover:text-branch-blue transition-colors px-3 py-1.5 rounded-full hover:bg-gray-100/60 focus:outline-none">
-          <i class="fa-solid fa-globe text-base text-gray-500"></i>
-          <span id="current-lang-text">English</span>
-          <i id="lang-arrow" class="fa-solid fa-chevron-down text-[0.7rem] text-gray-400 transition-transform duration-200"></i>
-        </button>
+  <nav id="site-nav" class="fixed top-0 left-0 w-full z-50 bg-white/70 backdrop-blur-xl backdrop-saturate-150 border-b border-white/50 shadow-[0_8px_32px_rgba(3,47,138,0.08)] transition-shadow duration-300">
+    <div class="flex justify-between items-center px-5 md:px-[60px] py-4 max-w-[1400px] mx-auto">
+      <div class="flex items-center gap-2.5">
+        <a href="index.html" class="font-black text-[1.6rem] tracking-tight text-brand-gradient" translate="no">Branch.</a>
+      </div>
 
-        <!-- Dropdown Menu -->
-        <div id="language-menu" class="hidden absolute right-0 mt-2 w-44 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.12)] border border-gray-100 py-2 z-50 transition-all">
-          <button class="lang-option w-full text-left px-4 py-2 text-sm font-medium text-branch-blue bg-blue-50/60 flex justify-between items-center transition-colors hover:bg-gray-50" data-lang="en">
-            <span>English</span>
-            <i class="fa-solid fa-check text-xs check-icon"></i>
+      <ul class="hidden md:flex items-center gap-1 list-none" aria-label="Primary">
+        <li><a href="index.html" class="text-[0.95rem] font-bold uppercase tracking-wide px-4 py-2 text-text-dark transition-colors duration-300 hover:text-branch-blue" data-i18n="nav_home">Home</a></li>
+        <li><a href="about.html" aria-current="page" class="text-[0.95rem] font-bold uppercase tracking-wide px-4 py-2 text-text-dark transition-colors duration-300 hover:text-branch-blue" data-i18n="nav_about">About</a></li>
+        <li><a href="contact.html" class="text-[0.95rem] font-bold uppercase tracking-wide px-4 py-2 text-text-dark transition-colors duration-300 hover:text-branch-blue" data-i18n="nav_contact">Contact</a></li>
+      </ul>
+
+      <div class="flex items-center gap-2">
+        <div class="relative" id="language-dropdown-container">
+          <button id="language-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center gap-2 text-[0.85rem] font-bold uppercase tracking-wide text-text-dark hover:text-branch-blue transition-colors px-3 py-1.5 focus:outline-none">
+            <i class="fa-solid fa-globe text-base"></i>
+            <span id="current-lang-text">English</span>
+            <i id="lang-arrow" class="fa-solid fa-chevron-down text-[0.65rem] transition-transform duration-200"></i>
           </button>
-          <button class="lang-option w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 flex justify-between items-center transition-colors" data-lang="nl">
-            <span>Nederlands</span>
-            <i class="fa-solid fa-check text-xs check-icon hidden"></i>
-          </button>
+
+          <div id="language-menu" class="hidden absolute right-0 mt-2 w-44 rounded-xl overflow-hidden bg-white/80 backdrop-blur-xl backdrop-saturate-150 border border-white/60 shadow-[0_8px_32px_rgba(3,47,138,0.18)] py-1 z-50">
+            <button class="lang-option w-full text-left px-4 py-2.5 text-sm font-bold text-branch-blue bg-blue-50 flex justify-between items-center transition-colors hover:bg-gray-50" data-lang="en">
+              <span>English</span>
+              <i class="fa-solid fa-check text-xs check-icon"></i>
+            </button>
+            <button class="lang-option w-full text-left px-4 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition-colors" data-lang="nl">
+              <span>Nederlands</span>
+              <i class="fa-solid fa-check text-xs check-icon hidden"></i>
+            </button>
+          </div>
         </div>
-      </div>
 
-      <!-- Hamburger -->
-      <div class="block md:hidden cursor-pointer text-branch-blue-dark hamburger">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
+        <button id="hamburger-btn" class="hamburger block md:hidden cursor-pointer text-branch-blue-dark p-2" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line class="hamburger-line line-top" x1="3" y1="6" x2="21" y2="6"></line>
+            <line class="hamburger-line line-mid" x1="3" y1="12" x2="21" y2="12"></line>
+            <line class="hamburger-line line-bot" x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </div>
 
-    <ul class="hidden md:flex gap-1.5 list-none nav-links md:order-1">
-      <li><a href="index.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5" data-i18n="nav_home"><i class="fa-solid fa-house mr-1"></i> Home</a></li>
-      <li><a href="about.html" class="text-[1.1rem] px-4 py-2 rounded-full transition-all duration-300 text-branch-blue bg-branch-blue/5" data-i18n="nav_about"><i class="fa-solid fa-circle-info mr-1"></i> About</a></li> 
-      <li><a href="contact.html" class="text-[1.1rem] px-4 py-2 rounded-full text-text-dark transition-all duration-300 hover:text-branch-blue hover:bg-branch-blue/5" data-i18n="nav_contact"><i class="fa-solid fa-envelope mr-1"></i> Contact</a></li>
-    </ul>
+    <div id="mobile-menu" class="md:hidden border-t border-white/50 bg-white/80 backdrop-blur-xl backdrop-saturate-150">
+      <ul class="flex flex-col px-5 py-3" aria-label="Primary mobile">
+        <li><a href="index.html" class="block py-3 text-[1.05rem] font-bold uppercase tracking-wide text-text-dark" data-i18n="nav_home">Home</a></li>
+        <li><a href="about.html" aria-current="page" class="block py-3 text-[1.05rem] font-bold uppercase tracking-wide text-text-dark border-t border-black/10" data-i18n="nav_about">About</a></li>
+        <li><a href="contact.html" class="block py-3 text-[1.05rem] font-bold uppercase tracking-wide text-text-dark border-t border-black/10" data-i18n="nav_contact">Contact</a></li>
+      </ul>
+    </div>
   </nav>
+
+  <main id="main">
 
   <header class="relative w-full pt-[180px] pb-[100px] px-5 bg-[radial-gradient(circle_at_top,_#ffffff_0%,_#f7f7f7_100%)] flex flex-col items-center text-center">
     <div class="max-w-[800px]">
@@ -92,14 +109,14 @@
       </span>
       <h1 class="text-[2.5rem] md:text-[3.5rem] font-semibold leading-[1.1] mb-6 text-text-dark" data-i18n="about_title">
         We don't just build businesses. <br>
-        <span class="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-branch-blue-dark via-branch-blue to-branch-green">We help people grow.</span>
+        <span class="italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-branch-blue-dark via-branch-blue to-branch-green">We help people grow.</span>
       </h1>
       <p class="text-[1.2rem] text-text-light mb-10" data-i18n="about_desc">
         <span class="font-semibold" translate="no">Branch </span> helps entrepreneurs and businesses turn ideas into something real with the strategy, structure and execution to grow sustainably.
       </p>
       
-      <div class="bg-white p-[30px] md:p-[30px_40px] rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] border-l-4 border-branch-green mt-10 text-left md:text-center">
-        <blockquote class="font-serif text-[1.3rem] italic text-branch-blue-dark leading-relaxed m-0" data-i18n="about_quote">
+      <div class="bg-white/60 backdrop-blur-xl backdrop-saturate-150 p-[30px] md:p-[30px_40px] rounded-2xl shadow-[0_10px_30px_rgba(3,47,138,0.08)] border border-white/60 border-l-4 border-l-branch-green mt-10 text-left md:text-center">
+        <blockquote class="text-[1.3rem] italic text-branch-blue-dark leading-relaxed m-0" data-i18n="about_quote">
           <i class="fa-solid fa-quote-left mr-2"></i> "A <span class="font-semibold" translate="no"> Branch</span> never grows by itself. It grows because something beneath it keeps giving it life." <i class="fa-solid fa-quote-right ml-2"></i>
         </blockquote>
       </div>
@@ -139,37 +156,37 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
-        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+        <div class="group bg-white/60 backdrop-blur-xl backdrop-saturate-150 border border-white/60 p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(3,47,138,0.05)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(3,47,138,0.12)]">
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
           <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-shield-heart text-branch-cyan text-[1.2rem] mr-2"></i> <span data-i18n="faith_title">Faith before fear</span></h3>
           <p class="text-text-light leading-relaxed" data-i18n="faith_desc">We start with belief, seeing and trusting your vision before we ever talk certainty.</p>
         </div>
 
-        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+        <div class="group bg-white/60 backdrop-blur-xl backdrop-saturate-150 border border-white/60 p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(3,47,138,0.05)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(3,47,138,0.12)]">
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
           <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-scale-balanced text-branch-cyan text-[1.2rem] mr-2"></i> <span data-i18n="character_title">Character before money</span></h3>
           <p class="text-text-light leading-relaxed" data-i18n="character_desc">Money follows character. Not the other way around.</p>
         </div>
 
-        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+        <div class="group bg-white/60 backdrop-blur-xl backdrop-saturate-150 border border-white/60 p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(3,47,138,0.05)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(3,47,138,0.12)]">
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
           <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-users text-branch-cyan text-[1.2rem] mr-2"></i> <span data-i18n="people_title">People before profit</span></h3>
           <p class="text-text-light leading-relaxed" data-i18n="people_desc">People are never a means. People are the mission.</p>
         </div>
 
-        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+        <div class="group bg-white/60 backdrop-blur-xl backdrop-saturate-150 border border-white/60 p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(3,47,138,0.05)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(3,47,138,0.12)]">
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
           <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-anchor text-branch-cyan text-[1.2rem] mr-2"></i> <span data-i18n="discipline_title">Discipline before motivation</span></h3>
           <p class="text-text-light leading-relaxed" data-i18n="discipline_desc">Motivation comes and goes. Discipline stays.</p>
         </div>
 
-        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+        <div class="group bg-white/60 backdrop-blur-xl backdrop-saturate-150 border border-white/60 p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(3,47,138,0.05)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(3,47,138,0.12)]">
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
           <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-handshake-angle text-branch-cyan text-[1.2rem] mr-2"></i> <span data-i18n="build_title">Build together</span></h3>
           <p class="text-text-light leading-relaxed" data-i18n="build_desc">Alone you may go faster. Together we go further, and we leave people better than we found them.</p>
         </div>
 
-        <div class="group bg-white p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+        <div class="group bg-white/60 backdrop-blur-xl backdrop-saturate-150 border border-white/60 p-[40px_30px] rounded-2xl shadow-[0_4px_20px_rgba(3,47,138,0.05)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(3,47,138,0.12)]">
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-branch-cyan to-branch-green"></div>
           <h3 class="text-[1.3rem] text-branch-blue-dark mb-[15px] font-semibold"><i class="fa-solid fa-hand-holding-heart text-branch-cyan text-[1.2rem] mr-2"></i> <span data-i18n="meeting_title">Every meeting adds value</span></h3>
           <p class="text-text-light leading-relaxed" data-i18n="meeting_desc">Not just to a business. To a person.</p>
@@ -179,10 +196,12 @@
   </section>
 
   <section class="bg-[#0b1121] pt-[60px] pb-5 px-5 text-center">
-    <p class="max-w-[800px] mx-auto text-white/70 font-serif italic text-[1.2rem] leading-relaxed" data-i18n="footer_quote">
+    <p class="max-w-[800px] mx-auto text-white/70 italic text-[1.2rem] leading-relaxed" data-i18n="footer_quote">
       <i class="fa-solid fa-sun mr-2.5"></i> "Built for everyone who ever planted a seed in someone else's life, knowing they might never sit in the shade of the tree."
     </p>
   </section>
+
+  </main>
 
   <footer class="bg-gradient-to-br from-branch-blue-dark to-[#021f5c] text-white pt-[60px] pb-5 px-5">
     <div class="flex flex-col md:flex-row justify-between max-w-[1100px] mx-auto mb-10 text-left gap-10 md:gap-[30px]">
@@ -211,6 +230,7 @@
     </div>
   </footer>
 
+  <script src="nav.js"></script>
   <script src="about.js"></script>
   <!-- NEW EXTERNAL TRANSLATION SCRIPT -->
   <script src="translations.js"></script>

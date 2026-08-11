@@ -1,19 +1,7 @@
-// ==========================================
-// 1. MOBILE NAVBAR CONTROLS
-// ==========================================
-
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.nav-links');
-
-// Safety check to ensure elements exist before adding event listeners
-if (hamburger && navLinks) {
-  hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-  });
-}
+// Mobile hamburger menu logic now lives in the shared nav.js (loaded on every page)
 
 // ==========================================
-// 2. GOOGLE TRANSLATE WIDGET
+// GOOGLE TRANSLATE WIDGET
 // ==========================================
 
 function googleTranslateElementInit() {

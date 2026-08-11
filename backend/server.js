@@ -65,8 +65,8 @@ app.get("/api/projects", async (request, response) => {
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,        
-    pass: process.env.EMAIL_PASS 
+    user: process.env.GMAIL_USER,        
+    pass: process.env.GMAIL_APP_PASSWORD
   }
 });
 
@@ -78,8 +78,8 @@ app.post("/api/contact", async (request, response) => {
     try {
         // --- 1. Send Notification to Admin (You) ---
         await transporter.sendMail({
-            from: `"Branch Inquiries" <${process.env.EMAIL_USER}>`,
-            to: "contact@infobranch.nl", // Sending to yourself
+            from: `"Branch Inquiries" <${process.env.GMAIL_USER}>`,
+            to: "frgtinfo@gmail.com", // Sending to yourself
             replyTo: email, 
             subject: `💼 New Project Inquiry: ${name}`,
             html: `
@@ -134,7 +134,7 @@ app.post("/api/contact", async (request, response) => {
 
         // --- 2. Send Confirmation to Client ---
         await transporter.sendMail({
-            from: `"Branch" <${process.env.EMAIL_USER}>`,
+            from: `"Branch" <${process.env.GMAIL_USER}>`,
             to: email, // Sending to the client who submitted the form
             subject: `Thank you for reaching out, ${name}!`,
             html: `

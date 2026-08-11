@@ -5,6 +5,7 @@
       en: {
         nav_home: "Home",
         nav_about: "About",
+        nav_projects: "Projects",
         nav_contact: "Contact",
         footer_about: "Helping businesses turn strategic opportunities into successful, scalable projects.",
         footer_quicklinks: "Quick Links",
@@ -14,7 +15,7 @@
         service_3: "Growth Strategy",
         footer_rights: "All rights reserved.",
         about_badge: "About Us",
-        about_title: "We don't just build businesses. <br>\n<span class=\"font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-branch-blue-dark via-branch-blue to-branch-green\">We help people grow.</span>",
+        about_title: "We don't just build businesses. <br>\n<span class=\"italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-branch-blue-dark via-branch-blue to-branch-green\">We help people grow.</span>",
         about_desc: "<span class=\"font-semibold\" translate=\"no\">Branch</span> helps entrepreneurs and businesses turn ideas into something real with the strategy, structure and execution to grow sustainably.",
         about_quote: "\"A <span class=\"font-semibold\" translate=\"no\"> Branch</span> never grows by itself. It grows because something beneath it keeps giving it life.\"",
         roots_title: "Our Roots",
@@ -66,6 +67,7 @@
       nl: {
         nav_home: "Startpagina",
         nav_about: "Over Ons",
+        nav_projects: "Projecten",
         nav_contact: "Contact",
         footer_about: "Bedrijven helpen strategische kansen om te zetten in succesvolle, schaalbare projecten.",
         footer_quicklinks: "Snelle Links",
@@ -75,7 +77,7 @@
         service_3: "Groeistrategie",
         footer_rights: "Alle rechten voorbehouden.",
         about_badge: "Over Ons",
-        about_title: "We bouwen niet alleen bedrijven. <br>\n<span class=\"font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-branch-blue-dark via-branch-blue to-branch-green\">We helpen mensen groeien.</span>",
+        about_title: "We bouwen niet alleen bedrijven. <br>\n<span class=\"italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-branch-blue-dark via-branch-blue to-branch-green\">We helpen mensen groeien.</span>",
         about_desc: "<span class=\"font-semibold\" translate=\"no\">Branch</span> helpt ondernemers en bedrijven ideeën om te zetten in werkelijkheid, met de strategie, structuur en uitvoering om duurzaam te groeien.",
         about_quote: "\"Een <span class=\"font-semibold\" translate=\"no\"> Branch (tak)</span> groeit nooit vanzelf. Hij groeit omdat iets eronder hem leven blijft geven.\"",
         roots_title: "Onze Wortels",

@@ -1,0 +1,58 @@
+/* Shared brand tokens, nav behavior, and glass utilities — used on every page */
+
+:root {
+  --branch-blue-dark: #032F8A;
+  --branch-blue: #0B6DFF;
+  --branch-cyan: #14B8E6;
+  --branch-green: #78DB55;
+  --background: #F7F7F7;
+  --white: #FFFFFF;
+  --text-dark: #111827;
+  --text-light: #6B7280;
+}
+
+img { max-width: 100%; height: auto; }
+
+/* Brand gradient (matches logo-text.png: navy -> blue -> cyan -> green) */
+.bg-brand-gradient { background: linear-gradient(135deg, #032F8A 0%, #0BDDFF 25%, #14B8E6 50%, #78DB55 100%); }
+.bg-cta-gradient { background: linear-gradient(115deg, #78DB55 0%, #14B8E6 100%); }
+.text-brand-gradient {
+  background: linear-gradient(90deg, #032F8A, #0BDDFF, #14B8E6, #78DB55);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Subtle glassmorphism: translucent surface + blur + soft border/shadow */
+.glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(3, 47, 138, 0.08);
+}
+
+.glass-dark {
+  background: rgba(5, 15, 40, 0.45);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* Shared navbar: same markup + behavior on every page */
+#mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.65,0,0.35,1); }
+#mobile-menu.open { max-height: 400px; }
+.hamburger-line { transition: transform 0.3s ease, opacity 0.3s ease; transform-origin: center; }
+.hamburger.open .line-top { transform: translateY(6px) rotate(45deg); }
+.hamburger.open .line-mid { opacity: 0; }
+.hamburger.open .line-bot { transform: translateY(-6px) rotate(-45deg); }
+
+a:focus-visible, button:focus-visible { outline: 2px solid #78DB55; outline-offset: 3px; border-radius: 4px; }
+
+[aria-current="page"] { color: #05070F; position: relative; }
+[aria-current="page"]::after { content:''; position: absolute; left: 0; right: 0; bottom: 2px; height: 2px; background: #78DB55; }
+
+@media (prefers-reduced-motion: reduce) {
+  #mobile-menu { transition: none; }
+}
