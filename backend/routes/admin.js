@@ -19,12 +19,21 @@ router.post("/admin/login", async (req, res) => {
   const validPassword =
     typeof password === "string" && (await bcrypt.compare(password, config.admin.passwordHash()));
 
+  const wantsJson = req.is("application/json");
+
   if (!validUsername || !validPassword) {
-    return res.status(401).json({ error: "Invalid credentials" });
+    if (wantsJson) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+    return res.redirect("/admin/login");
   }
 
   req.session.isAdmin = true;
-  res.json({ success: true });
+
+  if (wantsJson) {
+    return res.json({ success: true });
+  }
+  res.redirect("/admin");
 });
 
 router.post("/admin/logout", (req, res) => {

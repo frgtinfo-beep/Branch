@@ -34,6 +34,7 @@ app.use(
     },
   }),
 );
+app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret: config.sessionSecret(),
