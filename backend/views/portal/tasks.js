@@ -31,8 +31,9 @@ ${PORTAL_BRAND_HEAD}
   .modal label { display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-top: 14px; margin-bottom: 4px; }
   .modal input, .modal textarea, .modal select { width: 100%; box-sizing: border-box; padding: 9px 11px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.85rem; font-family: inherit; }
   .modal textarea { min-height: 70px; resize: vertical; }
-  .assignee-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-  .assignee-list label { display: flex; align-items: center; gap: 4px; font-weight: 500; font-size: 0.8rem; background: #f3f4f6; padding: 4px 8px; border-radius: 999px; margin: 0; }
+  .assignee-list { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; max-height: 180px; overflow-y: auto; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 8px; }
+  .assignee-list label { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.85rem; color: var(--ink); padding: 5px 2px; margin: 0; white-space: nowrap; }
+  .assignee-list label input { width: auto; flex: none; }
   .modal-actions { display: flex; gap: 10px; margin-top: 22px; justify-content: flex-end; }
   .time-entries { margin-top: 16px; border-top: 1px solid #e5e7eb; padding-top: 14px; }
   .time-entry-row { display: flex; justify-content: space-between; font-size: 0.8rem; padding: 4px 0; color: var(--text-light); }
