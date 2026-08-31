@@ -6,6 +6,7 @@
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
     "seed-client": "node backend/scripts/seed-client.js",
+    "seed-team-member": "node backend/scripts/seed-team-member.js",
     "hash-admin-password": "node backend/scripts/hash-admin-password.js",
     "simulate-transaction": "node backend/scripts/simulate-transaction.js",
     "run-billing": "node backend/scripts/run-billing.js"

@@ -17,6 +17,13 @@ const transactionsRouter = require("./routes/transactions");
 const onboardingRouter = require("./routes/onboarding");
 const webhooksRouter = require("./routes/webhooks");
 const adminRouter = require("./routes/admin");
+const portalAuthRouter = require("./routes/portal/auth");
+const portalUsersRouter = require("./routes/portal/users");
+const portalTasksRouter = require("./routes/portal/tasks");
+const portalAvailabilityRouter = require("./routes/portal/availability");
+const portalCompanyProfilesRouter = require("./routes/portal/companyProfiles");
+const portalSettingsRouter = require("./routes/portal/settings");
+const portalReportsRouter = require("./routes/portal/reports");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -55,6 +62,13 @@ app.use("/api/transactions", transactionsRouter);
 app.use("/onboarding", onboardingRouter);
 app.use("/webhooks", webhooksRouter);
 app.use(adminRouter);
+app.use(portalAuthRouter);
+app.use(portalUsersRouter);
+app.use(portalTasksRouter);
+app.use(portalAvailabilityRouter);
+app.use(portalCompanyProfilesRouter);
+app.use(portalSettingsRouter);
+app.use(portalReportsRouter);
 
 // --- API Endpoints ---
 

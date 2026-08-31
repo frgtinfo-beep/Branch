@@ -24,12 +24,62 @@ async function billingRuns() {
   return (await getDatabase()).collection("billing_runs");
 }
 
+// --- Team portal collections ---
+
+async function users() {
+  return (await getDatabase()).collection("users");
+}
+
+async function tasks() {
+  return (await getDatabase()).collection("tasks");
+}
+
+async function timeEntries() {
+  return (await getDatabase()).collection("timeEntries");
+}
+
+async function availability() {
+  return (await getDatabase()).collection("availability");
+}
+
+async function companyProfiles() {
+  return (await getDatabase()).collection("companyProfiles");
+}
+
+async function deliverables() {
+  return (await getDatabase()).collection("deliverables");
+}
+
+async function journeyStages() {
+  return (await getDatabase()).collection("journeyStages");
+}
+
+const DEFAULT_JOURNEY_STAGES = ["Kennismaking", "Voorstel", "Onderhandeling", "Actief", "Afgerond"];
+
 // Idempotent — safe to call on every startup.
 async function ensureIndexes() {
-  const [clientsCol, transactionsCol, billingRunsCol] = await Promise.all([
+  const [
+    clientsCol,
+    transactionsCol,
+    billingRunsCol,
+    usersCol,
+    tasksCol,
+    timeEntriesCol,
+    availabilityCol,
+    companyProfilesCol,
+    deliverablesCol,
+    journeyStagesCol,
+  ] = await Promise.all([
     clients(),
     transactions(),
     billingRuns(),
+    users(),
+    tasks(),
+    timeEntries(),
+    availability(),
+    companyProfiles(),
+    deliverables(),
+    journeyStages(),
   ]);
 
   await Promise.all([
@@ -46,7 +96,38 @@ async function ensureIndexes() {
     // One billing_run per client per period — lets the daily job upsert
     // safely if it's ever triggered twice for the same collection date.
     billingRunsCol.createIndex({ client_id: 1, period_end: 1 }, { unique: true }),
+    usersCol.createIndex({ email: 1 }, { unique: true }),
+    usersCol.createIndex({ role: 1, active: 1 }),
+    tasksCol.createIndex({ assigneeIds: 1, status: 1 }),
+    tasksCol.createIndex({ status: 1, deadline: 1 }),
+    tasksCol.createIndex({ companyProfileId: 1 }, { sparse: true }),
+    timeEntriesCol.createIndex({ taskId: 1 }),
+    timeEntriesCol.createIndex({ personId: 1, date: 1 }),
+    availabilityCol.createIndex({ personId: 1, date: 1 }, { unique: true }),
+    companyProfilesCol.createIndex({ name: 1 }),
+    companyProfilesCol.createIndex({ "board.collaborationStatus": 1 }),
+    deliverablesCol.createIndex({ companyProfileId: 1 }),
+    // Singleton settings doc — never overwrites an admin's existing
+    // customization, just guarantees it exists on a fresh database.
+    journeyStagesCol.updateOne(
+      { _id: "journeyStages" },
+      { $setOnInsert: { stages: DEFAULT_JOURNEY_STAGES.map((name) => ({ name })), updatedAt: new Date() } },
+      { upsert: true },
+    ),
   ]);
 }
 
-module.exports = { getDatabase, clients, transactions, billingRuns, ensureIndexes };
+module.exports = {
+  getDatabase,
+  clients,
+  transactions,
+  billingRuns,
+  users,
+  tasks,
+  timeEntries,
+  availability,
+  companyProfiles,
+  deliverables,
+  journeyStages,
+  ensureIndexes,
+};
