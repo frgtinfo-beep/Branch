@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const { escapeHtml } = require("../utils/html");
 
 let transporter;
 
@@ -31,7 +32,7 @@ async function sendPreCollectionNotice({ client, items, totalAmount, collectionD
       (item) =>
         `<tr>
           <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">${formatDate(item.occurred_at)}</td>
-          <td style="padding: 8px 0; color: #111827; font-size: 14px;">${item.external_transaction_id}</td>
+          <td style="padding: 8px 0; color: #111827; font-size: 14px;">${escapeHtml(item.external_transaction_id)}</td>
           <td style="padding: 8px 0; color: #111827; font-size: 14px; text-align: right;">${formatCurrency(Number(item.fee_amount.toString()), client.currency)}</td>
         </tr>`,
     )
@@ -44,7 +45,7 @@ async function sendPreCollectionNotice({ client, items, totalAmount, collectionD
     html: `
       <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #111827;">
         <h2 style="margin-top: 0;">Upcoming Direct Debit collection</h2>
-        <p>Hi ${client.name},</p>
+        <p>Hi ${escapeHtml(client.name)},</p>
         <p>
           We'll be collecting <strong>${formatCurrency(totalAmount, client.currency)}</strong> via SEPA Direct Debit
           on <strong>${formatDate(collectionDate)}</strong> for ${items.length} transaction(s) reported since your last collection.

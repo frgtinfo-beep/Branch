@@ -42,8 +42,15 @@
   </div>
 
   <script>
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => (
+        { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]
+      ));
+    }
+
     function statusBadge(status) {
-      return '<span class="status status-' + status + '">' + status + '</span>';
+      const safe = escapeHtml(status);
+      return '<span class="status status-' + safe + '">' + safe + '</span>';
     }
 
     function formatMoney(amount, currency) {
@@ -68,10 +75,10 @@
         row.className = "client-row";
         row.dataset.clientId = client.client_id;
         row.innerHTML =
-          "<td>" + client.name + "</td>" +
+          "<td>" + escapeHtml(client.name) + "</td>" +
           "<td>" + statusBadge(client.mandate_status || "none") + "</td>" +
           "<td>" + formatMoney(client.unbilled_total, client.currency) + "</td>" +
-          "<td>" + client.currency + "</td>";
+          "<td>" + escapeHtml(client.currency) + "</td>";
         row.addEventListener("click", () => loadHistory(client.client_id, client.name));
         body.appendChild(row);
       });
@@ -91,10 +98,10 @@
         const row = document.createElement("tr");
         row.innerHTML =
           "<td>" + formatDate(run.period_start) + " – " + formatDate(run.period_end) + "</td>" +
-          "<td>" + run.transaction_count + "</td>" +
+          "<td>" + escapeHtml(run.transaction_count) + "</td>" +
           "<td>" + formatMoney(run.total_amount, run.currency) + "</td>" +
           "<td>" + statusBadge(run.status) + "</td>" +
-          "<td>" + (run.gocardless_payment_id || "—") + "</td>";
+          "<td>" + escapeHtml(run.gocardless_payment_id || "—") + "</td>";
         body.appendChild(row);
       });
       document.getElementById("history").style.display = "block";

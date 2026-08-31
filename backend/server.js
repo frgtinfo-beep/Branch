@@ -4,6 +4,7 @@ const cors = require('cors');
 const session = require("express-session");
 const { ObjectId } = require("mongodb");
 const nodemailer = require("nodemailer");
+const { escapeHtml } = require("./utils/html");
 
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 
@@ -94,16 +95,35 @@ const transporter = nodemailer.createTransport({
 
 // 2. Contact Form Route
 // 2. Contact Form Route
+const EMAIL_PATTERN = /^[^\s@"<>]+@[^\s@"<>]+\.[^\s@"<>]+$/;
+
 app.post("/api/contact", async (request, response) => {
-    const { name, email, company, projectType, budget, message } = request.body;
+    const { name, email, company, projectType, budget, message } = request.body || {};
+
+    if (!name || !email || !message || typeof name !== "string" || typeof email !== "string" || typeof message !== "string") {
+        return response.status(400).json({ success: false, error: "name, email, and message are required" });
+    }
+    if (!EMAIL_PATTERN.test(email)) {
+        return response.status(400).json({ success: false, error: "A valid email address is required" });
+    }
+
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeCompany = escapeHtml(company || "—");
+    const safeProjectType = escapeHtml(projectType || "Not Specified");
+    const safeBudget = escapeHtml(budget || "Not Specified");
+    const safeMessage = escapeHtml(message);
+    // Subject headers can't contain raw newlines — collapse them defensively
+    // even though EMAIL_PATTERN already excludes whitespace from `email`.
+    const subjectSafeName = name.replace(/[\r\n]+/g, " ");
 
     try {
         // --- 1. Send Notification to Admin (You) ---
         await transporter.sendMail({
             from: `"Branch Inquiries" <${process.env.GMAIL_USER}>`,
             to: "frgtinfo@gmail.com", // Sending to yourself
-            replyTo: email, 
-            subject: `💼 New Project Inquiry: ${name}`,
+            replyTo: email,
+            subject: `💼 New Project Inquiry: ${subjectSafeName}`,
             html: `
                 <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
                     <div style="height: 6px; background: linear-gradient(to right, #003399, #009ce3, #6dd45c); background-color: #003399;"></div>
@@ -120,32 +140,32 @@ app.post("/api/contact", async (request, response) => {
                         <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
                             <tr>
                                 <td style="padding: 10px 0; color: #6b7280; font-size: 14px; width: 120px;"><strong>Name:</strong></td>
-                                <td style="padding: 10px 0; color: #111827; font-size: 15px;">${name}</td>
+                                <td style="padding: 10px 0; color: #111827; font-size: 15px;">${safeName}</td>
                             </tr>
                             <tr>
                                 <td style="padding: 10px 0; color: #6b7280; font-size: 14px;"><strong>Email:</strong></td>
                                 <td style="padding: 10px 0; font-size: 15px;">
-                                    <a href="mailto:${email}" style="color: #009ce3; text-decoration: none; font-weight: 500;">${email}</a>
+                                    <a href="mailto:${safeEmail}" style="color: #009ce3; text-decoration: none; font-weight: 500;">${safeEmail}</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding: 10px 0; color: #6b7280; font-size: 14px;"><strong>Company:</strong></td>
-                                <td style="padding: 10px 0; color: #111827; font-size: 15px;">${company || "—"}</td>
+                                <td style="padding: 10px 0; color: #111827; font-size: 15px;">${safeCompany}</td>
                             </tr>
                         </table>
                         <h2 style="color: #111827; font-size: 18px; margin-top: 0; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px;">Project Scope</h2>
                         <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
                             <tr>
                                 <td style="padding: 10px 0; color: #6b7280; font-size: 14px; width: 120px;"><strong>Type:</strong></td>
-                                <td style="padding: 10px 0; color: #111827; font-size: 15px; font-weight: 500;">${projectType || "Not Specified"}</td>
+                                <td style="padding: 10px 0; color: #111827; font-size: 15px; font-weight: 500;">${safeProjectType}</td>
                             </tr>
                             <tr>
                                 <td style="padding: 10px 0; color: #6b7280; font-size: 14px;"><strong>Budget:</strong></td>
-                                <td style="padding: 10px 0; color: #6dd45c; font-size: 15px; font-weight: 600;">${budget || "Not Specified"}</td>
+                                <td style="padding: 10px 0; color: #6dd45c; font-size: 15px; font-weight: 600;">${safeBudget}</td>
                             </tr>
                         </table>
                         <h2 style="color: #111827; font-size: 18px; margin-top: 0; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px;">Message</h2>
-                        <div style="background-color: #f9fafb; padding: 20px; border-radius: 6px; color: #374151; font-size: 15px; line-height: 1.6; white-space: pre-wrap; border-left: 4px solid #009ce3;">${message}</div>
+                        <div style="background-color: #f9fafb; padding: 20px; border-radius: 6px; color: #374151; font-size: 15px; line-height: 1.6; white-space: pre-wrap; border-left: 4px solid #009ce3;">${safeMessage}</div>
                     </div>
                     <div style="background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
                         <p style="color: #94a3b8; font-size: 12px; margin: 0;">© 2026 Branch. All rights reserved.</p>
@@ -158,7 +178,7 @@ app.post("/api/contact", async (request, response) => {
         await transporter.sendMail({
             from: `"Branch" <${process.env.GMAIL_USER}>`,
             to: email, // Sending to the client who submitted the form
-            subject: `Thank you for reaching out, ${name}!`,
+            subject: `Thank you for reaching out, ${subjectSafeName}!`,
             html: `
                 <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
                     
@@ -174,7 +194,7 @@ app.post("/api/contact", async (request, response) => {
 
                     <!-- Content -->
                     <div style="padding: 40px 30px; color: #374151; font-size: 16px; line-height: 1.6;">
-                        <p style="margin-top: 0; font-size: 18px; color: #111827; font-weight: 600;">Hi ${name},</p>
+                        <p style="margin-top: 0; font-size: 18px; color: #111827; font-weight: 600;">Hi ${safeName},</p>
                         
                         <p>Thank you for reaching out to us! This is an automated message to confirm that we have successfully received your project inquiry.</p>
                         
