@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Branch</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 960px; margin: 40px auto; padding: 0 20px; color: #111827; }
+  h1 { font-size: 22px; display: flex; justify-content: space-between; align-items: center; }
+  button.logout { background: none; border: 1px solid #d1d5db; border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+  th { color: #6b7280; font-weight: 600; font-size: 12px; text-transform: uppercase; }
+  .status { padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .status-active { background: #dcfce7; color: #166534; }
+  .status-pending_customer_approval, .status-pending_submission, .status-submitted { background: #fef3c7; color: #92400e; }
+  .status-failed, .status-cancelled, .status-no_mandate { background: #fee2e2; color: #991b1b; }
+  .status-confirmed, .status-paid_out { background: #dcfce7; color: #166534; }
+  tr.client-row { cursor: pointer; }
+  tr.client-row:hover { background: #f9fafb; }
+  #history { display: none; margin-top: 8px; margin-bottom: 24px; }
+  #history h3 { font-size: 14px; color: #6b7280; }
+</style>
+</head>
+<body>
+  <h1>Clients <button class="logout" id="logout">Log out</button></h1>
+  <table id="clients-table">
+    <thead>
+      <tr><th>Client</th><th>Mandate</th><th>Unbilled total</th><th>Currency</th></tr>
+    </thead>
+    <tbody id="clients-body"></tbody>
+  </table>
+
+  <div id="history">
+    <h3 id="history-title"></h3>
+    <table>
+      <thead>
+        <tr><th>Period</th><th>Transactions</th><th>Total</th><th>Status</th><th>GoCardless payment</th></tr>
+      </thead>
+      <tbody id="history-body"></tbody>
+    </table>
+  </div>
+
+  <script>
+    function statusBadge(status) {
+      return '<span class="status status-' + status + '">' + status + '</span>';
+    }
+
+    function formatMoney(amount, currency) {
+      return new Intl.NumberFormat("en-IE", { style: "currency", currency: currency || "EUR" }).format(amount);
+    }
+
+    function formatDate(value) {
+      return value ? new Date(value).toLocaleDateString("en-IE") : "—";
+    }
+
+    async function loadClients() {
+      const response = await fetch("/api/admin/clients");
+      if (response.status === 401) {
+        window.location.href = "/admin/login";
+        return;
+      }
+      const clients = await response.json();
+      const body = document.getElementById("clients-body");
+      body.innerHTML = "";
+      clients.forEach((client) => {
+        const row = document.createElement("tr");
+        row.className = "client-row";
+        row.dataset.clientId = client.client_id;
+        row.innerHTML =
+          "<td>" + client.name + "</td>" +
+          "<td>" + statusBadge(client.mandate_status || "none") + "</td>" +
+          "<td>" + formatMoney(client.unbilled_total, client.currency) + "</td>" +
+          "<td>" + client.currency + "</td>";
+        row.addEventListener("click", () => loadHistory(client.client_id, client.name));
+        body.appendChild(row);
+      });
+    }
+
+    async function loadHistory(clientId, clientName) {
+      const response = await fetch("/api/admin/clients/" + encodeURIComponent(clientId) + "/billing-runs");
+      if (response.status === 401) {
+        window.location.href = "/admin/login";
+        return;
+      }
+      const runs = await response.json();
+      document.getElementById("history-title").textContent = "Collection history — " + clientName;
+      const body = document.getElementById("history-body");
+      body.innerHTML = "";
+      runs.forEach((run) => {
+        const row = document.createElement("tr");
+        row.innerHTML =
+          "<td>" + formatDate(run.period_start) + " – " + formatDate(run.period_end) + "</td>" +
+          "<td>" + run.transaction_count + "</td>" +
+          "<td>" + formatMoney(run.total_amount, run.currency) + "</td>" +
+          "<td>" + statusBadge(run.status) + "</td>" +
+          "<td>" + (run.gocardless_payment_id || "—") + "</td>";
+        body.appendChild(row);
+      });
+      document.getElementById("history").style.display = "block";
+    }
+
+    document.getElementById("logout").addEventListener("click", async () => {
+      await fetch("/admin/logout", { method: "POST" });
+      window.location.href = "/admin/login";
+    });
+
+    loadClients();
+  </script>
+</body>
+</html>

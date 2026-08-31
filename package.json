@@ -1,13 +1,21 @@
 {
   "scripts": {
     "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
+    "dev": "nodemon backend/server.js",
+    "seed-client": "node backend/scripts/seed-client.js",
+    "hash-admin-password": "node backend/scripts/hash-admin-password.js",
+    "simulate-transaction": "node backend/scripts/simulate-transaction.js",
+    "run-billing": "node backend/scripts/run-billing.js"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-session": "^1.18.1",
+    "gocardless-nodejs": "^8.6.4",
     "mongodb": "^7.3.0",
+    "node-cron": "^3.0.3",
     "nodemailer": "^9.0.3",
     "nodemon": "^3.1.14"
   }

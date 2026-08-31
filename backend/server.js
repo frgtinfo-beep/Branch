@@ -1,37 +1,53 @@
 const express = require("express");
 const path = require("path");
 const cors = require('cors');
-const { MongoClient, ObjectId } = require("mongodb");
+const session = require("express-session");
+const { ObjectId } = require("mongodb");
 const nodemailer = require("nodemailer");
 
 require("dotenv").config({ path: path.join(__dirname, ".env") });
+
+const { assertEnv, config } = require("./config/env");
+assertEnv();
+
+const { getDatabase, ensureIndexes } = require("./db");
+const { startBillingScheduler } = require("./jobs/scheduler");
+const transactionsRouter = require("./routes/transactions");
+const onboardingRouter = require("./routes/onboarding");
+const webhooksRouter = require("./routes/webhooks");
+const adminRouter = require("./routes/admin");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-if (!process.env.MONGODB_URI) {
-  throw new Error("MONGODB_URI is missing from your environment configurations.");
-}
-
 // Global Middleware
 app.use(cors({ origin: "*", methods: ["GET", "POST", "OPTIONS"] }));
-app.use(express.json());
+app.use(
+  express.json({
+    // Capture the exact raw bytes GoCardless signed — needed to verify the
+    // webhook signature, which must run against the untouched body, not the
+    // reserialized JSON.
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    },
+  }),
+);
+app.use(
+  session({
+    secret: config.sessionSecret(),
+    resave: false,
+    saveUninitialized: false,
+    cookie: { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production" },
+  }),
+);
 app.use(express.static(path.join(__dirname, "..", "frontend")));
 
-// MongoDB Connection
-const client = new MongoClient(process.env.MONGODB_URI);
-const databaseName = process.env.MONGODB_DB || "Branch";
-let database;
-
-async function getDatabase() {
-  if (!database) {
-    await client.connect();
-    database = client.db(databaseName);
-  }
-  return database;
-}
+app.use("/api/transactions", transactionsRouter);
+app.use("/onboarding", onboardingRouter);
+app.use("/webhooks", webhooksRouter);
+app.use(adminRouter);
 
 // --- API Endpoints ---
 
@@ -181,6 +197,17 @@ app.post("/api/contact", async (request, response) => {
 });
 
 // Start Server
-app.listen(port, "0.0.0.0", () => {
-  console.log(`Branch server is running on port ${port}`);
+async function start() {
+  await ensureIndexes();
+
+  app.listen(port, "0.0.0.0", () => {
+    console.log(`Branch server is running on port ${port}`);
+  });
+
+  startBillingScheduler();
+}
+
+start().catch((error) => {
+  console.error("Failed to start server:", error);
+  process.exit(1);
 });
