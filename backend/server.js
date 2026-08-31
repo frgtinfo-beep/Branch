@@ -20,6 +20,11 @@ const adminRouter = require("./routes/admin");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Render (and most PaaS hosts) terminate TLS at their edge and forward plain
+// HTTP internally — without this, Express sees every request as insecure,
+// so the session cookie's `secure` flag silently drops the cookie entirely.
+app.set("trust proxy", 1);
+
 app.use(cors());
 
 // Global Middleware
