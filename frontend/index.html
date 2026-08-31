@@ -79,15 +79,10 @@
     @keyframes draw { to { stroke-dashoffset: 0; } }
     @keyframes bloom { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
 
-    /* Marquee ticker */
-    .marquee-track { display: flex; width: max-content; animation: marquee 22s linear infinite; }
-    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       .reveal { opacity: 1; transform: none; transition: none; }
       .grow-path, .grow-node { animation: none; opacity: 1; stroke-dashoffset: 0; }
-      .marquee-track { animation: none; }
     }
   </style>
 </head>
@@ -95,7 +90,7 @@
 
   <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-white focus:text-ink focus:font-bold focus:px-4 focus:py-2 focus:shadow-lg">Skip to content</a>
 
-  <nav id="site-nav" class="fixed top-0 left-0 w-full z-50 bg-white/65 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/65 shadow-[0_8px_32px_rgba(3,47,138,0.08)] transition-shadow duration-300">
+  <nav id="site-nav" class="fixed top-0 left-0 w-full z-50 bg-white/30 backdrop-blur-sm backdrop-saturate-150 border-b border-white/40 shadow-[0_8px_32px_rgba(3,47,138,0.08)] transition-shadow duration-300">
     <div class="flex justify-between items-center px-5 md:px-[60px] py-4 max-w-[1400px] mx-auto">
       <div class="flex items-center gap-2.5">
         <a href="index.html" class="font-black text-[1.6rem] tracking-tight text-brand-gradient" translate="no">Branch</a>
@@ -148,7 +143,7 @@
 
   <main id="main">
 
-  <section class="relative w-full bg-brand-gradient pt-32 md:pt-36 pb-16 md:pb-24 px-5 md:px-[60px] overflow-hidden">
+  <section class="relative w-full bg-branch-blue-dark pt-32 md:pt-36 pb-0 px-5 md:px-[60px] overflow-hidden">
     <div class="relative z-10 max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] gap-12 md:gap-8 items-center">
 
       <div class="reveal active">
@@ -159,81 +154,82 @@
 
         <h1 class="text-white text-[3.1rem] md:text-[5.5rem] font-black leading-[0.98] tracking-tight mb-7" data-i18n="hero_title">
           Turn ideas into<br>
-          <span class="italic font-normal text-white">successful projects</span>
+          <span class="italic font-normal text-brand-gradient">successful projects</span>
         </h1>
 
         <p class="text-white/70 text-[1.15rem] max-w-[520px] mb-10 font-normal" data-i18n="hero_desc">
           Branch connects businesses, entrepreneurs, and individuals with the expertise, strategy, and execution needed to launch, grow, and succeed.
         </p>
 
-        <a href="contact.html" class="inline-block py-5 px-10 text-base font-bold uppercase tracking-wide text-ink bg-white transition-all duration-200 hover:-translate-y-1 hover:bg-branch-green shadow-[6px_6px_0_0_#032F8A] hover:shadow-[8px_8px_0_0_#78DB55]" data-i18n="hero_cta">
+        <a href="contact.html" class="inline-flex items-center gap-2 py-5 px-10 text-base font-bold uppercase tracking-wide text-white bg-branch-blue transition-colors duration-200 hover:bg-branch-blue-dark" data-i18n="hero_cta">
           Start a Project &rarr;
         </a>
       </div>
 
       <div class="relative reveal delay-200 hidden md:block" aria-hidden="true">
-        <svg class="w-full h-auto" viewBox="0 0 520 620" fill="none">
-          <path class="grow-path" d="M260 620 L260 430 L370 340 L370 190" stroke="#78DB55" stroke-width="10" stroke-linecap="square"/>
-          <path class="grow-path" d="M260 480 L150 400 L150 250" stroke="#14B8E6" stroke-width="10" stroke-linecap="square" style="animation-delay:0.5s"/>
-          <path class="grow-path" d="M260 430 L260 300 L340 220" stroke="#0B6DFF" stroke-width="8" stroke-linecap="square" style="animation-delay:0.8s"/>
-          <rect class="grow-node" x="345" y="165" width="50" height="50" fill="#78DB55" style="animation-delay:1.3s"/>
-          <rect class="grow-node" x="125" y="225" width="50" height="50" fill="#14B8E6" style="animation-delay:1.5s"/>
-          <rect class="grow-node" x="315" y="195" width="34" height="34" fill="#0B6DFF" style="animation-delay:1.7s"/>
-          <circle class="grow-node" cx="260" cy="600" r="14" fill="white" style="animation-delay:1.1s"/>
+        <svg class="w-full h-auto" viewBox="0 0 420 300" fill="none">
+          <defs>
+            <linearGradient id="growthGrad" x1="0" y1="300" x2="420" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#0B6DFF"/>
+              <stop offset="0.55" stop-color="#14B8E6"/>
+              <stop offset="1" stop-color="#78DB55"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="60" x2="420" y2="60" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+          <line x1="0" y1="140" x2="420" y2="140" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+          <line x1="0" y1="220" x2="420" y2="220" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+          <line x1="0" y1="298" x2="420" y2="298" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+
+          <rect class="grow-node" x="34" y="230" width="34" height="68" fill="url(#growthGrad)" opacity="0.9" style="animation-delay:0.6s"/>
+          <rect class="grow-node" x="104" y="190" width="34" height="108" fill="url(#growthGrad)" opacity="0.9" style="animation-delay:0.8s"/>
+          <rect class="grow-node" x="174" y="140" width="34" height="158" fill="url(#growthGrad)" opacity="0.9" style="animation-delay:1.0s"/>
+          <rect class="grow-node" x="244" y="95" width="34" height="203" fill="url(#growthGrad)" opacity="0.9" style="animation-delay:1.2s"/>
+
+          <path class="grow-path" d="M10 268 C90 268 150 250 210 205 C280 152 320 90 405 45" fill="none" stroke="url(#growthGrad)" stroke-width="2.5" stroke-linecap="round"/>
+          <path class="grow-path" d="M370 30 L410 42 L397 80" fill="none" stroke="url(#growthGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:0.3s"/>
         </svg>
       </div>
     </div>
-  </section>
 
-  <!-- Bold marquee ticker -->
-  <div class="bg-branch-green py-3.5 overflow-hidden border-y-2 border-ink" role="presentation">
-    <div class="marquee-track">
-      <span class="flex items-center shrink-0" aria-hidden="false">
-        <span class="mx-6 text-ink font-bold uppercase tracking-wide text-sm whitespace-nowrap" data-i18n="service_1">Business Development</span>
-        <span class="text-ink text-lg">&#9670;</span>
-        <span class="mx-6 text-ink font-bold uppercase tracking-wide text-sm whitespace-nowrap" data-i18n="service_2">Digital Solutions</span>
-        <span class="text-ink text-lg">&#9670;</span>
-        <span class="mx-6 text-ink font-bold uppercase tracking-wide text-sm whitespace-nowrap" data-i18n="service_3">Growth Strategy</span>
-        <span class="text-ink text-lg">&#9670;</span>
-      </span>
-      <span class="flex items-center shrink-0" aria-hidden="true">
-        <span class="mx-6 text-ink font-bold uppercase tracking-wide text-sm whitespace-nowrap" data-i18n="service_1">Business Development</span>
-        <span class="text-ink text-lg">&#9670;</span>
-        <span class="mx-6 text-ink font-bold uppercase tracking-wide text-sm whitespace-nowrap" data-i18n="service_2">Digital Solutions</span>
-        <span class="text-ink text-lg">&#9670;</span>
-        <span class="mx-6 text-ink font-bold uppercase tracking-wide text-sm whitespace-nowrap" data-i18n="service_3">Growth Strategy</span>
-        <span class="text-ink text-lg">&#9670;</span>
-      </span>
+    <!-- Quiet trust bar -->
+    <div class="relative border-t border-white/10 py-6 mt-16">
+      <div class="max-w-[1400px] mx-auto flex items-center gap-8 flex-wrap">
+        <span class="text-white/60 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_1">Business Development</span>
+        <span class="w-px h-3.5 bg-white/15"></span>
+        <span class="text-white/60 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_2">Digital Solutions</span>
+        <span class="w-px h-3.5 bg-white/15"></span>
+        <span class="text-white/60 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_3">Growth Strategy</span>
+      </div>
     </div>
-  </div>
+  </section>
 
   <section class="py-24 md:py-32 px-5 bg-paper">
     <div class="max-w-[1200px] mx-auto">
       <div class="mb-16 reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div>
           <span class="block text-branch-blue text-sm font-bold tracking-[0.2em] uppercase mb-3" data-i18n="why_eyebrow">How Branch Works</span>
-          <h2 class="text-ink text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] max-w-[600px]" data-i18n="why_title">Why choose <span class="italic font-normal text-branch-blue-dark" translate="no">Branch</span></h2>
+          <h2 class="text-ink text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] max-w-[600px]" data-i18n="why_title">Why choose <span class="italic font-normal text-brand-gradient" translate="no">Branch</span></h2>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-black/10 border border-black/10">
 
-        <div class="group bg-branch-blue text-left p-9 transition-transform duration-300 hover:-translate-y-2 reveal delay-100">
-          <span class="block italic font-bold text-[3.2rem] text-white/70 leading-none mb-6" aria-hidden="true">01</span>
-          <h3 class="text-white mb-3 text-[1.35rem] font-bold tracking-tight" data-i18n="card1_title">Find Opportunities</h3>
-          <p class="text-white/60 text-[1rem] leading-relaxed" data-i18n="card1_desc">We help identify and secure the right projects for strategic growth.</p>
+        <div class="bg-paper text-left p-9 border-t-2 border-branch-blue reveal delay-100">
+          <span class="block font-bold text-[1.1rem] text-branch-blue leading-none mb-6" aria-hidden="true">01</span>
+          <h3 class="text-ink mb-3 text-[1.35rem] font-bold tracking-tight" data-i18n="card1_title">Find Opportunities</h3>
+          <p class="text-text-light text-[1rem] leading-relaxed" data-i18n="card1_desc">We help identify and secure the right projects for strategic growth.</p>
         </div>
 
-        <div class="group bg-branch-blue-dark text-left p-9 transition-transform duration-300 hover:-translate-y-2 reveal delay-200">
-          <span class="block italic font-bold text-[3.2rem] text-branch-cyan leading-none mb-6" aria-hidden="true">02</span>
-          <h3 class="text-white mb-3 text-[1.35rem] font-bold tracking-tight" data-i18n="card2_title">Expert Guidance</h3>
-          <p class="text-white/65 text-[1rem] leading-relaxed" data-i18n="card2_desc">End-to-end strategic planning and high-level project execution.</p>
+        <div class="bg-paper text-left p-9 border-t-2 border-branch-cyan reveal delay-200">
+          <span class="block font-bold text-[1.1rem] text-branch-cyan leading-none mb-6" aria-hidden="true">02</span>
+          <h3 class="text-ink mb-3 text-[1.35rem] font-bold tracking-tight" data-i18n="card2_title">Expert Guidance</h3>
+          <p class="text-text-light text-[1rem] leading-relaxed" data-i18n="card2_desc">End-to-end strategic planning and high-level project execution.</p>
         </div>
 
-        <div class="group bg-branch-green text-left p-9 transition-transform duration-300 hover:-translate-y-2 reveal delay-300">
-          <span class="block italic font-bold text-[3.2rem] text-ink/70 leading-none mb-6" aria-hidden="true">03</span>
+        <div class="bg-paper text-left p-9 border-t-2 border-branch-green reveal delay-300">
+          <span class="block font-bold text-[1.1rem] text-[#4a9c2e] leading-none mb-6" aria-hidden="true">03</span>
           <h3 class="text-ink mb-3 text-[1.35rem] font-bold tracking-tight" data-i18n="card3_title">Real Growth</h3>
-          <p class="text-ink/70 text-[1rem] leading-relaxed" data-i18n="card3_desc">Laser-focused on delivering measurable, long-term business success.</p>
+          <p class="text-text-light text-[1rem] leading-relaxed" data-i18n="card3_desc">Laser-focused on delivering measurable, long-term business success.</p>
         </div>
 
       </div>
@@ -243,7 +239,7 @@
   <section class="bg-cta-gradient py-24 px-5 md:px-[60px] reveal">
     <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
       <h2 class="text-ink text-[2.4rem] md:text-[3.5rem] font-black leading-[1.02] tracking-tight max-w-[650px]" data-i18n="cta_title">Ready to build something great?</h2>
-      <a href="contact.html" class="shrink-0 inline-block bg-branch-blue-dark text-white font-bold uppercase tracking-wide text-[1rem] py-5 px-10 whitespace-nowrap transition-all duration-200 hover:-translate-y-1 hover:bg-white hover:text-branch-blue-dark shadow-[6px_6px_0_0_#05070F] hover:shadow-[6px_6px_0_0_#78DB55]" data-i18n="cta_button">
+      <a href="contact.html" class="shrink-0 inline-block bg-branch-blue-dark text-white font-bold uppercase tracking-wide text-[1rem] py-5 px-10 whitespace-nowrap transition-colors duration-200 hover:bg-ink" data-i18n="cta_button">
         Get Started Today
       </a>
     </div>

@@ -17,7 +17,7 @@ img { max-width: 100%; height: auto; }
 .bg-brand-gradient { background: linear-gradient(135deg, #032F8A 0%, #0BDDFF 25%, #14B8E6 50%, #78DB55 100%); }
 .bg-cta-gradient { background: linear-gradient(115deg, #78DB55 0%, #14B8E6 100%); }
 .text-brand-gradient {
-  background: linear-gradient(90deg, #032F8A, #0BDDFF, #14B8E6, #78DB55);
+  background: linear-gradient(90deg, #0B6DFF, #0BDDFF, #14B8E6, #78DB55);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
