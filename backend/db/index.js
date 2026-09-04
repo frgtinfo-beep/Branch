@@ -1,4 +1,4 @@
-const { MongoClient } = require("mongodb");
+const { MongoClient, GridFSBucket } = require("mongodb");
 
 const client = new MongoClient(process.env.MONGODB_URI);
 const databaseName = process.env.MONGODB_DB || "Branch";
@@ -52,6 +52,14 @@ async function deliverables() {
 
 async function journeyStages() {
   return (await getDatabase()).collection("journeyStages");
+}
+
+// Client contract PDFs go in GridFS rather than on local disk — the app runs
+// on a host with ephemeral disk storage, so anything written to disk is lost
+// on every redeploy/restart. GridFS keeps the binary in the same MongoDB
+// instance we already depend on.
+async function contractsBucket() {
+  return new GridFSBucket(await getDatabase(), { bucketName: "contracts" });
 }
 
 const DEFAULT_JOURNEY_STAGES = ["Kennismaking", "Voorstel", "Onderhandeling", "Actief", "Afgerond"];
@@ -129,5 +137,6 @@ module.exports = {
   companyProfiles,
   deliverables,
   journeyStages,
+  contractsBucket,
   ensureIndexes,
 };

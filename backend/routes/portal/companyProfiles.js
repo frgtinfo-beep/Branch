@@ -1,11 +1,33 @@
 const express = require("express");
+const multer = require("multer");
 const { ObjectId } = require("mongodb");
-const { companyProfiles, deliverables, journeyStages, tasks } = require("../../db");
+const { companyProfiles, deliverables, journeyStages, tasks, contractsBucket } = require("../../db");
 const { requirePortalPage, requirePortalApi, requireRole } = require("../../middleware/portalAuth");
 const { clientsPage } = require("../../views/portal/clients");
 const { clientDetailPage } = require("../../views/portal/clientDetail");
 
 const router = express.Router();
+
+const contractUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 20 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype !== "application/pdf") {
+      return cb(new Error("Only PDF files are allowed"));
+    }
+    cb(null, true);
+  },
+}).single("contract");
+
+// Wraps multer so a bad upload (wrong type, too large) comes back as the
+// same { error } JSON shape as every other endpoint here, instead of
+// falling through to Express's default HTML error page.
+function handleContractUpload(req, res, next) {
+  contractUpload(req, res, (err) => {
+    if (err) return res.status(400).json({ error: err.message || "Failed to upload file" });
+    next();
+  });
+}
 
 const VALID_COLLAB_STATUSES = new Set(["prospect", "in_gesprek", "actieve_klant", "afgerond"]);
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -21,6 +43,9 @@ function toObjectId(value) {
 // The one place that decides whether `board` is included — used by both the
 // list and detail endpoints so the gating logic can't drift between them.
 function projectionForRole(role) {
+  // contractFile.data-less summary lives on the doc; the PDF bytes themselves
+  // are in GridFS, so there's nothing large to exclude here — but keep this
+  // the one place that decides `board` visibility.
   return role === "admin" || role === "bestuur" ? {} : { board: 0 };
 }
 
@@ -38,6 +63,13 @@ function serializeProfile(profile) {
   };
   if (profile.board !== undefined) {
     out.board = profile.board;
+  }
+  if (profile.contractFile) {
+    out.contractFile = {
+      filename: profile.contractFile.filename,
+      size: profile.contractFile.size,
+      uploadedAt: profile.contractFile.uploadedAt,
+    };
   }
   return out;
 }
@@ -194,6 +226,77 @@ router.delete("/api/portal/company-profiles/:id", requirePortalApi, requireRole(
   // Unlink, don't delete — a task and its time-tracking history shouldn't
   // disappear just because the client relationship record was removed.
   await tasksCol.updateMany({ companyProfileId: id }, { $set: { companyProfileId: null } });
+
+  res.json({ success: true });
+});
+
+router.post("/api/portal/company-profiles/:id/contract", requirePortalApi, requireRole("admin"), handleContractUpload, async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (!id) return res.status(400).json({ error: "Invalid company profile id" });
+  if (!req.file) return res.status(400).json({ error: "contract file is required" });
+
+  const companyProfilesCol = await companyProfiles();
+  const profile = await companyProfilesCol.findOne({ _id: id }, { projection: { contractFile: 1 } });
+  if (!profile) return res.status(404).json({ error: "Company profile not found" });
+
+  const bucket = await contractsBucket();
+  const uploadStream = bucket.openUploadStream(req.file.originalname, { contentType: req.file.mimetype });
+  await new Promise((resolve, reject) => {
+    uploadStream.on("error", reject).on("finish", resolve).end(req.file.buffer);
+  });
+
+  const contractFile = {
+    fileId: uploadStream.id,
+    filename: req.file.originalname,
+    mimeType: req.file.mimetype,
+    size: req.file.size,
+    uploadedAt: new Date(),
+  };
+  const result = await companyProfilesCol.findOneAndUpdate(
+    { _id: id },
+    { $set: { contractFile, updatedAt: new Date() } },
+    { returnDocument: "after" },
+  );
+
+  // Replacing an existing contract — drop the old GridFS file now that the
+  // new one is safely referenced by the profile document.
+  if (profile.contractFile && profile.contractFile.fileId) {
+    await bucket.delete(profile.contractFile.fileId).catch(() => {});
+  }
+
+  res.status(201).json(serializeProfile(result));
+});
+
+router.get("/api/portal/company-profiles/:id/contract", requirePortalApi, async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (!id) return res.status(400).json({ error: "Invalid company profile id" });
+
+  const companyProfilesCol = await companyProfiles();
+  const profile = await companyProfilesCol.findOne({ _id: id }, { projection: { contractFile: 1 } });
+  if (!profile) return res.status(404).json({ error: "Company profile not found" });
+  if (!profile.contractFile) return res.status(404).json({ error: "No contract uploaded" });
+
+  const bucket = await contractsBucket();
+  res.set("Content-Type", profile.contractFile.mimeType || "application/pdf");
+  const safeName = profile.contractFile.filename.replace(/["\r\n]/g, "_");
+  res.set("Content-Disposition", `inline; filename="${safeName}"; filename*=UTF-8''${encodeURIComponent(profile.contractFile.filename)}`);
+  bucket.openDownloadStream(profile.contractFile.fileId)
+    .on("error", () => res.status(404).json({ error: "Contract file not found" }))
+    .pipe(res);
+});
+
+router.delete("/api/portal/company-profiles/:id/contract", requirePortalApi, requireRole("admin"), async (req, res) => {
+  const id = toObjectId(req.params.id);
+  if (!id) return res.status(400).json({ error: "Invalid company profile id" });
+
+  const companyProfilesCol = await companyProfiles();
+  const profile = await companyProfilesCol.findOne({ _id: id }, { projection: { contractFile: 1 } });
+  if (!profile) return res.status(404).json({ error: "Company profile not found" });
+  if (!profile.contractFile) return res.status(404).json({ error: "No contract uploaded" });
+
+  const bucket = await contractsBucket();
+  await bucket.delete(profile.contractFile.fileId).catch(() => {});
+  await companyProfilesCol.updateOne({ _id: id }, { $unset: { contractFile: "" }, $set: { updatedAt: new Date() } });
 
   res.json({ success: true });
 });

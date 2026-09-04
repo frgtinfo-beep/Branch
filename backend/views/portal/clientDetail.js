@@ -63,6 +63,15 @@ ${portalNav({ active: "clients", role, name })}
     </div>
 
     <div class="portal-card">
+      <h2 style="font-size:0.95rem; margin-top:0;">Contract</h2>
+      <div id="contract-info"></div>
+      <div id="contract-admin-controls" style="display:none; margin-top:10px; gap:8px; flex-wrap:wrap; align-items:center;">
+        <input type="file" id="contract-file-input" accept="application/pdf">
+        <button class="portal-btn secondary" id="contract-upload-btn" type="button">Uploaden</button>
+      </div>
+    </div>
+
+    <div class="portal-card">
       <h2 style="font-size:0.95rem; margin-top:0;">Deliverables</h2>
       <div class="progress-line" id="deliverable-progress"></div>
       <div id="deliverable-list"></div>
@@ -127,6 +136,40 @@ ${portalNav({ active: "clients", role, name })}
         document.getElementById("edit-notes").value = profile.board.strategicNotes || "";
       }
     }
+
+    loadContract();
+  }
+
+  function loadContract() {
+    const contractInfo = document.getElementById("contract-info");
+    if (profile.contractFile) {
+      const uploaded = profile.contractFile.uploadedAt ? new Date(profile.contractFile.uploadedAt).toLocaleDateString("nl-NL") : "—";
+      const sizeKb = profile.contractFile.size ? Math.round(profile.contractFile.size / 1024) + " KB" : "";
+      contractInfo.innerHTML =
+        '<div class="field-row"><strong>Bestand:</strong>' + escapeHtmlClient(profile.contractFile.filename) + " " + sizeKb + "</div>" +
+        '<div class="field-row"><strong>Geüpload op:</strong>' + uploaded + "</div>" +
+        '<div style="margin-top:8px; display:flex; gap:8px;">' +
+        '<button class="portal-btn secondary" id="contract-open-btn" type="button">Openen</button>' +
+        (ROLE === "admin" ? '<button class="portal-btn secondary" id="contract-delete-btn" type="button">Verwijderen</button>' : "") +
+        "</div>";
+      document.getElementById("contract-open-btn").addEventListener("click", () => {
+        window.open("/api/portal/company-profiles/" + CLIENT_ID + "/contract", "_blank");
+      });
+      const deleteBtn = document.getElementById("contract-delete-btn");
+      if (deleteBtn) {
+        deleteBtn.addEventListener("click", async () => {
+          if (!confirm("Weet je zeker dat je dit contract wilt verwijderen?")) return;
+          await fetchJson("/api/portal/company-profiles/" + CLIENT_ID + "/contract", { method: "DELETE" });
+          loadProfile();
+        });
+      }
+    } else {
+      contractInfo.innerHTML = '<p style="font-size:0.85rem; color:#6b7280;">Nog geen contract geüpload.</p>';
+    }
+
+    if (ROLE === "admin") {
+      document.getElementById("contract-admin-controls").style.display = "flex";
+    }
   }
 
   const saveBoardBtn = document.getElementById("save-board-btn");
@@ -143,6 +186,29 @@ ${portalNav({ active: "clients", role, name })}
         }),
       });
       loadProfile();
+    });
+  }
+
+  const contractUploadBtn = document.getElementById("contract-upload-btn");
+  if (contractUploadBtn) {
+    contractUploadBtn.addEventListener("click", async () => {
+      const fileInput = document.getElementById("contract-file-input");
+      const file = fileInput.files[0];
+      if (!file) { alert("Kies eerst een PDF-bestand."); return; }
+      const formData = new FormData();
+      formData.append("contract", file);
+      contractUploadBtn.disabled = true;
+      try {
+        const res = await fetch("/api/portal/company-profiles/" + CLIENT_ID + "/contract", { method: "POST", body: formData });
+        if (res.status === 401) { window.location.href = "/portal/login"; return; }
+        if (!res.ok) { const body = await res.json().catch(() => ({})); throw new Error(body.error || ("HTTP " + res.status)); }
+        fileInput.value = "";
+        await loadProfile();
+      } catch (err) {
+        alert(err.message || "Uploaden mislukt.");
+      } finally {
+        contractUploadBtn.disabled = false;
+      }
     });
   }
 
