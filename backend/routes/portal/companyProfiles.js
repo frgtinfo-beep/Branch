@@ -40,13 +40,13 @@ function toObjectId(value) {
   }
 }
 
-// The one place that decides whether `board` is included — used by both the
-// list and detail endpoints so the gating logic can't drift between them.
+// The one place that decides whether `board`/`contractFile` are included —
+// used by both the list and detail endpoints so the gating logic can't drift
+// between them. Contract PDFs are at least as sensitive as the board fields
+// (collaboration status, contract value, notes), so they're gated the same
+// way: Admin/Bestuur only.
 function projectionForRole(role) {
-  // contractFile.data-less summary lives on the doc; the PDF bytes themselves
-  // are in GridFS, so there's nothing large to exclude here — but keep this
-  // the one place that decides `board` visibility.
-  return role === "admin" || role === "bestuur" ? {} : { board: 0 };
+  return role === "admin" || role === "bestuur" ? {} : { board: 0, contractFile: 0 };
 }
 
 function serializeProfile(profile) {
@@ -219,13 +219,21 @@ router.delete("/api/portal/company-profiles/:id", requirePortalApi, requireRole(
   const deliverablesCol = await deliverables();
   const tasksCol = await tasks();
 
-  const result = await companyProfilesCol.deleteOne({ _id: id });
-  if (result.deletedCount === 0) return res.status(404).json({ error: "Company profile not found" });
+  // findOneAndDelete (not deleteOne) so we still have contractFile to clean
+  // up from GridFS afterward — otherwise a deleted profile's PDF leaks
+  // forever with nothing left pointing at it.
+  const deletedProfile = await companyProfilesCol.findOneAndDelete({ _id: id });
+  if (!deletedProfile) return res.status(404).json({ error: "Company profile not found" });
 
   await deliverablesCol.deleteMany({ companyProfileId: id });
   // Unlink, don't delete — a task and its time-tracking history shouldn't
   // disappear just because the client relationship record was removed.
   await tasksCol.updateMany({ companyProfileId: id }, { $set: { companyProfileId: null } });
+
+  if (deletedProfile.contractFile && deletedProfile.contractFile.fileId) {
+    const bucket = await contractsBucket();
+    await bucket.delete(deletedProfile.contractFile.fileId).catch(() => {});
+  }
 
   res.json({ success: true });
 });
@@ -267,7 +275,7 @@ router.post("/api/portal/company-profiles/:id/contract", requirePortalApi, requi
   res.status(201).json(serializeProfile(result));
 });
 
-router.get("/api/portal/company-profiles/:id/contract", requirePortalApi, async (req, res) => {
+router.get("/api/portal/company-profiles/:id/contract", requirePortalApi, requireRole("admin", "bestuur"), async (req, res) => {
   const id = toObjectId(req.params.id);
   if (!id) return res.status(400).json({ error: "Invalid company profile id" });
 

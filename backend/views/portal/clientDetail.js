@@ -62,7 +62,7 @@ ${portalNav({ active: "clients", role, name })}
       </div>
     </div>
 
-    <div class="portal-card">
+    <div class="portal-card" id="contract-card" style="display:none;">
       <h2 style="font-size:0.95rem; margin-top:0;">Contract</h2>
       <div id="contract-info"></div>
       <div id="contract-admin-controls" style="display:none; margin-top:10px; gap:8px; flex-wrap:wrap; align-items:center;">
@@ -137,7 +137,14 @@ ${portalNav({ active: "clients", role, name })}
       }
     }
 
-    loadContract();
+    // contractFile is only ever present in the API response for admin/bestuur
+    // (server-side projection) — same sensitivity class as board info, so the
+    // whole card stays hidden for anyone else rather than showing an empty
+    // "no contract" placeholder that implies access.
+    if (ROLE === "admin" || ROLE === "bestuur") {
+      document.getElementById("contract-card").style.display = "block";
+      loadContract();
+    }
   }
 
   function loadContract() {
