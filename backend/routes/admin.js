@@ -52,7 +52,7 @@ router.get("/api/admin/clients", requireAdminApi, async (req, res) => {
     const withTotals = await Promise.all(
       allClients.map(async (client) => {
         const unbilled = await transactionsCol
-          .find({ client_id: client.client_id, billed: false })
+          .find({ client_id: client.client_id, billed: false, cancelled: { $ne: true } })
           .toArray();
         const unbilledTotal =
           unbilled.reduce((cents, txn) => cents + Math.round(Number(txn.fee_amount.toString()) * 100), 0) / 100;
@@ -63,6 +63,7 @@ router.get("/api/admin/clients", requireAdminApi, async (req, res) => {
           currency: client.currency,
           mandate_status: client.mandate_status,
           active: client.active,
+          collection_paused: !!client.collection_paused,
           unbilled_total: unbilledTotal,
         };
       }),

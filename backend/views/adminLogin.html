@@ -4,25 +4,52 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin login — Branch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 360px; margin: 120px auto; padding: 0 20px; color: #111827; }
-  h1 { font-size: 20px; }
-  label { display: block; font-size: 13px; color: #374151; margin-top: 16px; margin-bottom: 4px; }
-  input { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
-  button { margin-top: 24px; width: 100%; background: #003399; color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; }
-  .error { color: #dc2626; font-size: 14px; margin-top: 16px; display: none; }
+  :root { --branch-blue-dark: #032F8A; --branch-blue: #0B6DFF; --branch-green: #78DB55; --branch-cyan: #14B8E6; --ink: #05070F; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #111827;
+    background:
+      radial-gradient(900px 560px at 12% -10%, rgba(11,109,255,0.16), transparent 60%),
+      radial-gradient(760px 520px at 105% 10%, rgba(120,219,85,0.16), transparent 55%),
+      radial-gradient(600px 400px at 50% 120%, rgba(20,184,230,0.12), transparent 55%),
+      #F7F7F7;
+    min-height: 100vh;
+  }
+  main { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .card { width: 100%; max-width: 380px; padding: 40px 32px; border-radius: 18px; background: rgba(255,255,255,0.9); backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 20px 50px rgba(3,47,138,0.14); border-top: 3px solid transparent; border-image: linear-gradient(90deg, #032F8A, #0BDDFF, #14B8E6, #78DB55) 1; animation: card-in 0.4s ease both; }
+  @keyframes card-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .logo { display: block; text-align: center; font-weight: 900; font-size: 1.7rem; letter-spacing: -0.02em; text-decoration: none; margin-bottom: 6px; background: linear-gradient(90deg, #032F8A, #0BDDFF, #14B8E6, #78DB55); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  h1 { font-size: 0.95rem; font-weight: 600; text-align: center; margin: 0 0 28px; color: #6b7280; }
+  label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-top: 16px; margin-bottom: 4px; }
+  input { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; font-family: inherit; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+  input:focus { outline: none; border-color: var(--branch-blue); box-shadow: 0 0 0 3px rgba(11,109,255,0.15); }
+  button { margin-top: 26px; width: 100%; background: linear-gradient(115deg, var(--branch-blue-dark), var(--branch-blue)); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; box-shadow: 0 6px 18px rgba(11,109,255,0.3); transition: filter 0.15s ease, transform 0.15s ease; }
+  button:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  button:active { transform: translateY(0); }
+  .error { color: #dc2626; font-size: 13px; margin-top: 16px; display: none; }
 </style>
 </head>
 <body>
-  <h1>Branch admin</h1>
-  <form id="login-form" method="post" action="/admin/login">
-    <label for="username">Username</label>
-    <input id="username" name="username" autocomplete="username" required>
-    <label for="password">Password</label>
-    <input id="password" name="password" type="password" autocomplete="current-password" required>
-    <div class="error" id="error">Invalid username or password.</div>
-    <button type="submit">Sign in</button>
-  </form>
+  <main>
+    <div class="card">
+      <span class="logo" translate="no">Branch</span>
+      <h1>Admin — Inloggen</h1>
+      <form id="login-form" method="post" action="/admin/login">
+        <label for="username">Username</label>
+        <input id="username" name="username" autocomplete="username" required>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <div class="error" id="error">Invalid username or password.</div>
+        <button type="submit">Sign in</button>
+      </form>
+    </div>
+  </main>
   <script>
     document.getElementById("login-form").addEventListener("submit", async (event) => {
       event.preventDefault();

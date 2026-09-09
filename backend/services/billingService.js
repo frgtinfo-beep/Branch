@@ -28,7 +28,10 @@ async function activeClients() {
 
 async function unbilledTransactionsFor(clientId) {
   const transactionsCol = await transactions();
-  return transactionsCol.find({ client_id: clientId, billed: false }).sort({ occurred_at: 1 }).toArray();
+  return transactionsCol
+    .find({ client_id: clientId, billed: false, cancelled: { $ne: true } })
+    .sort({ occurred_at: 1 })
+    .toArray();
 }
 
 async function periodStartFor(clientId) {
@@ -57,6 +60,12 @@ async function upsertBillingRun({ clientId, periodEnd, periodStart, transactionC
 
 async function sendPreCollectionNotices({ collectionDate }) {
   for (const client of await activeClients()) {
+    // Client is between payment providers (e.g. migrating off GoCardless) —
+    // reported transactions keep accruing as unbilled as normal, but we
+    // don't send a "Direct Debit collection" notice for a collection that
+    // isn't actually going to happen.
+    if (client.collection_paused) continue;
+
     try {
       const unbilled = await unbilledTransactionsFor(client.client_id);
       if (unbilled.length === 0) continue;
@@ -107,6 +116,24 @@ async function runCollections({ collectionDate }) {
 
       totalAmount = sumFeesInCents(unbilled) / 100;
       periodStart = await periodStartFor(client.client_id);
+
+      if (client.collection_paused) {
+        // Provider migration in progress (e.g. GoCardless -> Mollie) — record
+        // what's owed for this period so the ledger stays current, but don't
+        // attempt a charge and don't page anyone; this is expected, not a
+        // failure. Transactions stay unbilled so the full backlog is exactly
+        // what gets collected once the new provider is live.
+        await upsertBillingRun({
+          clientId: client.client_id,
+          periodEnd: collectionDate,
+          periodStart,
+          transactionCount: unbilled.length,
+          totalAmount,
+          status: "collection_paused",
+        });
+        log("collection_paused", { client_id: client.client_id, unbilled_total: totalAmount });
+        continue;
+      }
 
       if (client.mandate_status !== "active" || !client.gocardless_mandate_id) {
         await upsertBillingRun({

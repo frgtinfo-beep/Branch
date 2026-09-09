@@ -96,4 +96,58 @@ router.post("/", apiKeyAuth, async (req, res) => {
   }
 });
 
+// Called when a client cancels a booking after we already recorded the transaction. If it hasn't
+// been billed yet, this simply excludes it from billing — see the `cancelled: { $ne: true }` guard
+// in billingService's unbilledTransactionsFor. If it was already billed (charged via GoCardless),
+// we can't silently un-charge it here — that needs an actual credit/refund process, so this just
+// flags it loudly for a human instead of pretending it's handled.
+router.post("/:transactionId/cancel", apiKeyAuth, async (req, res) => {
+  const client = req.client;
+  const { transactionId } = req.params;
+
+  try {
+    const transactionsCol = await transactions();
+    const transaction = await transactionsCol.findOne({
+      client_id: client.client_id,
+      external_transaction_id: transactionId,
+    });
+
+    if (!transaction) {
+      logRequest("cancel_not_found", { client_id: client.client_id, transaction_id: transactionId });
+      return res.status(404).json({ error: "Transaction not found." });
+    }
+
+    if (transaction.cancelled) {
+      // Already cancelled — idempotent success, not an error (mirrors the duplicate-report case above).
+      return res.status(200).json({ success: true, already_cancelled: true, needs_manual_credit: !!transaction.billed });
+    }
+
+    await transactionsCol.updateOne(
+      { _id: transaction._id },
+      { $set: { cancelled: true, cancelled_at: new Date() } },
+    );
+
+    if (transaction.billed) {
+      console.error(
+        "MANUAL FOLLOW-UP REQUIRED:",
+        JSON.stringify({
+          stage: "transaction_cancellation",
+          reason: "already_billed",
+          client_id: client.client_id,
+          transaction_id: transactionId,
+          billing_run_id: transaction.billing_run_id,
+          fee_amount: transaction.fee_amount?.toString(),
+        }),
+      );
+    }
+
+    logRequest("cancelled", { client_id: client.client_id, transaction_id: transactionId, was_billed: !!transaction.billed });
+    return res.status(200).json({ success: true, already_cancelled: false, needs_manual_credit: !!transaction.billed });
+  } catch (error) {
+    logRequest("cancel_error", { client_id: client.client_id, transaction_id: transactionId, error: error.message });
+    console.error("POST /api/transactions/:transactionId/cancel error:", error);
+    return res.status(500).json({ error: "Failed to cancel transaction" });
+  }
+});
+
 module.exports = router;
