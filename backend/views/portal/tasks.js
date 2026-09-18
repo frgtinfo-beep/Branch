@@ -57,7 +57,7 @@ ${portalNav({ active: "tasks", role, name })}
       <option value="deadline">Sorteer op deadline</option>
       <option value="priority">Sorteer op prioriteit</option>
     </select>
-    ${role === "admin" ? '<button class="portal-btn" id="new-task-btn">+ Nieuwe taak</button>' : ""}
+    ${role === "admin" || role === "teamlid" ? '<button class="portal-btn" id="new-task-btn">+ Nieuwe taak</button>' : ""}
   </div>
 
   <div class="board">
@@ -199,6 +199,14 @@ ${portalNav({ active: "tasks", role, name })}
     document.getElementById("task-deadline").value = "";
     document.getElementById("task-priority").value = "gemiddeld";
     populateAssigneeChecklist([]);
+    // Reset state a prior view of someone else's task (read-only for
+    // non-admins) may have left behind on these shared modal elements.
+    document.getElementById("task-title").disabled = false;
+    document.getElementById("task-description").disabled = false;
+    document.getElementById("task-deadline").disabled = false;
+    document.getElementById("task-priority").disabled = false;
+    document.querySelectorAll("#assignee-list input").forEach((el) => (el.disabled = false));
+    document.querySelector('#task-form button[type="submit"]').style.display = "";
     document.getElementById("delete-task-btn").style.display = "none";
     document.getElementById("time-entries-section").style.display = "none";
     document.getElementById("task-modal-backdrop").classList.add("open");
@@ -248,8 +256,10 @@ ${portalNav({ active: "tasks", role, name })}
 
   document.getElementById("task-form").addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (ROLE !== "admin") { document.getElementById("task-modal-backdrop").classList.remove("open"); return; }
     const id = document.getElementById("task-id").value;
+    // Creating is open to admin + teamlid; editing an existing task stays admin-only.
+    const allowed = id ? ROLE === "admin" : (ROLE === "admin" || ROLE === "teamlid");
+    if (!allowed) { document.getElementById("task-modal-backdrop").classList.remove("open"); return; }
     const assigneeIds = Array.from(document.querySelectorAll("#assignee-list input:checked")).map((el) => el.value);
     const payload = {
       title: document.getElementById("task-title").value,

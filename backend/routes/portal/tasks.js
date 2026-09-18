@@ -110,7 +110,7 @@ router.get("/api/portal/tasks", requirePortalApi, async (req, res) => {
   res.json(allTasks.map((task) => serializeTask(task, hoursMap[task._id.toString()])));
 });
 
-router.post("/api/portal/tasks", requirePortalApi, requireRole("admin"), async (req, res) => {
+router.post("/api/portal/tasks", requirePortalApi, requireRole("admin", "teamlid"), async (req, res) => {
   const { title, description, assigneeIds, deadline, priority, companyProfileId } = req.body || {};
 
   if (!title || typeof title !== "string") {
