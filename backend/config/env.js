@@ -3,9 +3,7 @@
 
 const REQUIRED_VARS = [
   "MONGODB_URI",
-  "GOCARDLESS_ENVIRONMENT",
-  "GOCARDLESS_ACCESS_TOKEN",
-  "GOCARDLESS_WEBHOOK_SECRET",
+  "MOLLIE_API_KEY",
   "APP_BASE_URL",
   "SESSION_SECRET",
   "ADMIN_USERNAME",
@@ -21,21 +19,19 @@ function assertEnv() {
     );
   }
 
-  const goCardlessEnvironment = process.env.GOCARDLESS_ENVIRONMENT.toLowerCase();
-  if (!["sandbox", "live"].includes(goCardlessEnvironment)) {
-    throw new Error(
-      `GOCARDLESS_ENVIRONMENT must be "sandbox" or "live", got "${process.env.GOCARDLESS_ENVIRONMENT}".`,
-    );
+  // Catches pasting the wrong credential (e.g. an organization access token
+  // or profile ID) rather than failing on the first API call days later.
+  if (!/^(test|live)_/.test(process.env.MOLLIE_API_KEY)) {
+    throw new Error('MOLLIE_API_KEY must be a Mollie API key starting with "test_" or "live_".');
   }
 }
 
 const config = {
   appBaseUrl: () => process.env.APP_BASE_URL.replace(/\/+$/, ""),
   billingTimezone: () => process.env.BILLING_TIMEZONE || "Europe/Amsterdam",
-  goCardless: {
-    environment: () => process.env.GOCARDLESS_ENVIRONMENT.toLowerCase(),
-    accessToken: () => process.env.GOCARDLESS_ACCESS_TOKEN,
-    webhookSecret: () => process.env.GOCARDLESS_WEBHOOK_SECRET,
+  mollie: {
+    apiKey: () => process.env.MOLLIE_API_KEY,
+    webhookUrl: () => `${process.env.APP_BASE_URL.replace(/\/+$/, "")}/webhooks/mollie`,
   },
   admin: {
     username: () => process.env.ADMIN_USERNAME,

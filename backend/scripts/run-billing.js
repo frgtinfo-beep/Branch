@@ -1,5 +1,5 @@
 // Manually triggers the daily billing check — useful for testing the notice
-// email and GoCardless payment creation against the sandbox without waiting
+// email and Mollie payment creation in test mode without waiting
 // for the real 1st-of-month / notice-day dates to roll around.
 //
 // Usage:

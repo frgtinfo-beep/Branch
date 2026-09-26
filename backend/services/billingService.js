@@ -1,5 +1,7 @@
 const { clients, transactions, billingRuns } = require("../db");
-const { createPayment } = require("./gocardlessService");
+const { config } = require("../config/env");
+const { createRecurringPayment, findPaymentForBillingRun } = require("./mollieService");
+const { refreshMandateStatus } = require("./mandateService");
 const { sendPreCollectionNotice } = require("./emailService");
 
 const NOTICE_DAYS_BEFORE_COLLECTION = 5;
@@ -60,7 +62,7 @@ async function upsertBillingRun({ clientId, periodEnd, periodStart, transactionC
 
 async function sendPreCollectionNotices({ collectionDate }) {
   for (const client of await activeClients()) {
-    // Client is between payment providers (e.g. migrating off GoCardless) —
+    // Client is between payment providers (e.g. mid-switch to Mollie) —
     // reported transactions keep accruing as unbilled as normal, but we
     // don't send a "Direct Debit collection" notice for a collection that
     // isn't actually going to happen.
@@ -135,7 +137,9 @@ async function runCollections({ collectionDate }) {
         continue;
       }
 
-      if (client.mandate_status !== "active" || !client.gocardless_mandate_id) {
+      const mandateStatus = await refreshMandateStatus(client);
+
+      if (mandateStatus !== "active" || !client.mollie_mandate_id) {
         await upsertBillingRun({
           clientId: client.client_id,
           periodEnd: collectionDate,
@@ -148,7 +152,7 @@ async function runCollections({ collectionDate }) {
           stage: "collection",
           reason: "no_active_mandate",
           client_id: client.client_id,
-          mandate_status: client.mandate_status,
+          mandate_status: mandateStatus,
           unbilled_total: totalAmount,
         });
         continue;
@@ -163,23 +167,30 @@ async function runCollections({ collectionDate }) {
         status: "collecting",
       });
 
-      const chargeDateIso = collectionDate.toISOString().slice(0, 10);
+      const billingRunId = billingRun._id.toString();
 
-      const payment = await createPayment({
-        mandateId: client.gocardless_mandate_id,
-        amountInMajorUnits: totalAmount,
-        currency: client.currency,
-        chargeDate: chargeDateIso,
-        description: `Branch service fee — ${unbilled.length} transaction(s)`,
-        // Stable per (client, period) — safe to retry this whole job without
-        // ever double-charging, even if it crashes right after this call.
-        idempotencyKey: `billing-run-${billingRun._id.toString()}`,
-      });
+      // Re-running the job for a period whose payment was created but never
+      // recorded (crash right after the API call) must pick that payment up,
+      // not charge a second time. Mollie collects recurring SEPA payments as
+      // soon as possible, so there's no charge date to pass — the job itself
+      // runs on the 1st.
+      const payment =
+        (await findPaymentForBillingRun({ customerId: client.mollie_customer_id, billingRunId })) ||
+        (await createRecurringPayment({
+          customerId: client.mollie_customer_id,
+          mandateId: client.mollie_mandate_id,
+          amountInMajorUnits: totalAmount,
+          currency: client.currency,
+          description: `Branch service fee — ${unbilled.length} transaction(s)`,
+          webhookUrl: config.mollie.webhookUrl(),
+          billingRunId,
+          idempotencyKey: `billing-run-${billingRunId}`,
+        }));
 
       const billingRunsCol = await billingRuns();
       await billingRunsCol.updateOne(
         { _id: billingRun._id },
-        { $set: { gocardless_payment_id: payment.id, status: payment.status || "submitted", updated_at: new Date() } },
+        { $set: { mollie_payment_id: payment.id, status: payment.status, updated_at: new Date() } },
       );
 
       const transactionsCol = await transactions();
@@ -191,11 +202,11 @@ async function runCollections({ collectionDate }) {
       log("payment_created", {
         client_id: client.client_id,
         billing_run_id: billingRun._id,
-        gocardless_payment_id: payment.id,
+        mollie_payment_id: payment.id,
         total_amount: totalAmount,
       });
     } catch (error) {
-      // Transactions are only marked billed after the GC payment call
+      // Transactions are only marked billed after the Mollie payment call
       // succeeds, so a failure here leaves them unbilled and they'll be
       // picked up correctly next cycle — nothing is lost or double-charged.
       // Only flip status on a record that already reflects the real
@@ -213,7 +224,7 @@ async function runCollections({ collectionDate }) {
 
       flagForManualFollowUp({
         stage: "collection",
-        reason: "gocardless_error",
+        reason: "mollie_error",
         client_id: client.client_id,
         error: error.message,
       });

@@ -64,9 +64,9 @@
 
   .status { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
   .status-active { background: #dcfce7; color: #166534; }
-  .status-pending_customer_approval, .status-pending_submission, .status-submitted { background: #fef3c7; color: #92400e; }
-  .status-failed, .status-cancelled, .status-no_mandate { background: #fee2e2; color: #991b1b; }
-  .status-confirmed, .status-paid_out, .status-collecting { background: #dcfce7; color: #166534; }
+  .status-pending_customer_approval, .status-pending_submission, .status-submitted, .status-open, .status-pending { background: #fef3c7; color: #92400e; }
+  .status-failed, .status-cancelled, .status-no_mandate, .status-canceled, .status-expired, .status-charged_back { background: #fee2e2; color: #991b1b; }
+  .status-confirmed, .status-paid_out, .status-collecting, .status-paid { background: #dcfce7; color: #166534; }
   .status-collection_paused, .status-paused { background: #e0e7ff; color: #3730a3; }
   .status-none { background: #f3f4f6; color: #6b7280; }
 
@@ -119,7 +119,7 @@
         </div>
         <table>
           <thead>
-            <tr><th>Period</th><th>Transactions</th><th>Total</th><th>Status</th><th>GoCardless payment</th></tr>
+            <tr><th>Period</th><th>Transactions</th><th>Total</th><th>Status</th><th>Payment</th></tr>
           </thead>
           <tbody id="history-body"></tbody>
         </table>
@@ -216,7 +216,7 @@
             '<td data-label="Transactions">' + escapeHtml(run.transaction_count) + "</td>" +
             '<td data-label="Total" class="money">' + formatMoney(run.total_amount, run.currency) + "</td>" +
             '<td data-label="Status">' + statusBadge(run.status) + "</td>" +
-            '<td data-label="GoCardless payment">' + escapeHtml(run.gocardless_payment_id || "—") + "</td>";
+            '<td data-label="Payment">' + escapeHtml(run.payment_id || "—") + "</td>";
           body.appendChild(row);
         });
       }

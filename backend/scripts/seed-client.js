@@ -56,9 +56,9 @@ async function main() {
     apiKey = generateApiKey();
     update.client_id = clientId;
     update.api_key_hash = hashApiKey(apiKey);
-    update.gocardless_customer_id = null;
-    update.gocardless_mandate_id = null;
-    update.gocardless_billing_request_id = null;
+    update.mollie_customer_id = null;
+    update.mollie_mandate_id = null;
+    update.mollie_first_payment_id = null;
     update.mandate_status = null;
     update.created_at = new Date();
   }

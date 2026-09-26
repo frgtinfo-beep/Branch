@@ -98,7 +98,7 @@ router.post("/", apiKeyAuth, async (req, res) => {
 
 // Called when a client cancels a booking after we already recorded the transaction. If it hasn't
 // been billed yet, this simply excludes it from billing — see the `cancelled: { $ne: true }` guard
-// in billingService's unbilledTransactionsFor. If it was already billed (charged via GoCardless),
+// in billingService's unbilledTransactionsFor. If it was already billed (charged via Mollie),
 // we can't silently un-charge it here — that needs an actual credit/refund process, so this just
 // flags it loudly for a human instead of pretending it's handled.
 router.post("/:transactionId/cancel", apiKeyAuth, async (req, res) => {

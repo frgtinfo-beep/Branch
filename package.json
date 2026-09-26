@@ -12,12 +12,12 @@
     "run-billing": "node backend/scripts/run-billing.js"
   },
   "dependencies": {
+    "@mollie/api-client": "^4.6.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-session": "^1.18.1",
-    "gocardless-nodejs": "^8.6.4",
     "mongodb": "^7.6.0",
     "multer": "^2.3.0",
     "node-cron": "^3.0.3",

@@ -1,109 +1,85 @@
 const express = require("express");
-const { parse, InvalidSignatureError } = require("gocardless-nodejs");
-const { config } = require("../config/env");
 const { clients, billingRuns } = require("../db");
+const { getPayment } = require("../services/mollieService");
+const { applyFirstPaymentResult } = require("../services/mandateService");
 
 const router = express.Router();
 
-const MANDATE_STATUS_BY_ACTION = {
-  created: "pending_submission",
-  active: "active",
-  failed: "failed",
-  cancelled: "cancelled",
-};
-
-// GC payment event actions map 1:1 onto the billing_run.status vocabulary we
-// use for anything past "collecting" — no translation needed.
-const PAYMENT_ACTIONS_HANDLED = new Set(["created", "submitted", "confirmed", "failed", "paid_out"]);
-
 function logEvent(outcome, details) {
-  console.log(JSON.stringify({ at: new Date().toISOString(), route: "POST /webhooks/gocardless", outcome, ...details }));
+  console.log(JSON.stringify({ at: new Date().toISOString(), route: "POST /webhooks/mollie", outcome, ...details }));
 }
 
-async function handleMandateEvent(event) {
-  const newStatus = MANDATE_STATUS_BY_ACTION[event.action];
-  if (!newStatus) {
-    logEvent("ignored_mandate_action", { event_id: event.id, action: event.action });
-    return;
-  }
-
-  const mandateId = event.links && event.links.mandate;
+async function handleFirstPayment(payment) {
   const clientsCol = await clients();
-  const result = await clientsCol.updateOne(
-    { gocardless_mandate_id: mandateId },
-    { $set: { mandate_status: newStatus, updated_at: new Date() } },
-  );
-
-  if (result.matchedCount === 0) {
-    logEvent("unmatched_mandate_event", { event_id: event.id, mandate_id: mandateId, action: event.action });
+  const client = await clientsCol.findOne({ mollie_first_payment_id: payment.id });
+  if (!client) {
+    // An older, superseded attempt (the client restarted onboarding).
+    logEvent("unmatched_first_payment", { payment_id: payment.id, status: payment.status });
     return;
   }
 
-  logEvent("mandate_updated", { event_id: event.id, mandate_id: mandateId, action: event.action, new_status: newStatus });
+  const { outcome, mandateStatus } = await applyFirstPaymentResult(client, payment);
+  logEvent("mandate_setup_updated", { payment_id: payment.id, client_id: client.client_id, result: outcome, mandate_status: mandateStatus });
 }
 
-async function handlePaymentEvent(event) {
-  if (!PAYMENT_ACTIONS_HANDLED.has(event.action)) {
-    logEvent("ignored_payment_action", { event_id: event.id, action: event.action });
-    return;
-  }
+async function handleRecurringPayment(payment) {
+  // A chargeback leaves the payment "paid" and only shows up as an amount —
+  // surface it as its own status so it doesn't read as a successful collection.
+  const status = payment.hasChargebacks() ? "charged_back" : payment.status;
 
-  const paymentId = event.links && event.links.payment;
   const billingRunsCol = await billingRuns();
   const result = await billingRunsCol.updateOne(
-    { gocardless_payment_id: paymentId },
-    { $set: { status: event.action, updated_at: new Date() } },
+    { mollie_payment_id: payment.id },
+    { $set: { status, updated_at: new Date() } },
   );
 
   if (result.matchedCount === 0) {
-    logEvent("unmatched_payment_event", { event_id: event.id, payment_id: paymentId, action: event.action });
+    logEvent("unmatched_payment", { payment_id: payment.id, status });
     return;
   }
 
-  logEvent("billing_run_updated", { event_id: event.id, payment_id: paymentId, action: event.action });
+  logEvent("billing_run_updated", { payment_id: payment.id, status });
+  if (status === "failed" || status === "charged_back") {
+    console.error("MANUAL FOLLOW-UP REQUIRED:", JSON.stringify({ stage: "collection_webhook", payment_id: payment.id, status }));
+  }
 }
 
-async function processEvent(event) {
+// Mollie webhooks are unsigned and carry only the payment id (form-encoded
+// `id=tr_...`). That's by design: the only trustworthy data is what we fetch
+// back from the API with our own key, so a forged call can't change anything.
+router.post("/mollie", async (req, res) => {
+  const paymentId = req.body && req.body.id;
+  if (typeof paymentId !== "string" || !paymentId.startsWith("tr_")) {
+    return res.status(400).json({ error: "Missing payment id" });
+  }
+
+  let payment;
   try {
-    if (event.resource_type === "mandates") {
-      await handleMandateEvent(event);
-    } else if (event.resource_type === "payments") {
-      await handlePaymentEvent(event);
+    payment = await getPayment(paymentId);
+  } catch (error) {
+    // Unknown id (or a test-mode id hitting the live key) — answer 200 so we
+    // don't reveal which ids exist, and so Mollie doesn't keep retrying.
+    if (error.statusCode === 404) {
+      logEvent("unknown_payment", { payment_id: paymentId });
+      return res.status(200).end();
+    }
+    console.error("Mollie webhook fetch error:", error);
+    return res.status(502).end();
+  }
+
+  try {
+    if (payment.sequenceType === "first") {
+      await handleFirstPayment(payment);
     } else {
-      logEvent("ignored_resource_type", { event_id: event.id, resource_type: event.resource_type });
+      await handleRecurringPayment(payment);
     }
+    res.status(200).end();
   } catch (error) {
-    console.error("Webhook event processing error:", error, event);
-    logEvent("processing_error", { event_id: event.id, error: error.message });
+    // Non-2xx makes Mollie retry later; all updates above are idempotent.
+    console.error("Mollie webhook processing error:", error);
+    logEvent("processing_error", { payment_id: paymentId, error: error.message });
+    res.status(500).end();
   }
-}
-
-router.post("/gocardless", (req, res) => {
-  const signatureHeader = req.get("Webhook-Signature");
-
-  // `parse` verifies the HMAC-SHA256 signature over the raw body against our
-  // webhook secret, then JSON-parses it — in one step, so there is exactly
-  // one place the secret is used.
-  let events;
-  try {
-    events = parse(req.rawBody, config.goCardless.webhookSecret(), signatureHeader) || [];
-  } catch (error) {
-    if (error instanceof InvalidSignatureError) {
-      logEvent("invalid_signature", {});
-      return res.status(401).json({ error: "Invalid webhook signature" });
-    }
-    console.error("Webhook parse error:", error);
-    return res.status(400).json({ error: "Malformed webhook body" });
-  }
-
-  // Respond immediately — GoCardless expects a fast 200 and will retry on
-  // timeout. Event side effects (idempotent DB updates) happen after we've
-  // already acknowledged receipt.
-  res.status(200).json({ success: true });
-
-  Promise.all(events.map(processEvent)).catch((error) => {
-    console.error("Unexpected webhook batch processing error:", error);
-  });
 });
 
 module.exports = router;

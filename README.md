@@ -1,10 +1,10 @@
 # Branch
 
-## Transaction ledger + GoCardless fee collection
+## Transaction ledger + Mollie fee collection
 
 Business A's site (SumUp payments) reports each completed transaction to this
 site via `POST /api/transactions`. Branch collects a flat fee per transaction
-from Business A monthly via SEPA Direct Debit through GoCardless.
+from Business A monthly via SEPA Direct Debit through Mollie.
 
 ### One-time setup
 
@@ -13,27 +13,26 @@ from Business A monthly via SEPA Direct Debit through GoCardless.
    `backend/config/env.js`).
    - `SESSION_SECRET`: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
    - `ADMIN_PASSWORD_HASH`: `npm run hash-admin-password -- 'your-chosen-password'`
-   - `GOCARDLESS_ACCESS_TOKEN` / `GOCARDLESS_WEBHOOK_SECRET`: from your
-     GoCardless **sandbox** dashboard (Developers → Create access token,
-     Developers → Webhook endpoints).
-2. In the GoCardless sandbox dashboard, add a webhook endpoint pointing at
-   `https://<your-dev-tunnel-or-host>/webhooks/gocardless` and copy its
-   secret into `GOCARDLESS_WEBHOOK_SECRET`. (Locally, use something like
-   `ngrok http 3000` to get a URL GoCardless can reach.)
-3. `npm install`
-4. Seed the Business A client record and get its API key:
+   - `MOLLIE_API_KEY`: the **test** API key (`test_...`) from the Mollie
+     dashboard (Developers → API keys). SEPA Direct Debit and iDEAL (and/or
+     Bancontact) must be enabled on the profile.
+   - `APP_BASE_URL`: a URL Mollie can reach — it's used for both the checkout
+     redirect and the webhook (`<APP_BASE_URL>/webhooks/mollie`). Locally,
+     use something like `ngrok http 3000`. There's no webhook secret: the
+     webhook URL is set on each payment, and the app re-fetches the payment
+     from the API instead of trusting the webhook body.
+2. `npm install`
+3. Seed the Business A client record and get its API key:
    ```
    npm run seed-client -- --client-id business-a --name "Business A" \
      --email billing@businessa.example --fee 3.00 --currency EUR
    ```
    This prints an API key **once** — give that to Business A's site to send
    as `Authorization: Bearer <key>` on its calls to `/api/transactions`.
-5. Visit `http://localhost:3000/onboarding/business-a`, authorize with a
-   [GoCardless sandbox test bank account](https://developer.gocardless.com/getting-started/api/testing-guide/)
-   (e.g. sort code `200000`, account number `55779911` for a GB test payer —
-   check GoCardless's testing guide for the current SEPA/EUR test details),
-   and confirm the client's `mandate_status` becomes `active` once the
-   `mandates` webhook fires (check `/admin`).
+4. Visit `<APP_BASE_URL>/onboarding/business-a` and complete the €0.01
+   verification payment. In test mode Mollie shows a page where you choose the
+   outcome — pick **Paid** — and the client's `mandate_status` becomes
+   `active` (check `/admin`).
 
 ### Simulating an incoming transaction
 
@@ -65,7 +64,7 @@ npm run run-billing -- --date 2026-08-27   # 5 days before Sept 1 -> sends notic
 npm run run-billing -- --date 2026-09-01   # collects against unbilled transactions
 ```
 
-This hits the real GoCardless sandbox API and sends a real email via the
+This hits the Mollie API in test mode and sends a real email via the
 configured Gmail account, so use test data.
 
 ### Admin view
@@ -81,18 +80,26 @@ with a different flat fee/currency, then send them to
 `/onboarding/<id>`. Nothing else changes — routes, the billing job, and the
 admin view are all client-agnostic.
 
-### Switching sandbox → live
+### Switching test → live
 
-1. Create a **live** GoCardless account/access token and a **separate** live
-   webhook endpoint (the sandbox webhook secret does not carry over —
-   sandbox and live are registered independently in the dashboard).
-2. Update `backend/.env`: `GOCARDLESS_ENVIRONMENT=live`,
-   `GOCARDLESS_ACCESS_TOKEN=<live token>`,
-   `GOCARDLESS_WEBHOOK_SECRET=<live webhook secret>`, `APP_BASE_URL=<real
-   production URL>`.
-3. Re-run the onboarding flow for Business A against live — sandbox mandates
-   don't exist in live, so `gocardless_mandate_id` must be re-established.
+1. Get Mollie's approval for the profile to accept live payments, with SEPA
+   Direct Debit and iDEAL/Bancontact enabled.
+2. Update `backend/.env`: `MOLLIE_API_KEY=<live_... key>`,
+   `APP_BASE_URL=<real production URL>`.
+3. Re-run the onboarding flow for Business A against live. Test customers
+   and mandates don't exist in live mode, so first clear the client's
+   `mollie_customer_id`, `mollie_mandate_id` and `mollie_first_payment_id`.
 4. Restart the app so `assertEnv()` picks up the new values.
+
+### Migrating from GoCardless
+
+GoCardless mandates can't be moved to Mollie, so each existing client
+re-authorizes once via `/onboarding/<id>`. While a client has
+`collection_paused: true`, transactions keep piling up as unbilled and
+nothing is charged. Once their Mollie mandate is `active`, unset the flag and
+the next collection on the 1st charges the whole backlog. Older billing runs
+keep their `gocardless_payment_id` for history. Cancel the old mandate in the
+GoCardless dashboard after that.
 
 ### Known limitations
 

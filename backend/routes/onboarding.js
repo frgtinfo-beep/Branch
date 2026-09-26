@@ -1,11 +1,8 @@
 const express = require("express");
 const { clients } = require("../db");
 const { config } = require("../config/env");
-const {
-  createMandateOnlyBillingRequest,
-  createBillingRequestFlow,
-  getBillingRequest,
-} = require("../services/gocardlessService");
+const { createCustomer, createFirstPayment, getPayment } = require("../services/mollieService");
+const { applyFirstPaymentResult } = require("../services/mandateService");
 const { onboardingPage, onboardingResultPage } = require("../views/onboardingPage");
 
 const router = express.Router();
@@ -31,20 +28,35 @@ router.get("/:clientId/start", async (req, res) => {
   if (!client) return;
 
   try {
-    const billingRequest = await createMandateOnlyBillingRequest({});
-    const flow = await createBillingRequestFlow({
-      billingRequestId: billingRequest.id,
-      redirectUri: `${config.appBaseUrl()}/onboarding/${encodeURIComponent(client.client_id)}/callback`,
-      exitUri: `${config.appBaseUrl()}/onboarding/${encodeURIComponent(client.client_id)}?cancelled=1`,
+    const clientsCol = await clients();
+
+    // One Mollie customer per client, reused across retries so abandoned
+    // attempts don't leave a trail of duplicate customers in the dashboard.
+    let customerId = client.mollie_customer_id;
+    if (!customerId) {
+      const customer = await createCustomer({ name: client.name, email: client.billing_email, clientId: client.client_id });
+      customerId = customer.id;
+      await clientsCol.updateOne({ _id: client._id }, { $set: { mollie_customer_id: customerId, updated_at: new Date() } });
+    }
+
+    const payment = await createFirstPayment({
+      customerId,
+      clientId: client.client_id,
+      currency: client.currency,
+      description: `Branch — Direct Debit authorization for ${client.name}`,
+      redirectUrl: `${config.appBaseUrl()}/onboarding/${encodeURIComponent(client.client_id)}/callback`,
+      webhookUrl: config.mollie.webhookUrl(),
     });
 
-    const clientsCol = await clients();
     await clientsCol.updateOne(
       { _id: client._id },
       {
         $set: {
-          gocardless_billing_request_id: billingRequest.id,
-          mandate_status: "pending_customer_approval",
+          mollie_first_payment_id: payment.id,
+          // Keep an already-active mandate's status if they're re-authorizing
+          // (e.g. switching bank accounts) — it's still usable until the new
+          // one lands.
+          ...(client.mandate_status === "active" ? {} : { mandate_status: "pending_customer_approval" }),
           updated_at: new Date(),
         },
       },
@@ -55,14 +67,15 @@ router.get("/:clientId/start", async (req, res) => {
         at: new Date().toISOString(),
         route: "GET /onboarding/:clientId/start",
         client_id: client.client_id,
-        billing_request_id: billingRequest.id,
+        mollie_customer_id: customerId,
+        mollie_payment_id: payment.id,
       }),
     );
 
-    res.redirect(303, flow.authorisation_url);
+    res.redirect(303, payment.getCheckoutUrl());
   } catch (error) {
     console.error("Onboarding start error:", error);
-    res.status(502).send("Could not start GoCardless authorization. Please try again shortly.");
+    res.status(502).send("Could not start Mollie authorization. Please try again shortly.");
   }
 });
 
@@ -70,57 +83,34 @@ router.get("/:clientId/callback", async (req, res) => {
   const client = await findClientOr404(req, res);
   if (!client) return;
 
-  if (!client.gocardless_billing_request_id) {
+  if (!client.mollie_first_payment_id) {
     return res.status(400).send("No authorization in progress for this client.");
   }
 
   try {
-    // We deliberately re-fetch status from GoCardless rather than trusting
-    // the `outcome`/`id` query params on the redirect — GoCardless's own docs
-    // warn those aren't a reliable signal on their own.
-    const billingRequest = await getBillingRequest(client.gocardless_billing_request_id);
-    const clientsCol = await clients();
+    // Mollie's redirect carries no status, so always ask Mollie what happened.
+    const payment = await getPayment(client.mollie_first_payment_id);
+    const { outcome } = await applyFirstPaymentResult(client, payment);
 
-    if (billingRequest.status === "fulfilled") {
-      const mandateId = billingRequest.links && billingRequest.links.mandate_request_mandate;
-      const customerId = billingRequest.links && billingRequest.links.customer;
-
-      await clientsCol.updateOne(
-        { _id: client._id },
-        {
-          $set: {
-            gocardless_mandate_id: mandateId || null,
-            gocardless_customer_id: customerId || null,
-            // Authoritative status transitions (active/failed/cancelled) come
-            // from the mandates webhook, not from this callback.
-            mandate_status: "pending_submission",
-            updated_at: new Date(),
-          },
-        },
-      );
-
+    if (outcome === "authorized") {
       return res.send(
         onboardingResultPage({
           client,
           success: true,
           heading: "Authorization received",
           message:
-            "Thanks — we've received your Direct Debit authorization. We'll confirm once your bank has processed the mandate.",
+            "Thanks — your SEPA Direct Debit mandate is set up. Branch's monthly fees will be collected from this bank account.",
         }),
       );
     }
 
-    if (billingRequest.status === "cancelled") {
-      await clientsCol.updateOne(
-        { _id: client._id },
-        { $set: { mandate_status: "cancelled", updated_at: new Date() } },
-      );
+    if (outcome === "cancelled") {
       return res.send(
         onboardingResultPage({
           client,
           success: false,
           heading: "Authorization cancelled",
-          message: "The authorization was cancelled before it completed. You can try again.",
+          message: "The authorization was cancelled or did not complete. You can try again.",
         }),
       );
     }
@@ -130,7 +120,7 @@ router.get("/:clientId/callback", async (req, res) => {
         client,
         success: false,
         heading: "Still processing",
-        message: "We haven't received confirmation yet. Please check back in a few minutes.",
+        message: "We haven't received confirmation from your bank yet. Please check back in a few minutes.",
       }),
     );
   } catch (error) {

@@ -66,15 +66,15 @@ ${BRAND_HEAD}
       ${cancelled ? '<div class="notice">Authorization was cancelled or did not complete. You can try again below.</div>' : ""}
       <p>
         Branch charges ${name} a flat fee of ${currency} ${fee} per transaction,
-        billed monthly via SEPA Direct Debit through GoCardless.
+        billed monthly via SEPA Direct Debit through Mollie.
       </p>
       <p>
-        To set this up, we need your authorization for GoCardless to collect that fee
-        automatically. No payment is taken today — this only sets up permission for
-        future monthly collections. Your payment is protected by the SEPA Direct Debit
+        To set this up, you'll make a one-time ${currency} 0.01 verification payment with
+        iDEAL or Bancontact. That links the bank account you pay from as the account for
+        future monthly collections. Your payments are protected by the SEPA Direct Debit
         Guarantee, and you can cancel the mandate at any time directly with your bank.
       </p>
-      <a class="btn" href="/onboarding/${encodeURIComponent(client.client_id)}/start">Authorize with GoCardless</a>
+      <a class="btn" href="/onboarding/${encodeURIComponent(client.client_id)}/start">Authorize with Mollie</a>
     </div>
   </main>
 </body>

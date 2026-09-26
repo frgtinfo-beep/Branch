@@ -1,4 +1,4 @@
-// Guards for the team portal — a separate concern from the GoCardless billing
+// Guards for the team portal — a separate concern from the Mollie billing
 // admin area (see middleware/adminAuth.js). Uses the same express-session
 // instance already configured in server.js, but a distinct session key
 // (`req.session.portalUser`) so the two login systems never collide.

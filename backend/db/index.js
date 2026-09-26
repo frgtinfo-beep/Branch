@@ -100,7 +100,7 @@ async function ensureIndexes() {
     ),
     transactionsCol.createIndex({ client_id: 1, billed: 1 }),
     billingRunsCol.createIndex({ client_id: 1, created_at: -1 }),
-    billingRunsCol.createIndex({ gocardless_payment_id: 1 }, { sparse: true }),
+    billingRunsCol.createIndex({ mollie_payment_id: 1 }, { sparse: true }),
     // One billing_run per client per period — lets the daily job upsert
     // safely if it's ever triggered twice for the same collection date.
     billingRunsCol.createIndex({ client_id: 1, period_end: 1 }, { unique: true }),

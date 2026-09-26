@@ -97,7 +97,8 @@ router.get("/api/admin/clients/:clientId/billing-runs", requireAdminApi, async (
         total_amount: Number(run.total_amount),
         currency: client.currency,
         status: run.status,
-        gocardless_payment_id: run.gocardless_payment_id,
+        // Runs collected before the Mollie switch only have a GoCardless id.
+        payment_id: run.mollie_payment_id || run.gocardless_payment_id,
       })),
     );
   } catch (error) {

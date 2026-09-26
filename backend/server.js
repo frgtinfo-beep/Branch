@@ -37,16 +37,7 @@ app.use(cors());
 
 // Global Middleware
 app.use(cors({ origin: "*", methods: ["GET", "POST", "OPTIONS"] }));
-app.use(
-  express.json({
-    // Capture the exact raw bytes GoCardless signed — needed to verify the
-    // webhook signature, which must run against the untouched body, not the
-    // reserialized JSON.
-    verify: (req, res, buf) => {
-      req.rawBody = buf;
-    },
-  }),
-);
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
