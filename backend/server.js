@@ -24,6 +24,8 @@ const portalAvailabilityRouter = require("./routes/portal/availability");
 const portalCompanyProfilesRouter = require("./routes/portal/companyProfiles");
 const portalSettingsRouter = require("./routes/portal/settings");
 const portalReportsRouter = require("./routes/portal/reports");
+const portalCalendarRouter = require("./routes/portal/calendar");
+const portalCalendarFeedRouter = require("./routes/portal/calendarFeed");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -60,6 +62,8 @@ app.use(portalAvailabilityRouter);
 app.use(portalCompanyProfilesRouter);
 app.use(portalSettingsRouter);
 app.use(portalReportsRouter);
+app.use(portalCalendarRouter);
+app.use(portalCalendarFeedRouter);
 
 // --- API Endpoints ---
 

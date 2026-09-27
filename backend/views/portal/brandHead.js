@@ -315,6 +315,7 @@ const PORTAL_SCRIPT = `
 
 const NAV_ITEMS = [
   { href: "/portal", label: "Taken", key: "tasks" },
+  { href: "/portal/calendar", label: "Kalender", key: "calendar" },
   { href: "/portal/availability", label: "Beschikbaarheid", key: "availability" },
   { href: "/portal/clients", label: "Klanten", key: "clients" },
   { href: "/portal/reports", label: "Rapportages", key: "reports" },

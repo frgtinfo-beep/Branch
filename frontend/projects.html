@@ -17,11 +17,9 @@
     <meta name="twitter:description" content="Browse Branch's portfolio of business development, digital solutions, and growth strategy projects delivered for entrepreneurs and companies.">
     <meta name="twitter:image" content="https://infobranch.nl/images/logo-text.png">
     <link rel="icon" href="./images/Ontwerp zonder titel-3.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="vendor/inter/inter.css">
+    <script src="vendor/tailwind/tailwind-cdn.js"></script>
     <script>
       tailwind.config = {
         theme: {
@@ -33,7 +31,7 @@
               'branch-green': '#78db55',
               'background': '#f7f7f7',
               'text-dark': '#111827',
-              'text-light': '#6b7280',
+              'text-light': '#5B6472',
             },
             fontFamily: {
               sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -63,7 +61,7 @@
 
         <div class="flex items-center gap-2">
           <div class="relative" id="language-dropdown-container">
-            <button id="language-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center gap-2 text-[0.85rem] font-bold uppercase tracking-wide text-text-dark hover:text-branch-blue transition-colors px-3 py-1.5 focus:outline-none">
+            <button id="language-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center gap-2 text-[0.85rem] font-bold uppercase tracking-wide text-text-dark hover:text-branch-blue transition-colors px-3 py-1.5">
               <i class="fa-solid fa-globe text-base"></i>
               <span id="current-lang-text">English</span>
               <i id="lang-arrow" class="fa-solid fa-chevron-down text-[0.65rem] transition-transform duration-200"></i>
@@ -116,13 +114,52 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer>
-      <div class="footer-brand">
-        <img src="./images/main-logo-text.png" alt="Branch" />
-        <p>© 2026 Branch. All rights reserved. · <a href="https://branchdb.onrender.com/admin" style="color: var(--text-light); opacity: 0.7;">Staff login</a> · <a href="https://branchdb.onrender.com/portal/login" style="color: var(--text-light); opacity: 0.7;">Team login</a></p>
+  <footer class="bg-branch-blue-dark text-white pt-20 pb-6 px-5 md:px-[60px] border-t-2 border-branch-green">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-[1200px] mx-auto mb-14 text-left gap-10 md:gap-8">
+
+      <div>
+        <span class="block mb-5 font-black text-3xl text-white" translate="no">Branch<span class="text-branch-cyan">.</span></span>
+        <p class="max-w-[300px] text-white/70 leading-relaxed text-sm" data-i18n="footer_about">Helping businesses turn strategic opportunities into successful, scalable projects.</p>
       </div>
-    </footer>
+
+      <div>
+        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_quicklinks">Quick Links</h2>
+        <nav class="flex flex-col gap-3" aria-label="Footer">
+          <a href="index.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="nav_home">Home</a>
+          <a href="about.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="nav_about">About</a>
+          <a href="contact.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="nav_contact">Contact</a>
+        </nav>
+      </div>
+
+      <div>
+        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_services">Services</h2>
+        <ul class="flex flex-col gap-3 list-none">
+          <li class="text-white/75 text-sm font-medium" data-i18n="service_1">Business Development</li>
+          <li class="text-white/75 text-sm font-medium" data-i18n="service_2">Digital Solutions</li>
+          <li class="text-white/75 text-sm font-medium" data-i18n="service_3">Growth Strategy</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_legal">Legal</h2>
+        <nav class="flex flex-col gap-3" aria-label="Legal">
+          <a href="privacy.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_privacy">Privacy Policy</a>
+          <a href="terms.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_terms">Terms and Conditions</a>
+          <a href="refund.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_refund">Refund Policy</a>
+          <a href="cookies.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_cookies">Cookie Policy</a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="max-w-[1200px] mx-auto pt-8 border-t border-white/20 flex flex-col gap-3 text-white/60 text-[0.85rem] font-medium md:flex-row md:justify-between">
+      <p><span translate="no">Branch</span> · <span data-i18n="biz_form">Sole proprietorship</span> · KVK 42001190 · <span data-i18n="biz_vat">VAT</span> [BTW-ID] · [ADRES]</p>
+      <p>
+        &copy; 2026 <span translate="no">Branch</span>. <span data-i18n="footer_rights">All rights reserved.</span>
+        · <a href="https://branchdb.onrender.com/admin" class="text-white/60 underline-offset-4 hover:text-white hover:underline transition-colors duration-200">Staff login</a>
+        · <a href="https://branchdb.onrender.com/portal/login" class="text-white/60 underline-offset-4 hover:text-white hover:underline transition-colors duration-200">Team login</a>
+      </p>
+    </div>
+  </footer>
 
     <script src="nav.js"></script>
     <script src="translations.js"></script>

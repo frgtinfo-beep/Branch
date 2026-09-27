@@ -29,16 +29,14 @@
     "sameAs": []
   }
   </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css">
   <link rel="icon" href="./images/Ontwerp zonder titel-3.png" type="image/x-icon">
   <link rel="stylesheet" href="theme.css">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/inter/inter.css">
 
   <!-- 1. Load Tailwind CDN FIRST -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="vendor/tailwind/tailwind-cdn.js"></script>
 
   <!-- 2. THEN define your custom config -->
   <script>
@@ -49,7 +47,7 @@
             paper:              '#FFFFFF',
             ink:                '#05070F',
             'text-dark':        '#0A0D16',
-            'text-light':       '#6B7280',
+            'text-light':       '#5B6472',
             'branch-blue-dark': '#032F8A',
             'branch-blue':      '#0B6DFF',
             'branch-cyan':      '#14B8E6',
@@ -111,7 +109,7 @@
 
       <div class="flex items-center gap-2">
         <div class="relative" id="language-dropdown-container">
-          <button id="language-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center gap-2 text-[0.85rem] font-bold uppercase tracking-wide text-text-dark hover:text-branch-blue transition-colors px-3 py-1.5 focus:outline-none">
+          <button id="language-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center gap-2 text-[0.85rem] font-bold uppercase tracking-wide text-text-dark hover:text-branch-blue transition-colors px-3 py-1.5">
             <i class="fa-solid fa-globe text-base"></i>
             <span id="current-lang-text">English</span>
             <i id="lang-arrow" class="fa-solid fa-chevron-down text-[0.65rem] transition-transform duration-200"></i>
@@ -225,13 +223,13 @@
         </li>
         <li class="relative">
           <span class="step-node text-branch-cyan -ml-9 md:ml-0 mb-0 md:mb-8 absolute md:relative" aria-hidden="true"></span>
-          <span class="block text-sm font-bold text-[#0B8DB8] mb-2 price" aria-hidden="true">02</span>
+          <span class="block text-sm font-bold text-[#0A7699] mb-2 price" aria-hidden="true">02</span>
           <h3 class="text-ink mb-3 text-[1.4rem] font-bold tracking-tight" data-i18n="card2_title">Expert Guidance</h3>
           <p class="text-text-light text-[1.05rem] leading-relaxed max-w-[32ch]" data-i18n="card2_desc">End-to-end strategic planning and high-level project execution.</p>
         </li>
         <li class="relative">
           <span class="step-node text-branch-green -ml-9 md:ml-0 mb-0 md:mb-8 absolute md:relative" aria-hidden="true"></span>
-          <span class="block text-sm font-bold text-[#3F8A26] mb-2 price" aria-hidden="true">03</span>
+          <span class="block text-sm font-bold text-[#347A1F] mb-2 price" aria-hidden="true">03</span>
           <h3 class="text-ink mb-3 text-[1.4rem] font-bold tracking-tight" data-i18n="card3_title">Real Growth</h3>
           <p class="text-text-light text-[1.05rem] leading-relaxed max-w-[32ch]" data-i18n="card3_desc">Laser-focused on delivering measurable, long-term business success.</p>
         </li>
@@ -244,6 +242,7 @@
       <div class="mb-12 max-w-[700px]">
         <h2 class="text-ink text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] tracking-[-0.03em] mb-4" data-i18n="pkg_title">Our Packages</h2>
         <p class="text-text-light text-[1.1rem] leading-relaxed" data-i18n="pkg_desc">Pick the level of support that fits where your business is right now.</p>
+        <p class="text-text-light text-[0.95rem] mt-3" data-i18n="pkg_vat_note">All prices are per month, excluding 21% VAT. Our packages are for businesses and entrepreneurs.</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
@@ -389,14 +388,14 @@
   </main>
 
   <footer class="bg-branch-blue-dark text-white pt-20 pb-6 px-5 md:px-[60px] border-t-2 border-branch-green">
-    <div class="flex flex-col md:flex-row justify-between max-w-[1200px] mx-auto mb-14 text-left gap-10 md:gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-[1200px] mx-auto mb-14 text-left gap-10 md:gap-8">
 
-      <div class="flex-1 min-w-[200px]">
+      <div>
         <span class="block mb-5 font-black text-3xl text-white" translate="no">Branch<span class="text-branch-cyan">.</span></span>
         <p class="max-w-[300px] text-white/70 leading-relaxed text-sm" data-i18n="footer_about">Helping businesses turn strategic opportunities into successful, scalable projects.</p>
       </div>
 
-      <div class="flex-1 min-w-[180px]">
+      <div>
         <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_quicklinks">Quick Links</h2>
         <nav class="flex flex-col gap-3" aria-label="Footer">
           <a href="index.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="nav_home">Home</a>
@@ -405,7 +404,7 @@
         </nav>
       </div>
 
-      <div class="flex-1 min-w-[180px]">
+      <div>
         <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_services">Services</h2>
         <ul class="flex flex-col gap-3 list-none">
           <li class="text-white/75 text-sm font-medium" data-i18n="service_1">Business Development</li>
@@ -413,12 +412,25 @@
           <li class="text-white/75 text-sm font-medium" data-i18n="service_3">Growth Strategy</li>
         </ul>
       </div>
+
+      <div>
+        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_legal">Legal</h2>
+        <nav class="flex flex-col gap-3" aria-label="Legal">
+          <a href="privacy.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_privacy">Privacy Policy</a>
+          <a href="terms.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_terms">Terms and Conditions</a>
+          <a href="refund.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_refund">Refund Policy</a>
+          <a href="cookies.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_cookies">Cookie Policy</a>
+        </nav>
+      </div>
     </div>
 
-    <div class="text-center pt-8 border-t border-white/20 text-white/60 text-[0.85rem] font-medium">
-      &copy; 2026 Branch. <span data-i18n="footer_rights">All rights reserved.</span>
-      · <a href="https://branchdb.onrender.com/admin" class="text-white/60 underline-offset-4 hover:text-white hover:underline transition-colors duration-200">Staff login</a>
-      · <a href="https://branchdb.onrender.com/portal/login" class="text-white/60 underline-offset-4 hover:text-white hover:underline transition-colors duration-200">Team login</a>
+    <div class="max-w-[1200px] mx-auto pt-8 border-t border-white/20 flex flex-col gap-3 text-white/60 text-[0.85rem] font-medium md:flex-row md:justify-between">
+      <p><span translate="no">Branch</span> · <span data-i18n="biz_form">Sole proprietorship</span> · KVK 42001190 · <span data-i18n="biz_vat">VAT</span> [BTW-ID] · [ADRES]</p>
+      <p>
+        &copy; 2026 <span translate="no">Branch</span>. <span data-i18n="footer_rights">All rights reserved.</span>
+        · <a href="https://branchdb.onrender.com/admin" class="text-white/60 underline-offset-4 hover:text-white hover:underline transition-colors duration-200">Staff login</a>
+        · <a href="https://branchdb.onrender.com/portal/login" class="text-white/60 underline-offset-4 hover:text-white hover:underline transition-colors duration-200">Team login</a>
+      </p>
     </div>
   </footer>
 

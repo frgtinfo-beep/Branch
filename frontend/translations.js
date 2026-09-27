@@ -50,7 +50,7 @@
         label_name: "Full Name",
         label_email: "Email",
         label_company: "Company (optional)",
-        label_project: "Sector",
+        label_project: "Sector (optional)",
         project_select: "Select project type",
         label_message: "Message",
         btn_send: "Send Inquiry →",
@@ -107,7 +107,7 @@
         pkg3_f17: "Weekly progress report",
         pkg4_name: "Package 4 — Partnership",
         pkg4_badge: "Selected clients only",
-        pkg4_intro: "Same commitment and results as Package 3 — no fixed monthly fee. The terms of collaboration are agreed in a personal conversation.",
+        pkg4_intro: "Same commitment and services as Package 3 — no fixed monthly fee. The terms of collaboration are agreed in a personal conversation.",
         pkg4_note: "Only available to clients who qualify, following an assessment by Branch.",
         pkg4_f1: "Full support take-over and build-up",
         pkg4_f2: "24-month Plan of Action",
@@ -149,6 +149,15 @@
         cta_title: "Ready to build something great?",
         cta_desc: "Whether you're launching a business, growing a company, or starting a new project, Branch is ready to help.",
         cta_button: "Get Started Today",
+        footer_legal: "Legal",
+        legal_privacy: "Privacy Policy",
+        legal_terms: "Terms and Conditions",
+        legal_refund: "Refund Policy",
+        legal_cookies: "Cookie Policy",
+        biz_form: "Sole proprietorship",
+        biz_vat: "VAT",
+        pkg_vat_note: "All prices are per month, excluding 21% VAT. Our packages are for businesses and entrepreneurs.",
+        form_privacy_note: "We only use your details to reply to your message and, if you ask for it, to prepare an offer. We keep them for up to 1 year. Read our <a href=\"privacy.html\" class=\"text-branch-blue-dark font-semibold underline underline-offset-4\">privacy policy</a>.",
         info_email: "Email",
         info_phone: "Phone",
         info_location: "Location",
@@ -208,7 +217,7 @@
         label_name: "Volledige Naam",
         label_email: "E-mailadres",
         label_company: "Bedrijf (optioneel)",
-        label_project: "Sector",
+        label_project: "Sector (optioneel)",
         project_select: "Selecteer projecttype",
         label_message: "Bericht",
         btn_send: "Aanvraag Verzenden →",
@@ -265,7 +274,7 @@
         pkg3_f17: "Wekelijkse voortgangsrapportage",
         pkg4_name: "Pakket 4 — Partnership",
         pkg4_badge: "Alleen voor geselecteerde klanten",
-        pkg4_intro: "Volledige inzet en resultaat gelijk aan Pakket 3 — geen vast maandbedrag. De samenwerkingsvoorwaarden bepalen we in een persoonlijk gesprek.",
+        pkg4_intro: "Dezelfde inzet en diensten als Pakket 3 — geen vast maandbedrag. De samenwerkingsvoorwaarden bepalen we in een persoonlijk gesprek.",
         pkg4_note: "Alleen beschikbaar voor klanten die hiervoor in aanmerking komen, na beoordeling door Branch.",
         pkg4_f1: "Volledige ondersteuning take over and build up",
         pkg4_f2: "Plan van Aanpak voor 24 maanden",
@@ -307,6 +316,15 @@
         cta_title: "Klaar om iets moois te bouwen?",
         cta_desc: "Of u nu een bedrijf start, uw onderneming laat groeien of aan een nieuw project begint: Branch staat klaar om te helpen.",
         cta_button: "Vandaag nog beginnen",
+        footer_legal: "Juridisch",
+        legal_privacy: "Privacybeleid",
+        legal_terms: "Algemene voorwaarden",
+        legal_refund: "Restitutiebeleid",
+        legal_cookies: "Cookiebeleid",
+        biz_form: "Eenmanszaak",
+        biz_vat: "Btw-id",
+        pkg_vat_note: "Alle prijzen zijn per maand, exclusief 21% btw. Onze pakketten zijn bedoeld voor bedrijven en ondernemers.",
+        form_privacy_note: "We gebruiken uw gegevens alleen om op uw bericht te reageren en, als u daarom vraagt, een offerte te maken. We bewaren ze maximaal 1 jaar. Lees ons <a href=\"privacy.html\" class=\"text-branch-blue-dark font-semibold underline underline-offset-4\">privacybeleid</a>.",
         info_email: "E-mail",
         info_phone: "Telefoon",
         info_location: "Locatie",
@@ -345,18 +363,31 @@
       const isHidden = langMenu.classList.contains('hidden');
       if (isHidden) {
         langMenu.classList.remove('hidden');
+        langBtn.setAttribute('aria-expanded', 'true');
         if (langArrow) langArrow.classList.add('rotate-180');
       } else {
-        langMenu.classList.add('hidden');
-        if (langArrow) langArrow.classList.remove('rotate-180');
+        closeLangMenu();
+      }
+    });
+
+    function closeLangMenu() {
+      langMenu.classList.add('hidden');
+      langBtn.setAttribute('aria-expanded', 'false');
+      if (langArrow) langArrow.classList.remove('rotate-180');
+    }
+
+    // Escape closes the menu and returns focus to the button
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !langMenu.classList.contains('hidden')) {
+        closeLangMenu();
+        langBtn.focus();
       }
     });
 
     // Close menu when clicking outside of it
     document.addEventListener('click', (e) => {
       if (!langMenu.contains(e.target) && !langBtn.contains(e.target)) {
-        langMenu.classList.add('hidden');
-        if (langArrow) langArrow.classList.remove('rotate-180');
+        closeLangMenu();
       }
     });
 
@@ -368,8 +399,8 @@
         applyLanguage(selectedLang);
         
         // Hide menu after selection
-        langMenu.classList.add('hidden');
-        if (langArrow) langArrow.classList.remove('rotate-180');
+        closeLangMenu();
+        langBtn.focus();
       });
     });
 
@@ -378,6 +409,12 @@
       if (!translations[langCode]) langCode = 'en'; 
       localStorage.setItem('branch_lang', langCode);
       window.branchT = (key) => translations[langCode][key];
+      document.documentElement.lang = langCode;
+
+      // Long-form pages (legal) carry one block per language instead of per-key strings
+      document.querySelectorAll('[data-lang-block]').forEach((block) => {
+        block.hidden = block.getAttribute('data-lang-block') !== langCode;
+      });
 
       // Update Dropdown Selection UI
       let langName = "English"; // Default

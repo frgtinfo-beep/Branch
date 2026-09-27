@@ -54,6 +54,16 @@ async function journeyStages() {
   return (await getDatabase()).collection("journeyStages");
 }
 
+// Shared team calendar (one calendar, visible to every portal user)
+async function events() {
+  return (await getDatabase()).collection("events");
+}
+
+// Small key/value documents for portal-wide settings (e.g. the calendar feed token)
+async function settings() {
+  return (await getDatabase()).collection("settings");
+}
+
 // Client contract PDFs go in GridFS rather than on local disk — the app runs
 // on a host with ephemeral disk storage, so anything written to disk is lost
 // on every redeploy/restart. GridFS keeps the binary in the same MongoDB
@@ -77,6 +87,7 @@ async function ensureIndexes() {
     companyProfilesCol,
     deliverablesCol,
     journeyStagesCol,
+    eventsCol,
   ] = await Promise.all([
     clients(),
     transactions(),
@@ -88,6 +99,7 @@ async function ensureIndexes() {
     companyProfiles(),
     deliverables(),
     journeyStages(),
+    events(),
   ]);
 
   await Promise.all([
@@ -115,6 +127,8 @@ async function ensureIndexes() {
     companyProfilesCol.createIndex({ name: 1 }),
     companyProfilesCol.createIndex({ "board.collaborationStatus": 1 }),
     deliverablesCol.createIndex({ companyProfileId: 1 }),
+    // Calendar range queries: events overlapping [from, to)
+    eventsCol.createIndex({ start: 1, end: 1 }),
     // Singleton settings doc — never overwrites an admin's existing
     // customization, just guarantees it exists on a fresh database.
     journeyStagesCol.updateOne(
@@ -137,6 +151,8 @@ module.exports = {
   companyProfiles,
   deliverables,
   journeyStages,
+  events,
+  settings,
   contractsBucket,
   ensureIndexes,
 };
