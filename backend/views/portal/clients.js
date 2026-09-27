@@ -1,4 +1,4 @@
-const { PORTAL_BRAND_HEAD, portalNav } = require("./brandHead");
+const { PORTAL_BRAND_HEAD, PORTAL_SCRIPT, portalNav } = require("./brandHead");
 
 function clientsPage({ name, role }) {
   return `<!doctype html>
@@ -9,94 +9,114 @@ function clientsPage({ name, role }) {
 <title>Klanten — Branch Team Tool</title>
 ${PORTAL_BRAND_HEAD}
 <style>
-  .toolbar { margin-bottom: 18px; }
-  .client-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-  .client-card { text-decoration: none; color: inherit; }
-  .client-card h3 { margin: 0 0 6px; font-size: 1rem; color: var(--ink); }
-  .client-card p { margin: 0 0 4px; font-size: 0.8rem; color: var(--text-light); }
-  .stage-pill { display: inline-block; margin-top: 8px; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: rgba(11,109,255,0.1); color: var(--branch-blue-dark); }
-  .modal-backdrop { position: fixed; inset: 0; background: rgba(5,7,15,0.4); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
-  .modal-backdrop.open { display: flex; }
-  .modal { background: #fff; border-radius: 16px; padding: 28px; max-width: 440px; width: 100%; }
-  .modal label { display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-top: 12px; margin-bottom: 4px; }
-  .modal input, .modal textarea { width: 100%; box-sizing: border-box; padding: 9px 11px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.85rem; font-family: inherit; }
-  .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+  .client-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+  .client-card { display: flex; flex-direction: column; gap: 4px; text-decoration: none; color: inherit; }
+  .client-card h2 { margin: 0 0 2px; font-size: 1rem; font-weight: 700; color: var(--ink); }
+  .client-card p { margin: 0; font-size: 0.85rem; color: var(--text-light); }
+  .client-card .badge { align-self: flex-start; margin-top: 10px; }
+  .search { margin-bottom: 18px; max-width: 320px; }
 </style>
 </head>
 <body>
 ${portalNav({ active: "clients", role, name })}
 <main class="portal-main">
-  <h1 class="portal-title">Klanten</h1>
-  <div class="toolbar">
-    ${role === "admin" ? '<button class="portal-btn" id="new-client-btn">+ Nieuw bedrijf</button>' : ""}
+  <div class="page-head">
+    <h1>Klanten</h1>
+    ${role === "admin" ? '<button type="button" class="portal-btn" id="new-client-btn">+ Nieuw bedrijf</button>' : ""}
   </div>
-  <div class="client-grid" id="client-grid"></div>
+  <label class="field search"><span class="sr-only">Zoek klant</span><input type="search" id="client-search" placeholder="Zoek op naam, sector, contactpersoon of nummer"></label>
+  <div class="client-grid" id="client-grid" aria-busy="true"></div>
 </main>
 
 <div class="modal-backdrop" id="modal-backdrop">
-  <div class="modal">
-    <h2 style="margin-top:0; font-size:1.1rem;">Nieuw bedrijfsprofiel</h2>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="client-modal-title">
+    <div class="modal-header">
+      <h2 id="client-modal-title">Nieuw bedrijfsprofiel</h2>
+      <button type="button" class="icon-btn modal-close" data-close-modal aria-label="Sluiten">✕</button>
+    </div>
     <form id="client-form">
-      <label for="c-name">Bedrijfsnaam</label>
-      <input id="c-name" required>
-      <label for="c-contact">Contactpersoon</label>
-      <input id="c-contact">
-      <label for="c-email">E-mailadres</label>
-      <input id="c-email" type="email">
-      <label for="c-sector">Sector</label>
-      <input id="c-sector">
-      <label for="c-desc">Korte omschrijving</label>
-      <textarea id="c-desc"></textarea>
+      <label class="field"><span>Bedrijfsnaam</span><input id="c-name" required autocomplete="organization"></label>
+      <label class="field"><span>Contactpersoon</span><input id="c-contact" autocomplete="name"></label>
+      <label class="field"><span>E-mailadres</span><input id="c-email" type="email" autocomplete="email"></label>
+      <label class="field"><span>Telefoonnummer</span><input id="c-phone" type="tel" autocomplete="tel" inputmode="tel"></label>
+      <label class="field"><span>Sector</span><input id="c-sector"></label>
+      <label class="field"><span>Korte omschrijving</span><textarea id="c-desc"></textarea></label>
+      <p class="form-error" id="client-form-error" role="alert"></p>
       <div class="modal-actions">
-        <button type="button" class="portal-btn secondary" id="cancel-client-btn">Annuleren</button>
-        <button type="submit" class="portal-btn">Aanmaken</button>
+        <button type="button" class="portal-btn secondary" data-close-modal>Annuleren</button>
+        <button type="submit" class="portal-btn" id="create-client-btn">Aanmaken</button>
       </div>
     </form>
   </div>
 </div>
 
+${PORTAL_SCRIPT}
 <script>
-  function escapeHtmlClient(value) {
-    return String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  }
-  async function fetchJson(url, opts) {
-    const res = await fetch(url, opts);
-    if (res.status === 401) { window.location.href = "/portal/login"; throw new Error("unauthenticated"); }
-    if (!res.ok) { const body = await res.json().catch(() => ({})); throw new Error(body.error || ("HTTP " + res.status)); }
-    return res.json();
+  const IS_ADMIN = ${JSON.stringify(role === "admin")};
+  let clients = [];
+
+  function renderClients() {
+    const query = document.getElementById("client-search").value.trim().toLowerCase();
+    const list = query
+      ? clients.filter((c) => [c.name, c.sector, c.contactPerson, c.contactPhone].some((v) => v && v.toLowerCase().includes(query)))
+      : clients;
+    const grid = document.getElementById("client-grid");
+    if (!clients.length) {
+      grid.innerHTML = '<p class="empty" style="grid-column:1/-1;">Nog geen klanten toegevoegd.' + (IS_ADMIN ? " Gebruik “+ Nieuw bedrijf” om de eerste aan te maken." : "") + "</p>";
+      return;
+    }
+    grid.innerHTML = list.map((c) =>
+      '<a class="client-card portal-card" href="/portal/clients/' + c.id + '">' +
+      "<h2>" + escapeHtmlClient(c.name) + "</h2>" +
+      (c.sector ? "<p>" + escapeHtmlClient(c.sector) + "</p>" : "") +
+      (c.contactPerson ? "<p>" + escapeHtmlClient(c.contactPerson) + "</p>" : "") +
+      (c.contactPhone ? '<p class="num">' + escapeHtmlClient(c.contactPhone) + "</p>" : "") +
+      (c.currentStage ? '<span class="badge badge-blue">' + escapeHtmlClient(c.currentStage) + "</span>" : "") +
+      "</a>"
+    ).join("") || '<p class="empty" style="grid-column:1/-1;">Geen klanten gevonden voor “' + escapeHtmlClient(query) + '”.</p>';
   }
 
   async function loadClients() {
-    const list = await fetchJson("/api/portal/company-profiles");
-    document.getElementById("client-grid").innerHTML = list.map((c) =>
-      '<a class="client-card portal-card" href="/portal/clients/' + c.id + '">' +
-      "<h3>" + escapeHtmlClient(c.name) + "</h3>" +
-      (c.sector ? "<p>" + escapeHtmlClient(c.sector) + "</p>" : "") +
-      (c.contactPerson ? "<p>" + escapeHtmlClient(c.contactPerson) + "</p>" : "") +
-      (c.currentStage ? '<span class="stage-pill">' + escapeHtmlClient(c.currentStage) + "</span>" : "") +
-      "</a>"
-    ).join("") || "<p>Nog geen klanten toegevoegd.</p>";
+    clients = await fetchJson("/api/portal/company-profiles");
+    document.getElementById("client-grid").setAttribute("aria-busy", "false");
+    renderClients();
   }
+
+  document.getElementById("client-search").addEventListener("input", renderClients);
 
   const newBtn = document.getElementById("new-client-btn");
   if (newBtn) {
-    newBtn.addEventListener("click", () => document.getElementById("modal-backdrop").classList.add("open"));
-    document.getElementById("cancel-client-btn").addEventListener("click", () => document.getElementById("modal-backdrop").classList.remove("open"));
+    const backdrop = document.getElementById("modal-backdrop");
+    newBtn.addEventListener("click", () => {
+      document.getElementById("client-form-error").textContent = "";
+      openModal(backdrop);
+    });
     document.getElementById("client-form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      await fetchJson("/api/portal/company-profiles", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: document.getElementById("c-name").value,
-          contactPerson: document.getElementById("c-contact").value,
-          contactEmail: document.getElementById("c-email").value,
-          sector: document.getElementById("c-sector").value,
-          shortDescription: document.getElementById("c-desc").value,
-        }),
+      const errorEl = document.getElementById("client-form-error");
+      errorEl.textContent = "";
+      await withBusy(document.getElementById("create-client-btn"), async () => {
+        try {
+          await fetchJson("/api/portal/company-profiles", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: document.getElementById("c-name").value.trim(),
+              contactPerson: document.getElementById("c-contact").value,
+              contactEmail: document.getElementById("c-email").value,
+              contactPhone: document.getElementById("c-phone").value,
+              sector: document.getElementById("c-sector").value,
+              shortDescription: document.getElementById("c-desc").value,
+            }),
+          });
+        } catch (err) {
+          errorEl.textContent = err.message;
+          return;
+        }
+        closeModal(backdrop);
+        document.getElementById("client-form").reset();
+        toast("Bedrijf aangemaakt", "success");
+        loadClients();
       });
-      document.getElementById("modal-backdrop").classList.remove("open");
-      document.getElementById("client-form").reset();
-      loadClients();
     });
   }
 

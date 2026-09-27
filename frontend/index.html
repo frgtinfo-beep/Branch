@@ -66,23 +66,30 @@
   <style>
     html { scroll-behavior: smooth; }
 
-    /* Scroll reveal */
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
-    .reveal.active { opacity: 1; transform: translateY(0); }
-    .delay-100 { transition-delay: 90ms; }
-    .delay-200 { transition-delay: 180ms; }
-    .delay-300 { transition-delay: 270ms; }
+    /* The one authored moment: the hero mark grows from a single seed into branches */
+    .branch-path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: branch-draw 1.1s var(--ease-in-out) forwards; }
+    .branch-node { opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(0.6); animation: branch-bloom 0.45s var(--ease-out) forwards; }
+    @keyframes branch-draw { to { stroke-dashoffset: 0; } }
+    @keyframes branch-bloom { to { opacity: 1; transform: scale(1); } }
 
-    /* Bold graphic mark: thick branching strokes draw in */
-    .grow-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw 1.6s cubic-bezier(0.65,0,0.35,1) 0.2s forwards; }
-    .grow-node { opacity: 0; transform-origin: center; animation: bloom 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
-    @keyframes draw { to { stroke-dashoffset: 0; } }
-    @keyframes bloom { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+    /* Process steps: one continuous line, a node per step */
+    .steps { position: relative; }
+    .steps::before { content: ''; position: absolute; background: linear-gradient(90deg, #0B6DFF, #14B8E6, #78DB55); }
+    .step-node { position: relative; z-index: 1; display: block; width: 14px; height: 14px; border-radius: 9999px; background: #fff; border: 3px solid currentColor; }
+    @media (min-width: 768px) {
+      .steps::before { left: 7px; right: 7px; top: 6px; height: 2px; }
+    }
+    @media (max-width: 767.98px) {
+      .steps::before { left: 6px; top: 7px; bottom: 7px; width: 2px; background: linear-gradient(180deg, #0B6DFF, #14B8E6, #78DB55); }
+    }
+
+    .price { font-variant-numeric: tabular-nums; }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .reveal { opacity: 1; transform: none; transition: none; }
-      .grow-path, .grow-node { animation: none; opacity: 1; stroke-dashoffset: 0; }
+      .branch-path { animation: none; stroke-dashoffset: 0; }
+      .branch-node { animation: branch-fade 0.3s ease forwards; transform: none; }
+      @keyframes branch-fade { to { opacity: 1; } }
     }
   </style>
 </head>
@@ -143,281 +150,279 @@
 
   <main id="main">
 
-  <section class="relative w-full bg-branch-blue-dark pt-32 md:pt-36 pb-0 px-5 md:px-[60px] overflow-hidden">
-    <div class="relative z-10 max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] gap-12 md:gap-8 items-center">
+  <section class="relative w-full bg-branch-blue-dark pt-32 md:pt-40 pb-0 px-5 md:px-[60px] overflow-hidden">
+    <div class="relative z-10 max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-10 md:gap-12 items-center">
 
-      <div class="reveal active">
-        <span class="inline-flex items-center gap-2 mb-7 text-white text-sm font-bold tracking-[0.2em] uppercase bg-white/25 backdrop-blur-lg border border-white/35 rounded-full px-4 py-2">
-          <span class="w-2.5 h-2.5 bg-branch-green"></span>
-          <span data-i18n="hero_eyebrow">Business Development &amp; Growth Strategy</span>
-        </span>
-
-        <h1 class="text-white text-[3.1rem] md:text-[5.5rem] font-black leading-[0.98] tracking-tight mb-7" data-i18n="hero_title">
+      <div>
+        <h1 class="text-white text-[3rem] sm:text-[3.6rem] md:text-[5.25rem] font-black leading-[0.98] tracking-[-0.035em] mb-7 [text-wrap:balance]" data-i18n="hero_title">
           Turn ideas into<br>
-          <span class="italic font-normal text-brand-gradient">successful projects</span>
+          <span class="italic font-normal text-branch-cyan">successful projects</span>
         </h1>
 
-        <p class="text-white/70 text-[1.15rem] max-w-[520px] mb-10 font-normal" data-i18n="hero_desc">
+        <p class="text-white/75 text-[1.15rem] md:text-[1.2rem] leading-relaxed max-w-[34rem] mb-10" data-i18n="hero_desc">
           Branch connects businesses, entrepreneurs, and individuals with the expertise, strategy, and execution needed to launch, grow, and succeed.
         </p>
 
-        <a href="contact.html" class="inline-flex items-center gap-2 py-5 px-10 text-base font-bold uppercase tracking-wide text-white bg-branch-blue transition-colors duration-200 hover:bg-branch-blue-dark" data-i18n="hero_cta">
-          Start a Project &rarr;
-        </a>
+        <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
+          <a href="contact.html" class="btn inline-flex items-center gap-2 py-4 px-8 text-base font-bold uppercase tracking-wide text-ink bg-branch-green hover:bg-white" data-i18n="hero_cta">
+            Start a Project &rarr;
+          </a>
+          <a href="#packages" class="btn inline-flex items-center py-2 text-base font-bold uppercase tracking-wide text-white underline decoration-white/35 decoration-2 underline-offset-[6px] hover:decoration-branch-green" data-i18n="hero_cta2">
+            View packages
+          </a>
+        </div>
       </div>
 
-      <div class="relative reveal delay-200 hidden md:block" aria-hidden="true">
-        <svg class="w-full h-auto" viewBox="0 0 420 300" fill="none">
+      <div class="relative w-full max-w-[300px] md:max-w-none mx-auto md:mx-0" aria-hidden="true">
+        <svg class="w-full h-auto" viewBox="0 0 440 380" fill="none">
           <defs>
-            <linearGradient id="growthGrad" x1="0" y1="300" x2="420" y2="0" gradientUnits="userSpaceOnUse">
+            <linearGradient id="branchGrad" x1="70" y1="350" x2="410" y2="50" gradientUnits="userSpaceOnUse">
               <stop offset="0" stop-color="#0B6DFF"/>
-              <stop offset="0.55" stop-color="#14B8E6"/>
+              <stop offset="0.5" stop-color="#14B8E6"/>
               <stop offset="1" stop-color="#78DB55"/>
             </linearGradient>
           </defs>
-          <line x1="0" y1="60" x2="420" y2="60" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-          <line x1="0" y1="140" x2="420" y2="140" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-          <line x1="0" y1="220" x2="420" y2="220" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-          <line x1="0" y1="298" x2="420" y2="298" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
 
-          <rect class="grow-node" x="34" y="230" width="34" height="68" fill="url(#growthGrad)" opacity="0.9" style="animation-delay:0.6s"/>
-          <rect class="grow-node" x="104" y="190" width="34" height="108" fill="url(#growthGrad)" opacity="0.9" style="animation-delay:0.8s"/>
-          <rect class="grow-node" x="174" y="140" width="34" height="158" fill="url(#growthGrad)" opacity="0.9" style="animation-delay:1.0s"/>
-          <rect class="grow-node" x="244" y="95" width="34" height="203" fill="url(#growthGrad)" opacity="0.9" style="animation-delay:1.2s"/>
+          <path class="branch-path" pathLength="1" d="M70 350 C70 292 108 250 170 230" stroke="url(#branchGrad)" stroke-width="12" stroke-linecap="round" style="animation-duration:.55s;animation-delay:.15s"/>
+          <path class="branch-path" pathLength="1" d="M170 230 C232 212 252 132 300 100 C330 81 362 68 400 60" stroke="url(#branchGrad)" stroke-width="9" stroke-linecap="round" style="animation-delay:.62s"/>
+          <path class="branch-path" pathLength="1" d="M170 230 C242 216 300 200 410 190" stroke="url(#branchGrad)" stroke-width="9" stroke-linecap="round" style="animation-delay:.68s"/>
+          <path class="branch-path" pathLength="1" d="M170 230 C222 250 262 290 350 300" stroke="url(#branchGrad)" stroke-width="9" stroke-linecap="round" style="animation-delay:.74s"/>
+          <path class="branch-path" pathLength="1" d="M262 140 C276 110 284 80 300 40" stroke="url(#branchGrad)" stroke-width="5" stroke-linecap="round" style="animation-duration:.6s;animation-delay:1.1s"/>
+          <path class="branch-path" pathLength="1" d="M300 202 C330 218 352 238 380 250" stroke="url(#branchGrad)" stroke-width="5" stroke-linecap="round" style="animation-duration:.6s;animation-delay:1.16s"/>
 
-          <path class="grow-path" d="M10 268 C90 268 150 250 210 205 C280 152 320 90 405 45" fill="none" stroke="url(#growthGrad)" stroke-width="2.5" stroke-linecap="round"/>
-          <path class="grow-path" d="M370 30 L410 42 L397 80" fill="none" stroke="url(#growthGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:0.3s"/>
+          <circle class="branch-node" cx="70" cy="350" r="10" fill="#0B6DFF" style="animation-delay:.05s"/>
+          <circle class="branch-node" cx="170" cy="230" r="8" fill="#032F8A" stroke="#fff" stroke-width="4" style="animation-delay:.68s"/>
+          <circle class="branch-node" cx="400" cy="60" r="13" fill="#78DB55" style="animation-delay:1.55s"/>
+          <circle class="branch-node" cx="410" cy="190" r="12" fill="#5CCB9A" style="animation-delay:1.6s"/>
+          <circle class="branch-node" cx="350" cy="300" r="11" fill="#14B8E6" style="animation-delay:1.65s"/>
+          <circle class="branch-node" cx="300" cy="40" r="7" fill="#78DB55" style="animation-delay:1.62s"/>
+          <circle class="branch-node" cx="380" cy="250" r="7" fill="#14B8E6" style="animation-delay:1.7s"/>
         </svg>
       </div>
     </div>
 
-    <!-- Quiet trust bar -->
-    <div class="relative border-t border-white/10 py-6 mt-16">
-      <div class="max-w-[1400px] mx-auto flex items-center gap-8 flex-wrap">
-        <span class="text-white/60 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_1">Business Development</span>
-        <span class="w-px h-3.5 bg-white/15"></span>
-        <span class="text-white/60 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_2">Digital Solutions</span>
-        <span class="w-px h-3.5 bg-white/15"></span>
-        <span class="text-white/60 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_3">Growth Strategy</span>
-      </div>
+    <div class="relative border-t border-white/15 py-6 mt-16 md:mt-20">
+      <ul class="max-w-[1400px] mx-auto flex items-center gap-x-8 gap-y-3 flex-wrap list-none">
+        <li class="text-white/70 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_1">Business Development</li>
+        <li class="w-px h-3.5 bg-white/20" aria-hidden="true"></li>
+        <li class="text-white/70 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_2">Digital Solutions</li>
+        <li class="w-px h-3.5 bg-white/20" aria-hidden="true"></li>
+        <li class="text-white/70 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_3">Growth Strategy</li>
+      </ul>
     </div>
   </section>
 
-  <section class="py-24 md:py-32 px-5 bg-paper">
+  <section class="py-24 md:py-32 px-5 md:px-[60px] bg-paper">
     <div class="max-w-[1200px] mx-auto">
-      <div class="mb-16 reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-        <div>
-          <span class="block text-branch-blue text-sm font-bold tracking-[0.2em] uppercase mb-3" data-i18n="why_eyebrow">How Branch Works</span>
-          <h2 class="text-ink text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] max-w-[600px]" data-i18n="why_title">Why choose <span class="italic font-normal text-brand-gradient" translate="no">Branch</span></h2>
-        </div>
-      </div>
+      <h2 class="text-ink text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] tracking-[-0.03em] mb-14 md:mb-20 max-w-[600px]" data-i18n="why_title">Why choose <span class="italic font-normal text-branch-blue" translate="no">Branch</span></h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-black/10 border border-black/10">
-
-        <div class="bg-paper text-left p-9 border-t-2 border-branch-blue reveal delay-100">
-          <span class="block font-bold text-[1.1rem] text-branch-blue leading-none mb-6" aria-hidden="true">01</span>
-          <h3 class="text-ink mb-3 text-[1.35rem] font-bold tracking-tight" data-i18n="card1_title">Find Opportunities</h3>
-          <p class="text-text-light text-[1rem] leading-relaxed" data-i18n="card1_desc">We help identify and secure the right projects for strategic growth.</p>
-        </div>
-
-        <div class="bg-paper text-left p-9 border-t-2 border-branch-cyan reveal delay-200">
-          <span class="block font-bold text-[1.1rem] text-branch-cyan leading-none mb-6" aria-hidden="true">02</span>
-          <h3 class="text-ink mb-3 text-[1.35rem] font-bold tracking-tight" data-i18n="card2_title">Expert Guidance</h3>
-          <p class="text-text-light text-[1rem] leading-relaxed" data-i18n="card2_desc">End-to-end strategic planning and high-level project execution.</p>
-        </div>
-
-        <div class="bg-paper text-left p-9 border-t-2 border-branch-green reveal delay-300">
-          <span class="block font-bold text-[1.1rem] text-[#4a9c2e] leading-none mb-6" aria-hidden="true">03</span>
-          <h3 class="text-ink mb-3 text-[1.35rem] font-bold tracking-tight" data-i18n="card3_title">Real Growth</h3>
-          <p class="text-text-light text-[1rem] leading-relaxed" data-i18n="card3_desc">Laser-focused on delivering measurable, long-term business success.</p>
-        </div>
-
-      </div>
+      <ol class="steps grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-10 list-none pl-9 md:pl-0">
+        <li class="relative">
+          <span class="step-node text-branch-blue -ml-9 md:ml-0 mb-0 md:mb-8 absolute md:relative" aria-hidden="true"></span>
+          <span class="block text-sm font-bold text-branch-blue mb-2 price" aria-hidden="true">01</span>
+          <h3 class="text-ink mb-3 text-[1.4rem] font-bold tracking-tight" data-i18n="card1_title">Find Opportunities</h3>
+          <p class="text-text-light text-[1.05rem] leading-relaxed max-w-[32ch]" data-i18n="card1_desc">We help identify and secure the right projects for strategic growth.</p>
+        </li>
+        <li class="relative">
+          <span class="step-node text-branch-cyan -ml-9 md:ml-0 mb-0 md:mb-8 absolute md:relative" aria-hidden="true"></span>
+          <span class="block text-sm font-bold text-[#0B8DB8] mb-2 price" aria-hidden="true">02</span>
+          <h3 class="text-ink mb-3 text-[1.4rem] font-bold tracking-tight" data-i18n="card2_title">Expert Guidance</h3>
+          <p class="text-text-light text-[1.05rem] leading-relaxed max-w-[32ch]" data-i18n="card2_desc">End-to-end strategic planning and high-level project execution.</p>
+        </li>
+        <li class="relative">
+          <span class="step-node text-branch-green -ml-9 md:ml-0 mb-0 md:mb-8 absolute md:relative" aria-hidden="true"></span>
+          <span class="block text-sm font-bold text-[#3F8A26] mb-2 price" aria-hidden="true">03</span>
+          <h3 class="text-ink mb-3 text-[1.4rem] font-bold tracking-tight" data-i18n="card3_title">Real Growth</h3>
+          <p class="text-text-light text-[1.05rem] leading-relaxed max-w-[32ch]" data-i18n="card3_desc">Laser-focused on delivering measurable, long-term business success.</p>
+        </li>
+      </ol>
     </div>
   </section>
 
-  <section id="packages" class="py-24 md:py-32 px-5 bg-[#F7F9FC]">
+  <section id="packages" class="scroll-mt-20 py-24 md:py-32 px-5 md:px-[60px] bg-[#F4F7FB]">
     <div class="max-w-[1200px] mx-auto">
-      <div class="mb-10 reveal max-w-[700px]">
-        <span class="block text-branch-blue text-sm font-bold tracking-[0.2em] uppercase mb-3" data-i18n="pkg_eyebrow">Pricing</span>
-        <h2 class="text-ink text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] mb-4" data-i18n="pkg_title">Our Packages</h2>
+      <div class="mb-12 max-w-[700px]">
+        <h2 class="text-ink text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] tracking-[-0.03em] mb-4" data-i18n="pkg_title">Our Packages</h2>
         <p class="text-text-light text-[1.1rem] leading-relaxed" data-i18n="pkg_desc">Pick the level of support that fits where your business is right now.</p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
 
         <!-- Pakket 1 -->
-        <div class="flex flex-col bg-white border border-black/10 border-t-4 border-t-branch-blue p-6 reveal delay-100">
-          <h3 class="text-ink text-[1.15rem] font-bold tracking-tight mb-1" data-i18n="pkg1_name">Package 1</h3>
-          <p class="mb-4"><span class="text-ink text-[1.9rem] font-black tracking-tight" translate="no">&euro;95</span> <span class="text-text-light text-xs font-medium" data-i18n="pkg_period">per month</span></p>
-          <ul class="flex flex-col gap-1.5 mb-3 grow">
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-1 shrink-0"></i><span data-i18n="pkg1_f1">Simple 2-page website — or: upkeep and light optimization of your existing website (choose one during intake)</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-1 shrink-0"></i><span data-i18n="pkg1_f2">12-month Plan of Action</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-1 shrink-0"></i><span data-i18n="pkg1_f3">Revenue-generation calls (quarterly)</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-1 shrink-0"></i><span data-i18n="pkg1_f4">Coaching throughout the program</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-1 shrink-0"></i><span data-i18n="pkg1_f5">6 shoot days</span></li>
+        <article class="flex flex-col bg-white border border-black/10 border-t-4 border-t-branch-blue p-7">
+          <h3 class="text-ink text-[1.2rem] font-bold tracking-tight mb-2" data-i18n="pkg1_name">Package 1</h3>
+          <p class="mb-6 pb-6 border-b border-black/10"><span class="price text-ink text-[2.5rem] leading-none font-black tracking-tight" translate="no">&euro;95</span> <span class="text-text-light text-sm font-medium" data-i18n="pkg_period">per month</span></p>
+          <ul class="flex flex-col gap-2.5 mb-5 grow">
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f1">Simple 2-page website — or: upkeep and light optimization of your existing website (choose one during intake)</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f2">12-month Plan of Action</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f3">Revenue-generation calls (quarterly)</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f4">Coaching throughout the program</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f5">6 shoot days</span></li>
           </ul>
-          <p class="text-text-light text-[0.7rem] italic mb-4" data-i18n="pkg1_note">Extra shoot day: +€100</p>
-          <a href="contact.html" class="mt-auto inline-flex justify-center items-center py-2.5 px-5 text-xs font-bold uppercase tracking-wide text-branch-blue border border-branch-blue transition-colors duration-200 hover:bg-branch-blue hover:text-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
-        </div>
+          <p class="text-text-light text-[0.85rem] mb-5" data-i18n="pkg1_note">Extra shoot day: +€100</p>
+          <a href="contact.html" class="btn mt-auto inline-flex justify-center items-center py-3.5 px-5 text-sm font-bold uppercase tracking-wide text-branch-blue-dark border-2 border-branch-blue-dark hover:bg-branch-blue-dark hover:text-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
+        </article>
 
         <!-- Pakket 2 -->
-        <div class="flex flex-col bg-white border border-black/10 border-t-4 border-t-branch-cyan p-6 reveal delay-200">
-          <h3 class="text-ink text-[1.15rem] font-bold tracking-tight mb-1" data-i18n="pkg2_name">Package 2</h3>
-          <p class="mb-4"><span class="text-ink text-[1.9rem] font-black tracking-tight" translate="no">&euro;185</span> <span class="text-text-light text-xs font-medium" data-i18n="pkg_period">per month</span></p>
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-4 gap-y-1.5 mb-4 grow">
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg2_f1">12-month Plan of Action</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg2_f2">Monthly revenue-generation calls</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg2_f3">Revenue-generation plans</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg2_f4">Monthly HR business check-up</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg2_f5">Coaching throughout the program</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg2_f6">Leads advice</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg2_f7">Access to the entrepreneurs' network</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg2_f8">20% discount on film and video/photo production projects</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg2_f9">Custom website</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-check text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg2_f10">Quarterly website updates</span></li>
+        <article class="flex flex-col bg-white border border-black/10 border-t-4 border-t-branch-cyan p-7">
+          <h3 class="text-ink text-[1.2rem] font-bold tracking-tight mb-2" data-i18n="pkg2_name">Package 2</h3>
+          <p class="mb-6 pb-6 border-b border-black/10"><span class="price text-ink text-[2.5rem] leading-none font-black tracking-tight" translate="no">&euro;185</span> <span class="text-text-light text-sm font-medium" data-i18n="pkg_period">per month</span></p>
+          <ul class="flex flex-col gap-2.5 mb-6 grow">
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f1">12-month Plan of Action</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f2">Monthly revenue-generation calls</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f3">Revenue-generation plans</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f4">Monthly HR business check-up</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f5">Coaching throughout the program</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f6">Leads advice</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f7">Access to the entrepreneurs' network</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f8">20% discount on film and video/photo production projects</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f9">Custom website</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f10">Quarterly website updates</span></li>
           </ul>
-          <a href="contact.html" class="mt-auto inline-flex justify-center items-center py-2.5 px-5 text-xs font-bold uppercase tracking-wide text-branch-blue border border-branch-blue transition-colors duration-200 hover:bg-branch-blue hover:text-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
-        </div>
+          <a href="contact.html" class="btn mt-auto inline-flex justify-center items-center py-3.5 px-5 text-sm font-bold uppercase tracking-wide text-branch-blue-dark border-2 border-branch-blue-dark hover:bg-branch-blue-dark hover:text-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
+        </article>
 
         <!-- Pakket 3 -->
-        <div class="flex flex-col bg-branch-blue-dark border-t-4 border-t-branch-green p-6 reveal delay-300">
-          <h3 class="text-white text-[1.15rem] font-bold tracking-tight mb-1" data-i18n="pkg3_name">Package 3</h3>
-          <p class="mb-4"><span class="text-white text-[1.9rem] font-black tracking-tight" translate="no">&euro;300</span> <span class="text-white/60 text-xs font-medium" data-i18n="pkg_period">per month</span></p>
-          <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-4 gap-y-1.5 mb-4 grow">
-            <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f1">Business take-over and build-up</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f2">24-month Plan of Action</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f3">12-month Plan of Action</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f4">Objectives</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f5">Monthly revenue-generation calls</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f6">Revenue-generation plans</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f7">Monthly HR business check-up</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f8">Coaching throughout the program</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f9">Leads advice</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f10">Lead generation</span></li>
+        <article class="flex flex-col bg-branch-blue-dark border-t-4 border-t-branch-green p-7 shadow-[0_24px_48px_-16px_rgba(3,47,138,0.45)]">
+          <h3 class="text-white text-[1.2rem] font-bold tracking-tight mb-2" data-i18n="pkg3_name">Package 3</h3>
+          <p class="mb-6 pb-6 border-b border-white/15"><span class="price text-white text-[2.5rem] leading-none font-black tracking-tight" translate="no">&euro;300</span> <span class="text-white/70 text-sm font-medium" data-i18n="pkg_period">per month</span></p>
+          <ul class="flex flex-col gap-2.5 mb-5 grow">
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f1">Business take-over and build-up</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f2">24-month Plan of Action</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f3">12-month Plan of Action</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f4">Objectives</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f5">Monthly revenue-generation calls</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f6">Revenue-generation plans</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f7">Monthly HR business check-up</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f8">Coaching throughout the program</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f9">Leads advice</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f10">Lead generation</span></li>
           </ul>
-          <details class="group mb-4">
-            <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center gap-2 text-[0.75rem] font-bold uppercase tracking-wide text-branch-green">
+          <details class="group mb-6">
+            <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none inline-flex items-center gap-2 py-1 text-[0.8rem] font-bold uppercase tracking-wide text-branch-green">
               <span data-i18n="pkg_view_all">View all features</span>
-              <i class="fa-solid fa-chevron-down text-[0.6rem] transition-transform duration-200 group-open:rotate-180"></i>
+              <i class="fa-solid fa-chevron-down text-[0.6rem] transition-transform duration-200 group-open:rotate-180" aria-hidden="true"></i>
             </summary>
-            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-4 gap-y-1.5 mt-3">
-              <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f11">Google SEO</span></li>
-              <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f12">Google Ads implementation (excluded from the subscription fee)</span></li>
-              <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f13">Access to the entrepreneurs' network</span></li>
-              <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f14">30% discount on film and video/photo production projects</span></li>
-              <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f15">Custom website (monthly updates)</span></li>
-              <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f16">Dedicated account manager with priority support (response within 24 hours)</span></li>
-              <li class="flex gap-2 text-[0.8rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg3_f17">Weekly progress report</span></li>
+            <ul class="flex flex-col gap-2.5 mt-3">
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f11">Google SEO</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f12">Google Ads implementation (excluded from the subscription fee)</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f13">Access to the entrepreneurs' network</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f14">30% discount on film and video/photo production projects</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f15">Custom website (monthly updates)</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f16">Dedicated account manager with priority support (response within 24 hours)</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f17">Weekly progress report</span></li>
             </ul>
           </details>
-          <a href="contact.html" class="mt-auto inline-flex justify-center items-center py-2.5 px-5 text-xs font-bold uppercase tracking-wide text-white bg-branch-blue transition-colors duration-200 hover:bg-white hover:text-branch-blue-dark" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
-        </div>
+          <a href="contact.html" class="btn mt-auto inline-flex justify-center items-center py-3.5 px-5 text-sm font-bold uppercase tracking-wide text-ink bg-branch-green hover:bg-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
+        </article>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
-
-        <!-- Pakket 4 -->
-        <div class="flex flex-col bg-ink border-t-4 border-t-branch-green p-6 reveal">
-          <span class="inline-flex w-fit items-center gap-2 mb-3 text-white text-[0.65rem] font-bold tracking-[0.15em] uppercase bg-white/10 border border-white/20 rounded-full px-3 py-1" data-i18n="pkg4_badge">Selected clients only</span>
-          <h3 class="text-white text-[1.15rem] font-bold tracking-tight mb-3" data-i18n="pkg4_name">Package 4 — Partnership</h3>
-          <p class="text-white/75 text-[0.8rem] leading-relaxed mb-2" data-i18n="pkg4_intro">Same commitment and results as Package 3 — no fixed monthly fee. The terms of collaboration are agreed in a personal conversation.</p>
-          <p class="text-white/50 text-[0.7rem] italic mb-4" data-i18n="pkg4_note">Only available to clients who qualify, following an assessment by Branch.</p>
-          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-1.5 mb-4 grow">
-            <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f1">Business take-over and build-up</span></li>
-            <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f2">24-month Plan of Action</span></li>
-            <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f3">12-month Plan of Action</span></li>
-            <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f4">Objectives</span></li>
-            <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f5">Monthly revenue-generation calls</span></li>
-            <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f6">Revenue-generation plans</span></li>
-            <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f7">Monthly HR business check-up</span></li>
-            <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f8">Coaching throughout the program</span></li>
-            <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f9">Leads advice</span></li>
-            <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f10">Lead generation</span></li>
+      <!-- Pakket 4 -->
+      <article class="mt-5 grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-8 lg:gap-12 bg-ink border-t-4 border-t-branch-green p-7 md:p-10">
+        <div class="flex flex-col">
+          <span class="inline-flex w-fit items-center mb-4 text-white text-[0.7rem] font-bold tracking-[0.12em] uppercase bg-white/10 border border-white/20 rounded-full px-3 py-1" data-i18n="pkg4_badge">Selected clients only</span>
+          <h3 class="text-white text-[1.6rem] font-bold tracking-tight leading-tight mb-4" data-i18n="pkg4_name">Package 4 — Partnership</h3>
+          <p class="text-white/80 text-[1rem] leading-relaxed mb-3 max-w-[46ch]" data-i18n="pkg4_intro">Same commitment and results as Package 3 — no fixed monthly fee. The terms of collaboration are agreed in a personal conversation.</p>
+          <p class="text-white/60 text-[0.85rem] mb-8 max-w-[46ch]" data-i18n="pkg4_note">Only available to clients who qualify, following an assessment by Branch.</p>
+          <a href="contact.html" class="btn mt-auto w-fit inline-flex justify-center items-center py-3.5 px-7 text-sm font-bold uppercase tracking-wide text-ink bg-branch-green hover:bg-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
+        </div>
+        <div>
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f1">Business take-over and build-up</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f2">24-month Plan of Action</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f3">12-month Plan of Action</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f4">Objectives</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f5">Monthly revenue-generation calls</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f6">Revenue-generation plans</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f7">Monthly HR business check-up</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f8">Coaching throughout the program</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f9">Leads advice</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f10">Lead generation</span></li>
           </ul>
-          <details class="group mb-4">
-            <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center gap-2 text-[0.75rem] font-bold uppercase tracking-wide text-branch-green">
+          <details class="group mt-5">
+            <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none inline-flex items-center gap-2 py-1 text-[0.8rem] font-bold uppercase tracking-wide text-branch-green">
               <span data-i18n="pkg_view_all">View all features</span>
-              <i class="fa-solid fa-chevron-down text-[0.6rem] transition-transform duration-200 group-open:rotate-180"></i>
+              <i class="fa-solid fa-chevron-down text-[0.6rem] transition-transform duration-200 group-open:rotate-180" aria-hidden="true"></i>
             </summary>
-            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-1.5 mt-3">
-              <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f11">Google SEO</span></li>
-              <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f12">Google Ads implementation</span></li>
-              <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f13">Access to the entrepreneurs' network</span></li>
-              <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f14">30% discount on film and video/photo production projects</span></li>
-              <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f15">Custom website (monthly updates)</span></li>
-              <li class="flex gap-2 text-[0.78rem] text-white/75 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-1 shrink-0"></i><span data-i18n="pkg4_f16">24/7 access to Branch coaches</span></li>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 mt-3">
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f11">Google SEO</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f12">Google Ads implementation</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f13">Access to the entrepreneurs' network</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f14">30% discount on film and video/photo production projects</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f15">Custom website (monthly updates)</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f16">24/7 access to Branch coaches</span></li>
             </ul>
           </details>
-          <a href="contact.html" class="mt-auto inline-flex justify-center items-center py-2.5 px-5 text-xs font-bold uppercase tracking-wide text-ink bg-branch-green transition-colors duration-200 hover:bg-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
         </div>
+      </article>
 
-        <!-- Pakket 5 -->
-        <div class="flex flex-col bg-white border-2 border-dashed border-branch-cyan p-6 reveal delay-100">
-          <h3 class="text-ink text-[1.15rem] font-bold tracking-tight mb-4" data-i18n="pkg5_name">Package 5 — Custom Package</h3>
-
-          <h4 class="text-branch-blue text-[0.65rem] font-bold tracking-[0.15em] uppercase mb-2" data-i18n="pkg5_addons_title">Add-ons</h4>
-          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 mb-5">
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-plus text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg5_addon1">Client-focused</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-plus text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg5_addon2">Content management</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-plus text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg5_addon3">Marketing campaign</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-plus text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg5_addon4">Business portal</span></li>
-            <li class="flex gap-2 text-[0.8rem] text-text-light leading-snug"><i class="fa-solid fa-plus text-branch-cyan text-xs mt-1 shrink-0"></i><span data-i18n="pkg5_addon5">Acquisition funnels</span></li>
-          </ul>
-          <a href="contact.html" class="mt-auto inline-flex justify-center items-center py-2.5 px-5 text-xs font-bold uppercase tracking-wide text-branch-blue border border-branch-blue transition-colors duration-200 hover:bg-branch-blue hover:text-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
+      <!-- Pakket 5 -->
+      <article class="mt-5 flex flex-col md:flex-row md:items-center gap-6 md:gap-10 bg-white border-2 border-dashed border-branch-cyan p-7 md:px-10">
+        <div class="md:w-[16rem] shrink-0">
+          <h3 class="text-ink text-[1.2rem] font-bold tracking-tight mb-1" data-i18n="pkg5_name">Package 5 — Custom Package</h3>
+          <h4 class="text-text-light text-[0.9rem]" data-i18n="pkg5_addons_title">Add-ons</h4>
         </div>
-      </div>
+        <ul class="flex flex-wrap gap-2 grow">
+          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon1">Client-focused</span></li>
+          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon2">Content management</span></li>
+          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon3">Marketing campaign</span></li>
+          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon4">Business portal</span></li>
+          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon5">Acquisition funnels</span></li>
+        </ul>
+        <a href="contact.html" class="btn shrink-0 inline-flex justify-center items-center py-3.5 px-6 text-sm font-bold uppercase tracking-wide text-branch-blue-dark border-2 border-branch-blue-dark hover:bg-branch-blue-dark hover:text-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
+      </article>
     </div>
   </section>
 
-  <section class="bg-cta-gradient py-24 px-5 md:px-[60px] reveal">
-    <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
-      <h2 class="text-ink text-[2.4rem] md:text-[3.5rem] font-black leading-[1.02] tracking-tight max-w-[650px]" data-i18n="cta_title">Ready to build something great?</h2>
-      <a href="contact.html" class="shrink-0 inline-block bg-branch-blue-dark text-white font-bold uppercase tracking-wide text-[1rem] py-5 px-10 whitespace-nowrap transition-colors duration-200 hover:bg-ink" data-i18n="cta_button">
+  <section class="bg-cta-gradient py-24 md:py-28 px-5 md:px-[60px]">
+    <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+      <div class="max-w-[650px]">
+        <h2 class="text-ink text-[2.4rem] md:text-[3.5rem] font-black leading-[1.02] tracking-[-0.03em] mb-5 [text-wrap:balance]" data-i18n="cta_title">Ready to build something great?</h2>
+        <p class="text-ink/80 text-[1.1rem] leading-relaxed font-medium" data-i18n="cta_desc">Whether you're launching a business, growing a company, or starting a new project, Branch is ready to help.</p>
+      </div>
+      <a href="contact.html" class="btn shrink-0 inline-flex items-center bg-branch-blue-dark text-white font-bold uppercase tracking-wide text-base py-5 px-10 whitespace-nowrap hover:bg-ink" data-i18n="cta_button">
         Get Started Today
       </a>
     </div>
-    <p class="max-w-[650px] mt-5 text-ink/70 text-[1.05rem] leading-relaxed font-medium" data-i18n="cta_desc">Whether you're launching a business, growing a company, or starting a new project, Branch is ready to help.</p>
   </section>
 
   </main>
 
-  <footer class="bg-branch-blue-dark text-white pt-20 pb-6 px-5 border-t-2 border-branch-green">
-    <div class="flex flex-col md:flex-row justify-between max-w-[1200px] mx-auto mb-14 text-left gap-10 md:gap-8 reveal">
+  <footer class="bg-branch-blue-dark text-white pt-20 pb-6 px-5 md:px-[60px] border-t-2 border-branch-green">
+    <div class="flex flex-col md:flex-row justify-between max-w-[1200px] mx-auto mb-14 text-left gap-10 md:gap-8">
 
       <div class="flex-1 min-w-[200px]">
         <span class="block mb-5 font-black text-3xl text-white" translate="no">Branch<span class="text-branch-cyan">.</span></span>
-        <p class="max-w-[300px] text-white/55 leading-relaxed text-sm" data-i18n="footer_about">Helping businesses turn strategic opportunities into successful, scalable projects.</p>
+        <p class="max-w-[300px] text-white/70 leading-relaxed text-sm" data-i18n="footer_about">Helping businesses turn strategic opportunities into successful, scalable projects.</p>
       </div>
 
       <div class="flex-1 min-w-[180px]">
-        <h4 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_quicklinks">Quick Links</h4>
+        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_quicklinks">Quick Links</h2>
         <nav class="flex flex-col gap-3" aria-label="Footer">
-          <a href="index.html" class="text-white/70 text-sm font-medium transition-colors duration-300 hover:text-branch-cyan w-fit" data-i18n="nav_home">Home</a>
-          <a href="about.html" class="text-white/70 text-sm font-medium transition-colors duration-300 hover:text-branch-cyan w-fit" data-i18n="nav_about">About</a>
-          <a href="contact.html" class="text-white/70 text-sm font-medium transition-colors duration-300 hover:text-branch-cyan w-fit" data-i18n="nav_contact">Contact</a>
+          <a href="index.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="nav_home">Home</a>
+          <a href="about.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="nav_about">About</a>
+          <a href="contact.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="nav_contact">Contact</a>
         </nav>
       </div>
 
       <div class="flex-1 min-w-[180px]">
-        <h4 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_services">Services</h4>
-        <nav class="flex flex-col gap-3" aria-label="Services">
-          <a href="#" class="text-white/70 text-sm font-medium transition-colors duration-300 hover:text-branch-cyan w-fit" data-i18n="service_1">Business Development</a>
-          <a href="#" class="text-white/70 text-sm font-medium transition-colors duration-300 hover:text-branch-cyan w-fit" data-i18n="service_2">Digital Solutions</a>
-          <a href="#" class="text-white/70 text-sm font-medium transition-colors duration-300 hover:text-branch-cyan w-fit" data-i18n="service_3">Growth Strategy</a>
-        </nav>
+        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_services">Services</h2>
+        <ul class="flex flex-col gap-3 list-none">
+          <li class="text-white/75 text-sm font-medium" data-i18n="service_1">Business Development</li>
+          <li class="text-white/75 text-sm font-medium" data-i18n="service_2">Digital Solutions</li>
+          <li class="text-white/75 text-sm font-medium" data-i18n="service_3">Growth Strategy</li>
+        </ul>
       </div>
     </div>
 
-    <div class="text-center pt-8 border-t border-white/25 text-white/40 text-[0.85rem] font-medium reveal">
+    <div class="text-center pt-8 border-t border-white/20 text-white/60 text-[0.85rem] font-medium">
       &copy; 2026 Branch. <span data-i18n="footer_rights">All rights reserved.</span>
-      · <a href="https://branchdb.onrender.com/admin" class="text-white/25 hover:text-white/50 transition-colors duration-300">Staff login</a>
-      · <a href="https://branchdb.onrender.com/portal/login" class="text-white/25 hover:text-white/50 transition-colors duration-300">Team login</a>
+      · <a href="https://branchdb.onrender.com/admin" class="text-white/60 underline-offset-4 hover:text-white hover:underline transition-colors duration-200">Staff login</a>
+      · <a href="https://branchdb.onrender.com/portal/login" class="text-white/60 underline-offset-4 hover:text-white hover:underline transition-colors duration-200">Team login</a>
     </div>
   </footer>
 
   <script src="nav.js"></script>
-  <script src="homepage.js"></script>
   <!-- EXTERNAL TRANSLATION SCRIPT -->
   <script src="translations.js"></script>
 

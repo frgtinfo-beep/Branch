@@ -55,6 +55,7 @@ function serializeProfile(profile) {
     name: profile.name,
     contactPerson: profile.contactPerson || "",
     contactEmail: profile.contactEmail || "",
+    contactPhone: profile.contactPhone || "",
     sector: profile.sector || "",
     shortDescription: profile.shortDescription || "",
     currentStage: profile.currentStage || null,
@@ -98,7 +99,7 @@ router.get("/api/portal/company-profiles", requirePortalApi, async (req, res) =>
 });
 
 router.post("/api/portal/company-profiles", requirePortalApi, requireRole("admin"), async (req, res) => {
-  const { name, contactPerson, contactEmail, sector, shortDescription, currentStage } = req.body || {};
+  const { name, contactPerson, contactEmail, contactPhone, sector, shortDescription, currentStage } = req.body || {};
 
   if (!name || typeof name !== "string") {
     return res.status(400).json({ error: "name is required" });
@@ -116,6 +117,7 @@ router.post("/api/portal/company-profiles", requirePortalApi, requireRole("admin
     name,
     contactPerson: typeof contactPerson === "string" ? contactPerson : "",
     contactEmail: typeof contactEmail === "string" ? contactEmail : "",
+    contactPhone: typeof contactPhone === "string" ? contactPhone.trim() : "",
     sector: typeof sector === "string" ? sector : "",
     shortDescription: typeof shortDescription === "string" ? shortDescription : "",
     currentStage: stage,
@@ -146,7 +148,7 @@ router.patch("/api/portal/company-profiles/:id", requirePortalApi, requireRole("
   const id = toObjectId(req.params.id);
   if (!id) return res.status(400).json({ error: "Invalid company profile id" });
 
-  const { name, contactPerson, contactEmail, sector, shortDescription, currentStage, board } = req.body || {};
+  const { name, contactPerson, contactEmail, contactPhone, sector, shortDescription, currentStage, board } = req.body || {};
   const update = { updatedAt: new Date() };
 
   if (name !== undefined) {
@@ -155,6 +157,7 @@ router.patch("/api/portal/company-profiles/:id", requirePortalApi, requireRole("
   }
   if (contactPerson !== undefined) update.contactPerson = typeof contactPerson === "string" ? contactPerson : "";
   if (contactEmail !== undefined) update.contactEmail = typeof contactEmail === "string" ? contactEmail : "";
+  if (contactPhone !== undefined) update.contactPhone = typeof contactPhone === "string" ? contactPhone.trim() : "";
   if (sector !== undefined) update.sector = typeof sector === "string" ? sector : "";
   if (shortDescription !== undefined) update.shortDescription = typeof shortDescription === "string" ? shortDescription : "";
 

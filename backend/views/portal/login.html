@@ -9,67 +9,82 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root { --branch-blue-dark: #032F8A; --branch-blue: #0B6DFF; --branch-green: #78DB55; --branch-cyan: #14B8E6; --ink: #05070F; }
+  :root { --branch-blue-dark: #032F8A; --branch-blue-darker: #02226A; --branch-blue: #0B6DFF; --branch-green: #78DB55; --branch-cyan: #14B8E6; --ink: #05070F; --danger: #B91C1C; }
   * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: #111827;
-    background:
-      radial-gradient(900px 560px at 12% -10%, rgba(11,109,255,0.16), transparent 60%),
-      radial-gradient(760px 520px at 105% 10%, rgba(120,219,85,0.16), transparent 55%),
-      radial-gradient(600px 400px at 50% 120%, rgba(20,184,230,0.12), transparent 55%),
-      #F7F7F7;
-    min-height: 100vh;
-  }
-  main { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-  .card { width: 100%; max-width: 380px; padding: 40px 32px; border-radius: 18px; background: rgba(255,255,255,0.9); backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 20px 50px rgba(3,47,138,0.14); border-top: 3px solid transparent; border-image: linear-gradient(90deg, #032F8A, #0BDDFF, #14B8E6, #78DB55) 1; animation: card-in 0.4s ease both; }
-  @keyframes card-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-  .logo { display: block; text-align: center; font-weight: 900; font-size: 1.7rem; letter-spacing: -0.02em; text-decoration: none; margin-bottom: 6px; background: linear-gradient(90deg, #032F8A, #0BDDFF, #14B8E6, #78DB55); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-  h1 { font-size: 0.95rem; font-weight: 600; text-align: center; margin: 0 0 28px; color: #6b7280; }
-  label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-top: 16px; margin-bottom: 4px; }
-  input { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; font-family: inherit; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
-  input:focus { outline: none; border-color: var(--branch-blue); box-shadow: 0 0 0 3px rgba(11,109,255,0.15); }
-  button { margin-top: 26px; width: 100%; background: linear-gradient(115deg, var(--branch-blue-dark), var(--branch-blue)); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; box-shadow: 0 6px 18px rgba(11,109,255,0.3); transition: filter 0.15s ease, transform 0.15s ease; }
-  button:hover { filter: brightness(1.08); transform: translateY(-1px); }
-  button:active { transform: translateY(0); }
-  .error { color: #dc2626; font-size: 13px; margin-top: 16px; display: none; }
+  body { margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #111827; background: var(--branch-blue-dark); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--branch-green); color: var(--ink); }
+  main { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 16px; gap: 24px; }
+  .logo { font-weight: 900; font-size: 2rem; letter-spacing: -0.03em; text-decoration: none; color: #fff; }
+  .logo span { color: var(--branch-cyan); }
+  .card { width: 100%; max-width: 380px; padding: 32px 28px; border-radius: 14px; background: #fff; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.45); }
+  h1 { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 4px; color: var(--ink); }
+  .sub { margin: 0 0 22px; color: #5B6472; font-size: 0.9rem; }
+  label { display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin: 14px 0 5px; }
+  input { width: 100%; padding: 10px 12px; min-height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; font: inherit; font-size: 0.95rem; color: var(--ink); transition: border-color 150ms ease, box-shadow 150ms ease; }
+  input:focus { outline: none; border-color: var(--branch-blue); box-shadow: 0 0 0 3px rgba(11,109,255,0.16); }
+  input[aria-invalid="true"] { border-color: var(--danger); }
+  button { margin-top: 22px; width: 100%; min-height: 44px; background: var(--branch-blue-dark); color: #fff; border: none; border-radius: 8px; font: inherit; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: background-color 150ms ease, opacity 150ms ease, transform 120ms cubic-bezier(0.23, 1, 0.32, 1); }
+  button:hover { background: var(--branch-blue-darker); }
+  button:active { transform: scale(0.98); }
+  button:disabled { opacity: 0.6; cursor: progress; transform: none; }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--branch-green); outline-offset: 3px; }
+  .error { color: var(--danger); font-size: 0.875rem; font-weight: 500; margin: 14px 0 0; }
+  .error:empty { display: none; }
+  .back { color: rgba(255,255,255,0.75); font-size: 0.85rem; text-decoration: none; }
+  .back:hover { color: #fff; }
+  @media (prefers-reduced-motion: reduce) { button:active { transform: none; } }
 </style>
 </head>
 <body>
   <main>
+    <a href="/" class="logo" translate="no">Branch<span>.</span></a>
     <div class="card">
-      <a href="/" class="logo" translate="no">Branch</a>
-      <h1>Team Tool — Inloggen</h1>
-      <form id="login-form" method="post" action="/portal/login">
+      <h1>Team Tool</h1>
+      <p class="sub">Log in met je Branch-account.</p>
+      <form id="login-form" method="post" action="/portal/login" novalidate>
         <label for="email">E-mailadres</label>
-        <input id="email" name="email" type="email" autocomplete="username" required>
+        <input id="email" name="email" type="email" autocomplete="username" inputmode="email" required autofocus>
         <label for="password">Wachtwoord</label>
         <input id="password" name="password" type="password" autocomplete="current-password" required>
-        <div class="error" id="error">Onjuist e-mailadres of wachtwoord.</div>
-        <button type="submit">Inloggen</button>
+        <p class="error" id="error" role="alert"></p>
+        <button type="submit" id="login-btn">Inloggen</button>
       </form>
     </div>
+    <a class="back" href="https://branch.nl/">← Terug naar branch.nl</a>
   </main>
   <script>
-    document.getElementById("login-form").addEventListener("submit", async (event) => {
+    const form = document.getElementById("login-form");
+    const errorEl = document.getElementById("error");
+    const button = document.getElementById("login-btn");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+
+    [emailInput, passwordInput].forEach((input) => input.addEventListener("input", () => input.removeAttribute("aria-invalid")));
+
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const errorEl = document.getElementById("error");
-      errorEl.style.display = "none";
+      errorEl.textContent = "";
+      const missing = [emailInput, passwordInput].filter((input) => !input.value.trim());
+      missing.forEach((input) => input.setAttribute("aria-invalid", "true"));
+      if (missing.length) { errorEl.textContent = "Vul je e-mailadres en wachtwoord in."; missing[0].focus(); return; }
 
-      const response = await fetch("/portal/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        window.location.href = "/portal";
-      } else {
-        errorEl.style.display = "block";
+      button.disabled = true;
+      button.textContent = "Bezig met inloggen…";
+      try {
+        const response = await fetch("/portal/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: emailInput.value.trim(), password: passwordInput.value }),
+        });
+        if (response.ok) { window.location.href = "/portal"; return; }
+        errorEl.textContent = response.status === 401 ? "Onjuist e-mailadres of wachtwoord." : "Inloggen lukt nu niet. Probeer het over een paar minuten opnieuw.";
+        passwordInput.value = "";
+        passwordInput.focus();
+      } catch (err) {
+        errorEl.textContent = "Geen verbinding met de server. Controleer je internetverbinding.";
       }
+      button.disabled = false;
+      button.textContent = "Inloggen";
     });
   </script>
 </body>

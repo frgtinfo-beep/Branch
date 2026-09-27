@@ -9,9 +9,19 @@
   --white: #FFFFFF;
   --text-dark: #111827;
   --text-light: #6B7280;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 img { max-width: 100%; height: auto; }
+
+::selection { background: #78DB55; color: #05070F; }
+input, textarea { caret-color: #0B6DFF; }
+
+/* Pressable feedback, shared by every CTA */
+.btn { transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, opacity 180ms ease, transform 140ms var(--ease-out); -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.6; cursor: progress; transform: none; }
 
 /* Brand gradient (matches logo-text.png: navy -> blue -> cyan -> green) */
 .bg-brand-gradient { background: linear-gradient(135deg, #032F8A 0%, #0BDDFF 25%, #14B8E6 50%, #78DB55 100%); }
@@ -55,4 +65,5 @@ a:focus-visible, button:focus-visible { outline: 2px solid #78DB55; outline-offs
 
 @media (prefers-reduced-motion: reduce) {
   #mobile-menu { transition: none; }
+  .btn:active { transform: none; }
 }
