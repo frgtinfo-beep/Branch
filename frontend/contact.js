@@ -67,9 +67,11 @@
       if (response.ok) {
         form.reset();
         setStatus(t('form_success'), 'success');
+        if (window.branchTrack) window.branchTrack('form_submit', 'verzonden');
       } else {
         const errorData = await response.json().catch(() => ({}));
         setStatus(errorData.error || errorData.message || t('form_error'), 'error');
+        if (window.branchTrack) window.branchTrack('form_submit', 'mislukt');
       }
     } catch (error) {
       setStatus(t('form_network'), 'error');

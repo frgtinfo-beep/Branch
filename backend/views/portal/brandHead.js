@@ -338,6 +338,10 @@ function portalNav({ active, role, name }) {
     (item) =>
       `<a href="${item.href}"${item.key === active ? ' aria-current="page"' : ""}>${item.label}</a>`,
   ).join("");
+  const analyticsLink =
+    role === "admin" || role === "bestuur"
+      ? `<a href="/portal/analytics"${active === "analytics" ? ' aria-current="page"' : ""}>Analytics</a>`
+      : "";
   const settingsLink =
     role === "admin"
       ? `<a href="/portal/settings"${active === "settings" ? ' aria-current="page"' : ""}>Instellingen</a>`
@@ -347,7 +351,7 @@ function portalNav({ active, role, name }) {
 <nav class="portal-nav" aria-label="Portal">
   <div class="portal-nav-inner">
     <a href="/portal" class="portal-logo" translate="no">Branch<span>.</span></a>
-    <div class="portal-links">${links}${settingsLink}</div>
+    <div class="portal-links">${links}${analyticsLink}${settingsLink}</div>
     <div class="portal-user">
       <span class="portal-avatar" aria-hidden="true">${escapeHtml(initials(name))}</span>
       <span class="portal-user-name">${escapeHtml(name)}</span>

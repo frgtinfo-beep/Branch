@@ -59,6 +59,11 @@ async function events() {
   return (await getDatabase()).collection("events");
 }
 
+// Cookieless website analytics (page views and clicks from the public site)
+async function analytics() {
+  return (await getDatabase()).collection("analytics");
+}
+
 // Small key/value documents for portal-wide settings (e.g. the calendar feed token)
 async function settings() {
   return (await getDatabase()).collection("settings");
@@ -88,6 +93,7 @@ async function ensureIndexes() {
     deliverablesCol,
     journeyStagesCol,
     eventsCol,
+    analyticsCol,
   ] = await Promise.all([
     clients(),
     transactions(),
@@ -100,6 +106,7 @@ async function ensureIndexes() {
     deliverables(),
     journeyStages(),
     events(),
+    analytics(),
   ]);
 
   await Promise.all([
@@ -129,6 +136,9 @@ async function ensureIndexes() {
     deliverablesCol.createIndex({ companyProfileId: 1 }),
     // Calendar range queries: events overlapping [from, to)
     eventsCol.createIndex({ start: 1, end: 1 }),
+    analyticsCol.createIndex({ day: 1, type: 1 }),
+    // Retention: raw analytics are deleted automatically after ~13 months
+    analyticsCol.createIndex({ ts: 1 }, { expireAfterSeconds: 400 * 24 * 60 * 60 }),
     // Singleton settings doc — never overwrites an admin's existing
     // customization, just guarantees it exists on a fresh database.
     journeyStagesCol.updateOne(
@@ -153,6 +163,7 @@ module.exports = {
   journeyStages,
   events,
   settings,
+  analytics,
   contractsBucket,
   ensureIndexes,
 };
