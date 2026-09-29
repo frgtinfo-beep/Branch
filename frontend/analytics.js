@@ -50,6 +50,28 @@
 
   window.branchTrack = function (name, label) { send({ type: "event", name: name, label: label || "" }); };
 
+  // Time on page: only counts while the tab is visible AND the visitor was
+  // active in the last minute, so a forgotten background tab doesn't inflate it.
+  var TICK = 5, IDLE_MS = 60000;
+  var activeSeconds = 0;
+  var lastActivity = Date.now();
+  ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "wheel"].forEach(function (type) {
+    window.addEventListener(type, function () { lastActivity = Date.now(); }, { passive: true, capture: true });
+  });
+  setInterval(function () {
+    if (document.visibilityState === "visible" && Date.now() - lastActivity < IDLE_MS) activeSeconds += TICK;
+  }, TICK * 1000);
+  function flushDuration() {
+    if (activeSeconds <= 0) return;
+    send({ type: "duration", seconds: activeSeconds });
+    activeSeconds = 0; // coming back to the tab starts a new segment
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") flushDuration();
+    else lastActivity = Date.now();
+  });
+  window.addEventListener("pagehide", flushDuration);
+
   // Where on the page a click happened, in words the dashboard can show
   function placeOf(el) {
     if (el.closest("#site-nav, #mobile-menu")) return "Menu";

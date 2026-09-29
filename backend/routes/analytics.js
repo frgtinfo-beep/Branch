@@ -74,8 +74,11 @@ router.post("/api/collect", express.text({ type: "*/*", limit: "4kb" }), async (
     let body;
     try { body = JSON.parse(typeof req.body === "string" ? req.body : "{}"); } catch { return; }
 
-    const type = body.type === "pageview" ? "pageview" : body.type === "event" ? "event" : null;
+    const type = ["pageview", "event", "duration"].includes(body.type) ? body.type : null;
     if (!type) return;
+    // Active seconds on a page; one segment is capped at 30 minutes
+    const seconds = type === "duration" ? Math.round(Number(body.seconds)) : 0;
+    if (type === "duration" && !(seconds >= 1 && seconds <= 1800)) return;
     const name = type === "event" ? clean(body.name, 40) : "";
     if (type === "event" && !EVENT_NAMES.has(name)) return;
 
@@ -98,6 +101,7 @@ router.post("/api/collect", express.text({ type: "*/*", limit: "4kb" }), async (
       lang: body.lang === "nl" ? "nl" : "en",
       host: clean(body.host, 80).toLowerCase(),
       v: visitor,
+      ...(type === "duration" ? { seconds } : {}),
     });
   } catch (err) {
     console.error("analytics collect failed:", err.message);
@@ -131,7 +135,7 @@ router.get("/api/portal/analytics", requirePortalApi, requireRole("admin", "best
   const match = { day: { $gte: all[0], $lte: today }, host: { $nin: LOCAL_HOSTS } };
 
   const col = await analytics();
-  const [visits, pages, referrers, events, live] = await Promise.all([
+  const [visits, pages, referrers, events, live, visitDurations, pageDurations] = await Promise.all([
     // One row per visitor per day
     col.aggregate([
       { $match: { ...match, type: "pageview" } },
@@ -158,7 +162,42 @@ router.get("/api/portal/analytics", requirePortalApi, requireRole("admin", "best
       { $group: { _id: "$v" } },
       { $count: "n" },
     ]).toArray(),
+    // Total active seconds per visit (visitor-day)
+    col.aggregate([
+      { $match: { ...match, type: "duration" } },
+      { $group: { _id: { day: "$day", v: "$v" }, seconds: { $sum: "$seconds" } } },
+    ]).toArray(),
+    // Average active seconds per page, per visit that saw it
+    col.aggregate([
+      { $match: { ...match, type: "duration", day: { $gte: firstCurrent, $lte: today } } },
+      { $group: { _id: { path: "$path", day: "$day", v: "$v" }, seconds: { $sum: "$seconds" } } },
+      { $group: { _id: "$_id.path", avgSeconds: { $avg: "$seconds" } } },
+    ]).toArray(),
   ]);
+
+  // Visit length: average, median and a fixed set of buckets
+  const BUCKETS = [["< 10 s", 10], ["10–30 s", 30], ["30 s – 1 min", 60], ["1–3 min", 180], ["3–10 min", 600], ["10 min +", Infinity]];
+  function durationStats(list) {
+    if (!list.length) return { visits: 0, avgSeconds: 0, medianSeconds: 0 };
+    const sorted = list.slice().sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return {
+      visits: list.length,
+      avgSeconds: Math.round(list.reduce((a, b) => a + b, 0) / list.length),
+      medianSeconds: sorted.length % 2 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2),
+    };
+  }
+  const currentDurations = visitDurations.filter((d) => d._id.day >= firstCurrent).map((d) => d.seconds);
+  const previousDurations = visitDurations.filter((d) => d._id.day < firstCurrent).map((d) => d.seconds);
+  const duration = {
+    current: durationStats(currentDurations),
+    previous: durationStats(previousDurations),
+    buckets: BUCKETS.map(([label, max], i) => ({
+      label,
+      visits: currentDurations.filter((s) => s < max && s >= (i ? BUCKETS[i - 1][1] : 0)).length,
+    })),
+  };
+  const avgByPath = Object.fromEntries(pageDurations.map((p) => [p._id, Math.round(p.avgSeconds)]));
 
   const daily = Object.fromEntries(current.map((d) => [d, { day: d, visits: 0, pageviews: 0 }]));
   const totals = { current: { visits: 0, pageviews: 0 }, previous: { visits: 0, pageviews: 0 } };
@@ -184,7 +223,8 @@ router.get("/api/portal/analytics", requirePortalApi, requireRole("admin", "best
     liveVisitors: live[0] ? live[0].n : 0,
     totals,
     daily: current.map((d) => daily[d]),
-    pages: pages.map((p) => ({ path: p._id, pageviews: p.pageviews })),
+    pages: pages.map((p) => ({ path: p._id, pageviews: p.pageviews, avgSeconds: avgByPath[p._id] || 0 })),
+    duration,
     referrers: referrers.map((r) => ({ source: r._id, visits: r.visits })),
     devices,
     languages,

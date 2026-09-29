@@ -22,7 +22,7 @@ ${PORTAL_BRAND_HEAD}
   .seg button:hover { color: var(--ink); }
   .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px var(--shadow); }
 
-  .tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
   @media (max-width: 1100px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 640px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .tile { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
@@ -70,6 +70,7 @@ ${PORTAL_BRAND_HEAD}
   .sub-list { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--border); }
   .sub-list h3 { font-size: 0.8rem; font-weight: 700; color: var(--text-light); margin: 0 0 10px; }
 
+  strong.ink { color: var(--ink); }
   .empty-state { text-align: center; padding: 48px 20px; }
   .empty-state h2 { font-size: 1.1rem; margin: 0 0 6px; color: var(--ink); }
   .privacy-note { margin-top: 20px; font-size: 0.8rem; color: var(--text-light); }
@@ -125,11 +126,19 @@ ${PORTAL_SCRIPT}
     const pct = Math.round((now - before) / before * 100);
     const cls = pct > 0 ? "up" : pct < 0 ? "down" : "";
     const sign = pct > 0 ? "+" : "";
-    return '<span class="delta ' + cls + '">' + sign + pct + "% vs vorige " + days + " dagen</span>";
+    return '<span class="delta ' + cls + '">' + sign + pct + "% vs vorige periode</span>";
   }
 
-  function tile(label, now, before, hero) {
-    return '<div class="tile' + (hero ? " hero" : "") + '"><p class="tile-label">' + label + '</p><p class="tile-value">' + nf.format(now) + "</p>" + delta(now, before) + "</div>";
+  function tile(label, now, before, hero, shown) {
+    return '<div class="tile' + (hero ? " hero" : "") + '"><p class="tile-label">' + label + '</p><p class="tile-value">' + (shown || nf.format(now)) + "</p>" + delta(now, before) + "</div>";
+  }
+
+  // 38 s · 1 min 24 s · 12 min
+  function formatDuration(total) {
+    const secs = Math.round(total || 0);
+    if (secs < 60) return secs + " s";
+    const m = Math.floor(secs / 60), r = secs % 60;
+    return m >= 10 || !r ? m + " min" : m + " min " + r + " s";
   }
 
   function barRows(rows, opts) {
@@ -218,6 +227,7 @@ ${PORTAL_SCRIPT}
       tile("Contactaanvragen", sumEvents("form_submit", true, "verzonden"), sumEvents("form_submit", false, "verzonden")) +
       tile("WhatsApp-klikken", sumEvents("whatsapp", true), sumEvents("whatsapp", false)) +
       tile("Klikken naar contact", contactClicks(true), contactClicks(false)) +
+      tile("Gem. bezoekduur", data.duration.current.avgSeconds, data.duration.previous.avgSeconds, false, data.duration.current.visits ? formatDuration(data.duration.current.avgSeconds) : "–") +
       "</div>";
 
     html += '<section class="portal-card" aria-labelledby="h-visits"><div class="card-head"><h2 class="section-title" id="h-visits">Bezoeken per dag</h2><span class="card-sub">' + fmtShort.format(parseDay(data.range.from)) + " – " + fmtShort.format(parseDay(data.range.to)) + "</span></div>" +
@@ -245,7 +255,15 @@ ${PORTAL_SCRIPT}
       (submitFailed ? '<p class="muted" style="margin:14px 0 0;">Let op: ' + nf.format(submitFailed) + "× mislukte verzending van het contactformulier.</p>" : "") +
       "</section>";
     html += '<section class="portal-card" aria-labelledby="h-pages"><div class="card-head"><h2 class="section-title" id="h-pages">Populaire pagina’s</h2><span class="card-sub">paginaweergaven</span></div>' +
-      barRows(data.pages.map((p) => ({ label: PAGE_NAMES[p.path] || p.path, value: p.pageviews })), { emptyNote: "Nog geen paginaweergaven." }) + "</section>";
+      barRows(data.pages.map((p) => ({ label: PAGE_NAMES[p.path] || p.path, value: p.pageviews, note: p.avgSeconds ? "gem. " + formatDuration(p.avgSeconds) + " op de pagina" : "" })), { emptyNote: "Nog geen paginaweergaven." }) + "</section>";
+
+    const dur = data.duration;
+    html += '<section class="portal-card" aria-labelledby="h-dur"><div class="card-head"><h2 class="section-title" id="h-dur">Hoe lang blijven bezoekers</h2><span class="card-sub">actieve tijd per bezoek</span></div>' +
+      (dur.current.visits
+        ? '<p class="muted" style="margin:-4px 0 14px;">Gemiddeld <strong class="ink">' + formatDuration(dur.current.avgSeconds) + '</strong> · de helft van de bezoeken duurt korter dan <strong class="ink">' + formatDuration(dur.current.medianSeconds) + "</strong></p>" +
+          barRows(dur.buckets.map((b) => ({ label: b.label, value: b.visits, sub: Math.round(b.visits / dur.current.visits * 100) + "%" })))
+        : '<p class="muted" style="margin:0;">Nog geen bezoekduur gemeten in deze periode.</p>') +
+      "</section>";
     const totalVisits = t.current.visits || 1;
     const pct = (n) => Math.round((n || 0) / totalVisits * 100) + "%";
     html += '<section class="portal-card" aria-labelledby="h-src"><div class="card-head"><h2 class="section-title" id="h-src">Herkomst</h2><span class="card-sub">binnengekomen via</span></div>' +
