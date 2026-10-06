@@ -6,6 +6,27 @@ Business A's site (SumUp payments) reports each completed transaction to this
 site via `POST /api/transactions`. Branch collects a flat fee per transaction
 from Business A monthly via SEPA Direct Debit through Mollie.
 
+### Monthly invoices
+
+Seven days before the 1st, every active client is invoiced for all reported
+transactions not yet on an invoice: 21% btw on top of the fee
+(`backend/config/company.js`), numbered `YYYY-NNN` without gaps. The PDF is
+emailed to the client's `billing_email`, CC'd to `GMAIL_USER` for the
+administration. On the 1st, each due invoice is collected as its own Mollie
+payment for exactly the invoice total. Transactions reported after the invoice
+went out land on next month's invoice. Paused clients are still invoiced;
+their invoices are collected on the first 1st after the pause is lifted.
+
+Invoice PDFs can be re-downloaded from `/admin` (Invoice column) — they're
+re-rendered from the snapshot stored on the billing run, identical to what was
+sent. `npm run preview-invoice -- --client-id <id> --out draft.pdf` shows what
+the next invoice would look like without saving or sending anything. An
+invoice made by hand is registered with `npm run record-manual-invoice` (dry
+run by default, `--confirm` to write) so it isn't invoiced twice.
+
+When the KOR is approved, set `VAT_RATE_PERCENT` to `0`: invoices then show
+the exemption text and the debit no longer includes btw.
+
 ### One-time setup
 
 1. Copy `backend/.env.example` to `backend/.env` and fill in every value —
@@ -25,8 +46,11 @@ from Business A monthly via SEPA Direct Debit through Mollie.
 3. Seed the Business A client record and get its API key:
    ```
    npm run seed-client -- --client-id business-a --name "Business A" \
-     --email billing@businessa.example --fee 3.00 --currency EUR
+     --email billing@businessa.example --fee 3.00 --currency EUR \
+     --address "Straat 1|1234 AB Plaats|Nederland"
    ```
+   `--address` is printed on invoices. `--savings 0.68` adds an informational
+   per-transaction savings line for the client's bookkeeper (not charged).
    This prints an API key **once** — give that to Business A's site to send
    as `Authorization: Bearer <key>` on its calls to `/api/transactions`.
 4. Visit `<APP_BASE_URL>/onboarding/business-a` and complete the €0.01
@@ -60,12 +84,13 @@ only actually sends a notice or collects on the right calendar days. To test
 without waiting for those dates:
 
 ```
-npm run run-billing -- --date 2026-08-27   # 5 days before Sept 1 -> sends notices
-npm run run-billing -- --date 2026-09-01   # collects against unbilled transactions
+npm run run-billing -- --date 2026-08-25   # 7 days before Sept 1 -> sends invoices
+npm run run-billing -- --date 2026-09-01   # collects every due invoice
 ```
 
-This hits the Mollie API in test mode and sends a real email via the
-configured Gmail account, so use test data.
+This hits the Mollie API with the configured key and sends real invoice
+emails via the configured Gmail account (and uses up invoice numbers), so
+only run it against test data.
 
 ### Admin view
 

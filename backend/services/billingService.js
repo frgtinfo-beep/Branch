@@ -2,9 +2,19 @@ const { clients, transactions, billingRuns } = require("../db");
 const { config } = require("../config/env");
 const { createRecurringPayment, findPaymentForBillingRun } = require("./mollieService");
 const { refreshMandateStatus } = require("./mandateService");
-const { sendPreCollectionNotice } = require("./emailService");
+const { sendInvoiceEmail } = require("./emailService");
+const { nextInvoiceNumber, buildInvoiceSnapshot, localDay } = require("./invoiceService");
+const { renderInvoicePdf } = require("./invoicePdf");
+const { localCalendarDate } = require("../utils/dates");
 
-const NOTICE_DAYS_BEFORE_COLLECTION = 5;
+// The invoice goes out a week before the debit and doubles as the SEPA
+// pre-notification of amount and date.
+const INVOICE_DAYS_BEFORE_COLLECTION = 7;
+
+// Invoiced runs whose money hasn't (successfully) been requested from Mollie
+// yet. "collecting" is included so a crash mid-collection is retried —
+// findPaymentForBillingRun stops that from charging twice.
+const UNCOLLECTED_STATUSES = ["invoiced", "collecting", "collection_paused", "no_mandate", "collection_error"];
 
 function log(event, details) {
   console.log(JSON.stringify({ at: new Date().toISOString(), job: "monthlyBilling", event, ...details }));
@@ -17,21 +27,17 @@ function flagForManualFollowUp(details) {
   console.error("MANUAL FOLLOW-UP REQUIRED:", JSON.stringify(details));
 }
 
-// Sums fee_amount (Decimal128) in integer cents to avoid float drift, then
-// converts back to a major-unit number for display/API calls.
-function sumFeesInCents(txns) {
-  return txns.reduce((cents, txn) => cents + Math.round(Number(txn.fee_amount.toString()) * 100), 0);
-}
-
 async function activeClients() {
   const clientsCol = await clients();
   return clientsCol.find({ active: true }).toArray();
 }
 
-async function unbilledTransactionsFor(clientId) {
+// Not yet on any invoice. Transactions reported after an invoice went out
+// stay here and land on the next one.
+async function uninvoicedTransactionsFor(clientId) {
   const transactionsCol = await transactions();
   return transactionsCol
-    .find({ client_id: clientId, billed: false, cancelled: { $ne: true } })
+    .find({ client_id: clientId, billed: false, billing_run_id: null, cancelled: { $ne: true } })
     .sort({ occurred_at: 1 })
     .toArray();
 }
@@ -60,176 +66,168 @@ async function upsertBillingRun({ clientId, periodEnd, periodStart, transactionC
   return result;
 }
 
-async function sendPreCollectionNotices({ collectionDate }) {
+async function emailInvoice({ client, run, collectionDate }) {
+  const pdf = await renderInvoicePdf(run.invoice);
+  await sendInvoiceEmail({ client, invoice: run.invoice, pdf, collectionDay: localDay(collectionDate) });
+  const billingRunsCol = await billingRuns();
+  await billingRunsCol.updateOne({ _id: run._id }, { $set: { invoice_emailed_at: new Date(), updated_at: new Date() } });
+}
+
+// Invoices every active client for whatever they haven't been invoiced for
+// yet, and emails the PDF. Paused clients are invoiced too — the work was
+// done; collection just waits until their mandate is live.
+async function sendInvoices({ collectionDate, now = new Date() }) {
+  const billingRunsCol = await billingRuns();
+
   for (const client of await activeClients()) {
-    // Client is between payment providers (e.g. mid-switch to Mollie) —
-    // reported transactions keep accruing as unbilled as normal, but we
-    // don't send a "Direct Debit collection" notice for a collection that
-    // isn't actually going to happen.
-    if (client.collection_paused) continue;
-
     try {
-      const unbilled = await unbilledTransactionsFor(client.client_id);
-      if (unbilled.length === 0) continue;
+      const existing = await billingRunsCol.findOne({ client_id: client.client_id, period_end: collectionDate });
+      if (existing && existing.invoice_number) {
+        // Re-run after a crash between creating the invoice and emailing it.
+        if (!existing.invoice_emailed_at) await emailInvoice({ client, run: existing, collectionDate });
+        continue;
+      }
 
-      const totalAmount = sumFeesInCents(unbilled) / 100;
-      const periodStart = await periodStartFor(client.client_id);
+      const txns = await uninvoicedTransactionsFor(client.client_id);
+      if (txns.length === 0) continue;
 
-      const billingRun = await upsertBillingRun({
+      const number = await nextInvoiceNumber(localCalendarDate(now).year);
+      const invoice = buildInvoiceSnapshot({ client, txns, number, invoiceDate: now });
+
+      const run = await upsertBillingRun({
         clientId: client.client_id,
         periodEnd: collectionDate,
-        periodStart,
-        transactionCount: unbilled.length,
-        totalAmount,
-        status: "notice_sent",
-        extra: { precollection_notice_sent_at: new Date() },
+        periodStart: await periodStartFor(client.client_id),
+        transactionCount: invoice.transaction_count,
+        totalAmount: invoice.total_cents / 100,
+        status: "invoiced",
+        extra: { invoice_number: number, invoice, invoiced_at: new Date() },
       });
 
-      await sendPreCollectionNotice({ client, items: unbilled, totalAmount, collectionDate });
+      const transactionsCol = await transactions();
+      await transactionsCol.updateMany(
+        { _id: { $in: txns.map((txn) => txn._id) }, billing_run_id: null },
+        { $set: { billing_run_id: run._id } },
+      );
 
-      log("notice_sent", {
+      await emailInvoice({ client, run, collectionDate });
+
+      log("invoice_sent", {
         client_id: client.client_id,
-        billing_run_id: billingRun._id,
-        transaction_count: unbilled.length,
-        total_amount: totalAmount,
+        billing_run_id: run._id,
+        invoice_number: number,
+        transaction_count: invoice.transaction_count,
+        total_cents: invoice.total_cents,
       });
     } catch (error) {
-      flagForManualFollowUp({
-        stage: "pre_collection_notice",
-        client_id: client.client_id,
-        error: error.message,
-      });
+      flagForManualFollowUp({ stage: "invoice", client_id: client.client_id, error: error.message });
     }
   }
 }
 
+// Charges every invoice that's due and not yet collected — one Mollie
+// payment per invoice, for exactly the invoice total, so the bank statement
+// always matches a factuur. Older invoices that waited on a paused client or
+// a missing mandate are picked up here too.
 async function runCollections({ collectionDate }) {
+  const billingRunsCol = await billingRuns();
+  const transactionsCol = await transactions();
+
   for (const client of await activeClients()) {
-    let unbilled;
-    let totalAmount;
-    let periodStart;
+    const due = await billingRunsCol
+      .find({
+        client_id: client.client_id,
+        invoice_number: { $exists: true },
+        status: { $in: UNCOLLECTED_STATUSES },
+        period_end: { $lte: collectionDate },
+      })
+      .sort({ period_end: 1 })
+      .toArray();
+
+    if (due.length === 0) {
+      log("nothing_due", { client_id: client.client_id });
+      continue;
+    }
+    const dueIds = due.map((run) => run._id);
+    const dueCents = due.reduce((sum, run) => sum + run.invoice.total_cents, 0);
 
     try {
-      unbilled = await unbilledTransactionsFor(client.client_id);
-      if (unbilled.length === 0) {
-        log("no_transactions", { client_id: client.client_id });
-        continue;
-      }
-
-      totalAmount = sumFeesInCents(unbilled) / 100;
-      periodStart = await periodStartFor(client.client_id);
-
       if (client.collection_paused) {
-        // Provider migration in progress (e.g. GoCardless -> Mollie) — record
-        // what's owed for this period so the ledger stays current, but don't
-        // attempt a charge and don't page anyone; this is expected, not a
-        // failure. Transactions stay unbilled so the full backlog is exactly
-        // what gets collected once the new provider is live.
-        await upsertBillingRun({
-          clientId: client.client_id,
-          periodEnd: collectionDate,
-          periodStart,
-          transactionCount: unbilled.length,
-          totalAmount,
-          status: "collection_paused",
-        });
-        log("collection_paused", { client_id: client.client_id, unbilled_total: totalAmount });
+        // Provider migration in progress — the invoices stand, the charge
+        // waits. Expected, not a failure, so nobody gets paged.
+        await billingRunsCol.updateMany({ _id: { $in: dueIds } }, { $set: { status: "collection_paused", updated_at: new Date() } });
+        log("collection_paused", { client_id: client.client_id, invoices: due.map((r) => r.invoice_number), due_cents: dueCents });
         continue;
       }
 
       const mandateStatus = await refreshMandateStatus(client);
-
       if (mandateStatus !== "active" || !client.mollie_mandate_id) {
-        await upsertBillingRun({
-          clientId: client.client_id,
-          periodEnd: collectionDate,
-          periodStart,
-          transactionCount: unbilled.length,
-          totalAmount,
-          status: "no_mandate",
-        });
+        await billingRunsCol.updateMany({ _id: { $in: dueIds } }, { $set: { status: "no_mandate", updated_at: new Date() } });
         flagForManualFollowUp({
           stage: "collection",
           reason: "no_active_mandate",
           client_id: client.client_id,
           mandate_status: mandateStatus,
-          unbilled_total: totalAmount,
+          invoices: due.map((r) => r.invoice_number),
+          due_cents: dueCents,
         });
         continue;
       }
-
-      const billingRun = await upsertBillingRun({
-        clientId: client.client_id,
-        periodEnd: collectionDate,
-        periodStart,
-        transactionCount: unbilled.length,
-        totalAmount,
-        status: "collecting",
-      });
-
-      const billingRunId = billingRun._id.toString();
-
-      // Re-running the job for a period whose payment was created but never
-      // recorded (crash right after the API call) must pick that payment up,
-      // not charge a second time. Mollie collects recurring SEPA payments as
-      // soon as possible, so there's no charge date to pass — the job itself
-      // runs on the 1st.
-      const payment =
-        (await findPaymentForBillingRun({ customerId: client.mollie_customer_id, billingRunId })) ||
-        (await createRecurringPayment({
-          customerId: client.mollie_customer_id,
-          mandateId: client.mollie_mandate_id,
-          amountInMajorUnits: totalAmount,
-          currency: client.currency,
-          description: `Branch service fee — ${unbilled.length} transaction(s)`,
-          webhookUrl: config.mollie.webhookUrl(),
-          billingRunId,
-          idempotencyKey: `billing-run-${billingRunId}`,
-        }));
-
-      const billingRunsCol = await billingRuns();
-      await billingRunsCol.updateOne(
-        { _id: billingRun._id },
-        { $set: { mollie_payment_id: payment.id, status: payment.status, updated_at: new Date() } },
-      );
-
-      const transactionsCol = await transactions();
-      await transactionsCol.updateMany(
-        { _id: { $in: unbilled.map((txn) => txn._id) } },
-        { $set: { billed: true, billing_run_id: billingRun._id } },
-      );
-
-      log("payment_created", {
-        client_id: client.client_id,
-        billing_run_id: billingRun._id,
-        mollie_payment_id: payment.id,
-        total_amount: totalAmount,
-      });
     } catch (error) {
-      // Transactions are only marked billed after the Mollie payment call
-      // succeeds, so a failure here leaves them unbilled and they'll be
-      // picked up correctly next cycle — nothing is lost or double-charged.
-      // Only flip status on a record that already reflects the real
-      // count/total (upserted earlier in the try block) — never recreate one
-      // with placeholder zeros, which would corrupt the audit trail.
-      if (totalAmount !== undefined) {
-        const billingRunsCol = await billingRuns();
-        await billingRunsCol
-          .updateOne(
-            { client_id: client.client_id, period_end: collectionDate },
-            { $set: { status: "failed", updated_at: new Date() } },
-          )
-          .catch(() => {});
-      }
+      flagForManualFollowUp({ stage: "collection", reason: "mollie_error", client_id: client.client_id, error: error.message });
+      continue;
+    }
 
-      flagForManualFollowUp({
-        stage: "collection",
-        reason: "mollie_error",
-        client_id: client.client_id,
-        error: error.message,
-      });
+    for (const run of due) {
+      try {
+        await billingRunsCol.updateOne({ _id: run._id }, { $set: { status: "collecting", updated_at: new Date() } });
+        const billingRunId = run._id.toString();
+
+        // Re-running for an invoice whose payment was created but never
+        // recorded (crash right after the API call) must pick that payment
+        // up, not charge a second time.
+        const payment =
+          (await findPaymentForBillingRun({ customerId: client.mollie_customer_id, billingRunId })) ||
+          (await createRecurringPayment({
+            customerId: client.mollie_customer_id,
+            mandateId: client.mollie_mandate_id,
+            amountInMajorUnits: run.invoice.total_cents / 100,
+            currency: client.currency,
+            description: `Branch factuur ${run.invoice_number}`,
+            webhookUrl: config.mollie.webhookUrl(),
+            billingRunId,
+            idempotencyKey: `billing-run-${billingRunId}`,
+          }));
+
+        await billingRunsCol.updateOne(
+          { _id: run._id },
+          { $set: { mollie_payment_id: payment.id, status: payment.status, collected_at: new Date(), updated_at: new Date() } },
+        );
+        await transactionsCol.updateMany({ billing_run_id: run._id }, { $set: { billed: true } });
+
+        log("payment_created", {
+          client_id: client.client_id,
+          billing_run_id: run._id,
+          invoice_number: run.invoice_number,
+          mollie_payment_id: payment.id,
+          total_cents: run.invoice.total_cents,
+        });
+      } catch (error) {
+        // The invoice's transactions stay unbilled and the run is retried
+        // on the next collection day — nothing is lost or double-charged.
+        await billingRunsCol
+          .updateOne({ _id: run._id }, { $set: { status: "collection_error", updated_at: new Date() } })
+          .catch(() => {});
+        flagForManualFollowUp({
+          stage: "collection",
+          reason: "mollie_error",
+          client_id: client.client_id,
+          invoice_number: run.invoice_number,
+          error: error.message,
+        });
+      }
     }
   }
 }
 
-module.exports = { sendPreCollectionNotices, runCollections, NOTICE_DAYS_BEFORE_COLLECTION };
+module.exports = { sendInvoices, runCollections, INVOICE_DAYS_BEFORE_COLLECTION };

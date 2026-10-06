@@ -1,20 +1,20 @@
 const { isFirstOfMonth, addLocalDays, startOfNextMonthLocal, toLocalNoon } = require("../utils/dates");
-const { sendPreCollectionNotices, runCollections, NOTICE_DAYS_BEFORE_COLLECTION } = require("../services/billingService");
+const { sendInvoices, runCollections, INVOICE_DAYS_BEFORE_COLLECTION } = require("../services/billingService");
 
 // Runs once a day. Two independent checks, both driven off the *local*
 // (billing-timezone) calendar date so day-of-month math is correct
 // regardless of month length:
-//   - "is today N days before the 1st of the upcoming month?" -> send notices
-//   - "is today the 1st?" -> run the actual collection
-// Fixed day-of-month cron schedules (e.g. "run on the 27th") would drift
+//   - "is today N days before the 1st of the upcoming month?" -> send invoices
+//   - "is today the 1st?" -> collect every invoice that's due
+// Fixed day-of-month cron schedules (e.g. "run on the 24th") would drift
 // wrong around February; this doesn't.
 async function runDailyBillingCheck({ now = new Date() } = {}) {
-  const results = { noticesSent: false, collectionsRun: false };
+  const results = { invoicesSent: false, collectionsRun: false };
 
-  if (isFirstOfMonth(addLocalDays(now, NOTICE_DAYS_BEFORE_COLLECTION))) {
+  if (isFirstOfMonth(addLocalDays(now, INVOICE_DAYS_BEFORE_COLLECTION))) {
     const upcomingCollectionDate = startOfNextMonthLocal(now);
-    await sendPreCollectionNotices({ collectionDate: upcomingCollectionDate });
-    results.noticesSent = true;
+    await sendInvoices({ collectionDate: upcomingCollectionDate, now });
+    results.invoicesSent = true;
   }
 
   if (isFirstOfMonth(now)) {

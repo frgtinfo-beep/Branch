@@ -2,7 +2,12 @@
 //
 // Usage:
 //   node backend/scripts/seed-client.js --client-id business-a --name "Business A" \
-//     --email billing@example.com --fee 3.00 --currency EUR
+//     --email billing@example.com --fee 3.00 --currency EUR \
+//     [--address "Street 1|1234 AB City|Nederland"] [--savings 0.68]
+//
+// --address is printed on invoices (lines separated by "|"). --savings is an
+// informational per-transaction amount shown on invoices for the client's
+// bookkeeper; it doesn't change what's charged.
 //
 // Prints the plaintext API key exactly once — it is stored only as a hash,
 // so save it now (e.g. into the barber site's config) or you'll need to
@@ -50,6 +55,8 @@ async function main() {
     active: true,
     updated_at: new Date(),
   };
+  if (args["address"]) update.address_lines = args["address"].split("|").map((line) => line.trim()).filter(Boolean);
+  if (args["savings"]) update.savings_per_transaction = Number(args["savings"]);
 
   let apiKey = null;
   if (!existing) {

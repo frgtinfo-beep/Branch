@@ -9,7 +9,9 @@
     "seed-team-member": "node backend/scripts/seed-team-member.js",
     "hash-admin-password": "node backend/scripts/hash-admin-password.js",
     "simulate-transaction": "node backend/scripts/simulate-transaction.js",
-    "run-billing": "node backend/scripts/run-billing.js"
+    "run-billing": "node backend/scripts/run-billing.js",
+    "preview-invoice": "node backend/scripts/preview-invoice.js",
+    "record-manual-invoice": "node backend/scripts/record-manual-invoice.js"
   },
   "dependencies": {
     "@mollie/api-client": "^4.6.0",
@@ -22,6 +24,7 @@
     "multer": "^2.3.0",
     "node-cron": "^3.0.3",
     "nodemailer": "^9.0.3",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "pdfkit": "^0.17.2"
   }
 }

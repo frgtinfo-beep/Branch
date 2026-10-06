@@ -1,9 +1,11 @@
 const express = require("express");
 const path = require("path");
 const bcrypt = require("bcryptjs");
+const { ObjectId } = require("mongodb");
 const { clients, transactions, billingRuns } = require("../db");
 const { config } = require("../config/env");
 const { requireAdminPage, requireAdminApi } = require("../middleware/adminAuth");
+const { renderInvoicePdf } = require("../services/invoicePdf");
 
 const router = express.Router();
 const viewsDir = path.join(__dirname, "..", "views");
@@ -91,6 +93,8 @@ router.get("/api/admin/clients/:clientId/billing-runs", requireAdminApi, async (
 
     res.json(
       runs.map((run) => ({
+        id: run._id.toString(),
+        invoice_number: run.invoice_number || null,
         period_start: run.period_start,
         period_end: run.period_end,
         transaction_count: run.transaction_count,
@@ -104,6 +108,25 @@ router.get("/api/admin/clients/:clientId/billing-runs", requireAdminApi, async (
   } catch (error) {
     console.error("GET /api/admin/clients/:clientId/billing-runs error:", error);
     res.status(500).json({ error: "Failed to load billing runs" });
+  }
+});
+
+// Re-renders from the snapshot stored at invoice time, so this is always
+// byte-for-byte the same invoice the client was emailed.
+router.get("/api/admin/billing-runs/:runId/invoice.pdf", requireAdminApi, async (req, res) => {
+  try {
+    if (!ObjectId.isValid(req.params.runId)) return res.status(404).json({ error: "Unknown invoice" });
+    const billingRunsCol = await billingRuns();
+    const run = await billingRunsCol.findOne({ _id: new ObjectId(req.params.runId) });
+    if (!run || !run.invoice) return res.status(404).json({ error: "Unknown invoice" });
+
+    const pdf = await renderInvoicePdf(run.invoice);
+    res.set("Content-Type", "application/pdf");
+    res.set("Content-Disposition", `inline; filename="Factuur-${run.invoice_number}-Branch.pdf"`);
+    res.send(pdf);
+  } catch (error) {
+    console.error("GET /api/admin/billing-runs/:runId/invoice.pdf error:", error);
+    res.status(500).json({ error: "Failed to render invoice" });
   }
 });
 

@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const { escapeHtml } = require("../utils/html");
+const { eur, nlDate } = require("./invoicePdf");
 
 let transporter;
 
@@ -16,56 +17,36 @@ function getTransporter() {
   return transporter;
 }
 
-function formatCurrency(amount, currency) {
-  return new Intl.NumberFormat("en-IE", { style: "currency", currency }).format(amount);
-}
-
-function formatDate(date) {
-  return new Intl.DateTimeFormat("en-IE", { day: "numeric", month: "long", year: "numeric" }).format(date);
-}
-
-// `items` are { external_transaction_id, occurred_at, fee_amount } for the
-// itemized breakdown the client can check against their own records.
-async function sendPreCollectionNotice({ client, items, totalAmount, collectionDate }) {
-  const rows = items
-    .map(
-      (item) =>
-        `<tr>
-          <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">${formatDate(item.occurred_at)}</td>
-          <td style="padding: 8px 0; color: #111827; font-size: 14px;">${escapeHtml(item.external_transaction_id)}</td>
-          <td style="padding: 8px 0; color: #111827; font-size: 14px; text-align: right;">${formatCurrency(Number(item.fee_amount.toString()), client.currency)}</td>
-        </tr>`,
-    )
-    .join("");
-
+// Monthly invoice, sent a week before the direct debit. It doubles as the
+// SEPA pre-notification (amount + collection date). Branch's own mailbox is
+// CC'd so every invoice lands in the administration automatically.
+async function sendInvoiceEmail({ client, invoice, pdf, collectionDay }) {
   await getTransporter().sendMail({
     from: `"Branch" <${process.env.GMAIL_USER}>`,
     to: client.billing_email,
-    subject: `Upcoming Direct Debit collection — ${formatCurrency(totalAmount, client.currency)} on ${formatDate(collectionDate)}`,
+    cc: process.env.GMAIL_USER,
+    subject: `Factuur ${invoice.number} van Branch — ${eur(invoice.total_cents)}`,
+    attachments: [{ filename: `Factuur-${invoice.number}-Branch.pdf`, content: pdf, contentType: "application/pdf" }],
     html: `
       <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #111827;">
-        <h2 style="margin-top: 0;">Upcoming Direct Debit collection</h2>
-        <p>Hi ${escapeHtml(client.name)},</p>
+        <h2 style="margin-top: 0;">Factuur ${escapeHtml(invoice.number)}</h2>
+        <p>Beste ${escapeHtml(client.name)},</p>
         <p>
-          We'll be collecting <strong>${formatCurrency(totalAmount, client.currency)}</strong> via SEPA Direct Debit
-          on <strong>${formatDate(collectionDate)}</strong> for ${items.length} transaction(s) reported since your last collection.
+          In de bijlage vindt u factuur <strong>${escapeHtml(invoice.number)}</strong> voor
+          ${invoice.transaction_count} verwerkte transactie(s).
         </p>
-        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-          <thead>
-            <tr>
-              <th style="text-align: left; padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 13px; color: #6b7280;">Date</th>
-              <th style="text-align: left; padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 13px; color: #6b7280;">Transaction</th>
-              <th style="text-align: right; padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 13px; color: #6b7280;">Fee</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
+        <p>
+          Het totaalbedrag van <strong>${eur(invoice.total_cents)}</strong> (incl. ${invoice.vat_rate}% btw)
+          wordt rond <strong>${nlDate(collectionDay)}</strong> via SEPA-incasso van uw rekening afgeschreven.
+          U hoeft zelf niets over te maken.
+        </p>
         <p style="color: #6b7280; font-size: 13px;">
-          If you have any questions about this collection, just reply to this email.
+          Vragen over deze factuur? Beantwoord gewoon deze e-mail.
         </p>
+        <p>Met vriendelijke groet,<br>Branch</p>
       </div>
     `,
   });
 }
 
-module.exports = { sendPreCollectionNotice };
+module.exports = { sendInvoiceEmail };
