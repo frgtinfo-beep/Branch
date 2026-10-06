@@ -18,6 +18,7 @@ require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
 
 const { clients } = require("../db");
 const { generateApiKey, hashApiKey } = require("../utils/apiKeys");
+const { generateOnboardingToken, onboardingPath } = require("../utils/onboardingTokens");
 
 function parseArgs(argv) {
   const args = {};
@@ -57,6 +58,8 @@ async function main() {
   };
   if (args["address"]) update.address_lines = args["address"].split("|").map((line) => line.trim()).filter(Boolean);
   if (args["savings"]) update.savings_per_transaction = Number(args["savings"]);
+  // Backfills clients created before onboarding links had a token.
+  update.onboarding_token = (existing && existing.onboarding_token) || generateOnboardingToken();
 
   let apiKey = null;
   if (!existing) {
@@ -76,8 +79,10 @@ async function main() {
   if (apiKey) {
     console.log("\nAPI key (save this now — it will not be shown again):");
     console.log(apiKey);
-    console.log(`\nOnboarding link: ${process.env.APP_BASE_URL || "<APP_BASE_URL>"}/onboarding/${clientId}`);
   }
+  console.log(
+    `\nOnboarding link: ${process.env.APP_BASE_URL || "<APP_BASE_URL>"}${onboardingPath({ client_id: clientId, onboarding_token: update.onboarding_token })}`,
+  );
 
   process.exit(0);
 }

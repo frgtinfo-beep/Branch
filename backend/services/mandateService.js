@@ -9,6 +9,20 @@ const MANDATE_STATUS_BY_MOLLIE_STATUS = {
   invalid: "failed",
 };
 
+// Unknown statuses count as failed so the billing job never charges on a
+// mandate we can't vouch for.
+function toMandateStatus(mollieStatus) {
+  return MANDATE_STATUS_BY_MOLLIE_STATUS[mollieStatus] || "failed";
+}
+
+// What the customer is told after the setup payment: only an active mandate
+// is "authorized"; a rejected one reads as not completed so they retry.
+const OUTCOME_BY_MANDATE_STATUS = {
+  active: "authorized",
+  pending_submission: "processing",
+  failed: "cancelled",
+};
+
 // Outcome of the one-time mandate-setup payment -> client mandate fields.
 // Called from both the onboarding redirect and the webhook, whichever
 // arrives first; both are idempotent.
@@ -17,12 +31,17 @@ async function applyFirstPaymentResult(client, payment) {
 
   if (payment.status === "paid" && payment.mandateId) {
     const mandate = await getMandate({ customerId: payment.customerId, mandateId: payment.mandateId });
-    const mandateStatus = MANDATE_STATUS_BY_MOLLIE_STATUS[mandate.status] || "pending_submission";
+    const mandateStatus = toMandateStatus(mandate.status);
+    // A rejected re-authorization (e.g. switching bank accounts) mustn't
+    // replace the mandate that's still collecting fine.
+    if (mandateStatus === "failed" && client.mandate_status === "active") {
+      return { outcome: OUTCOME_BY_MANDATE_STATUS[mandateStatus], mandateStatus: client.mandate_status };
+    }
     await clientsCol.updateOne(
       { _id: client._id },
       { $set: { mollie_mandate_id: mandate.id, mandate_status: mandateStatus, updated_at: new Date() } },
     );
-    return { outcome: "authorized", mandateStatus };
+    return { outcome: OUTCOME_BY_MANDATE_STATUS[mandateStatus], mandateStatus };
   }
 
   if (["canceled", "expired", "failed"].includes(payment.status)) {
@@ -47,7 +66,7 @@ async function refreshMandateStatus(client) {
   if (!client.mollie_customer_id || !client.mollie_mandate_id) return client.mandate_status || null;
 
   const mandate = await getMandate({ customerId: client.mollie_customer_id, mandateId: client.mollie_mandate_id });
-  const mandateStatus = MANDATE_STATUS_BY_MOLLIE_STATUS[mandate.status] || "failed";
+  const mandateStatus = toMandateStatus(mandate.status);
 
   if (mandateStatus !== client.mandate_status) {
     const clientsCol = await clients();

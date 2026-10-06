@@ -53,7 +53,9 @@ the exemption text and the debit no longer includes btw.
    per-transaction savings line for the client's bookkeeper (not charged).
    This prints an API key **once** — give that to Business A's site to send
    as `Authorization: Bearer <key>` on its calls to `/api/transactions`.
-4. Visit `<APP_BASE_URL>/onboarding/business-a` and complete the €0.01
+4. Open the onboarding link the script printed
+   (`<APP_BASE_URL>/onboarding/business-a?token=...` — the token is required,
+   so the link can't be guessed from the client id) and complete the €0.01
    verification payment. In test mode Mollie shows a page where you choose the
    outcome — pick **Paid** — and the client's `mandate_status` becomes
    `active` (check `/admin`).
@@ -101,8 +103,8 @@ total, and collection history.
 ### Adding a second client later
 
 `npm run seed-client -- --client-id <id> --name ... --email ... --fee ...`
-with a different flat fee/currency, then send them to
-`/onboarding/<id>`. Nothing else changes — routes, the billing job, and the
+with a different flat fee/currency, then send them the
+onboarding link it prints. Nothing else changes — routes, the billing job, and the
 admin view are all client-agnostic.
 
 ### Switching test → live
@@ -119,7 +121,8 @@ admin view are all client-agnostic.
 ### Migrating from GoCardless
 
 GoCardless mandates can't be moved to Mollie, so each existing client
-re-authorizes once via `/onboarding/<id>`. While a client has
+re-authorizes once via their onboarding link (re-run `seed-client` with
+their current details to print it; this also gives older clients a token). While a client has
 `collection_paused: true`, transactions keep piling up as unbilled and
 nothing is charged. Once their Mollie mandate is `active`, unset the flag and
 the next collection on the 1st charges the whole backlog. Older billing runs

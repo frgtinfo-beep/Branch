@@ -1,3 +1,5 @@
+const { onboardingPath } = require("../utils/onboardingTokens");
+
 // Minimal self-contained HTML — no template engine in this project, and the
 // content here is small enough not to need one.
 
@@ -74,7 +76,7 @@ ${BRAND_HEAD}
         future monthly collections. Your payments are protected by the SEPA Direct Debit
         Guarantee, and you can cancel the mandate at any time directly with your bank.
       </p>
-      <a class="btn" href="/onboarding/${encodeURIComponent(client.client_id)}/start">Authorize with Mollie</a>
+      <a class="btn" href="${escapeHtml(onboardingPath(client, "/start"))}">Authorize with Mollie</a>
     </div>
   </main>
 </body>
@@ -102,7 +104,7 @@ ${BRAND_HEAD}
     <div class="card">
       <h1>${escapeHtml(heading)}</h1>
       <p>${escapeHtml(message)}</p>
-      ${!success ? `<p><a href="/onboarding/${encodeURIComponent(client.client_id)}">Try again</a></p>` : ""}
+      ${!success ? `<p><a href="${escapeHtml(onboardingPath(client))}">Try again</a></p>` : ""}
     </div>
   </main>
 </body>

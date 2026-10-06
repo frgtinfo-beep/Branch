@@ -4,13 +4,16 @@ const { config } = require("../config/env");
 const { createCustomer, createFirstPayment, getPayment } = require("../services/mollieService");
 const { applyFirstPaymentResult } = require("../services/mandateService");
 const { onboardingPage, onboardingResultPage } = require("../views/onboardingPage");
+const { onboardingTokenMatches, onboardingPath } = require("../utils/onboardingTokens");
 
 const router = express.Router();
 
+// A wrong or missing token gets the same 404 as an unknown client, so the
+// response doesn't reveal which client_ids exist.
 async function findClientOr404(req, res) {
   const clientsCol = await clients();
   const client = await clientsCol.findOne({ client_id: req.params.clientId });
-  if (!client) {
+  if (!client || !onboardingTokenMatches(client, req.query.token)) {
     res.status(404).send("Unknown client");
     return null;
   }
@@ -44,7 +47,7 @@ router.get("/:clientId/start", async (req, res) => {
       clientId: client.client_id,
       currency: client.currency,
       description: `Branch — Direct Debit authorization for ${client.name}`,
-      redirectUrl: `${config.appBaseUrl()}/onboarding/${encodeURIComponent(client.client_id)}/callback`,
+      redirectUrl: `${config.appBaseUrl()}${onboardingPath(client, "/callback")}`,
       webhookUrl: config.mollie.webhookUrl(),
     });
 
