@@ -2,6 +2,7 @@ const express = require("express");
 const { clients, billingRuns } = require("../db");
 const { getPayment } = require("../services/mollieService");
 const { applyFirstPaymentResult } = require("../services/mandateService");
+const { handleFailedCollection } = require("../services/billingService");
 
 const router = express.Router();
 
@@ -28,19 +29,23 @@ async function handleRecurringPayment(payment) {
   const status = payment.hasChargebacks() ? "charged_back" : payment.status;
 
   const billingRunsCol = await billingRuns();
-  const result = await billingRunsCol.updateOne(
+  const previous = await billingRunsCol.findOneAndUpdate(
     { mollie_payment_id: payment.id },
     { $set: { status, updated_at: new Date() } },
+    { returnDocument: "before" },
   );
 
-  if (result.matchedCount === 0) {
+  // Also an earlier attempt's payment once a retry has replaced it.
+  if (!previous) {
     logEvent("unmatched_payment", { payment_id: payment.id, status });
     return;
   }
 
   logEvent("billing_run_updated", { payment_id: payment.id, status });
-  if (status === "failed" || status === "charged_back") {
-    console.error("MANUAL FOLLOW-UP REQUIRED:", JSON.stringify({ stage: "collection_webhook", payment_id: payment.id, status }));
+  // Only on the change itself, so Mollie re-sending the same webhook doesn't
+  // email twice or push the retry date back.
+  if ((status === "failed" || status === "charged_back") && previous.status !== status) {
+    await handleFailedCollection({ run: previous, payment, status });
   }
 }
 

@@ -8,6 +8,12 @@
         "value": "inter",
         "createdAt": "2026-09-27T18:10:41.296Z",
         "reason": "Inter is Branch's brand typeface across the website and portal (existing project convention, not introduced this session)"
+      },
+      {
+        "rule": "overused-font",
+        "value": "helvetica",
+        "createdAt": "2026-10-06T22:40:31.787Z",
+        "reason": "Claude: HTML email needs a web-safe stack; matches the existing invoice email's Helvetica/Arial stack in emailService.js"
       }
     ]
   }

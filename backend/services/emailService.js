@@ -49,4 +49,29 @@ async function sendInvoiceEmail({ client, invoice, pdf, collectionDay }) {
   });
 }
 
-module.exports = { sendInvoiceEmail };
+// Internal alert to Branch itself (never the client) when billing needs a
+// human: a failed debit, a missing mandate, a Mollie error.
+async function sendAlertEmail({ subject, summary, details }) {
+  const rows = Object.entries(details)
+    .filter(([, value]) => value !== undefined && value !== null)
+    .map(
+      ([key, value]) =>
+        `<tr><td style="padding: 4px 12px 4px 0; color: #6b7280;">${escapeHtml(key)}</td>` +
+        `<td style="padding: 4px 0;">${escapeHtml(typeof value === "object" ? JSON.stringify(value) : String(value))}</td></tr>`,
+    )
+    .join("");
+
+  await getTransporter().sendMail({
+    from: `"Branch billing" <${process.env.GMAIL_USER}>`,
+    to: process.env.ALERT_EMAIL || process.env.GMAIL_USER,
+    subject: `[Branch] ${subject}`,
+    html: `
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #111827;">
+        <p>${escapeHtml(summary)}</p>
+        <table style="border-collapse: collapse; font-size: 14px;">${rows}</table>
+      </div>
+    `,
+  });
+}
+
+module.exports = { sendInvoiceEmail, sendAlertEmail };

@@ -50,11 +50,17 @@ async function getMandate({ customerId, mandateId }) {
 // the sole guard against double-charging when the monthly job is re-run
 // later. This looks for a payment we already created for the billing run by
 // its metadata, which is permanent.
-async function findPaymentForBillingRun({ customerId, billingRunId }) {
+async function findPaymentForBillingRun({ customerId, billingRunId, attempt = 1 }) {
   const client = getMollieClient();
   const page = await client.customerPayments.page({ customerId, limit: 50 });
   return (
-    page.find((payment) => payment.metadata && payment.metadata.billing_run_id === billingRunId) || null
+    page.find(
+      (payment) =>
+        payment.metadata &&
+        payment.metadata.billing_run_id === billingRunId &&
+        // Payments from before retries existed carry no attempt: the first.
+        (payment.metadata.attempt || 1) === attempt,
+    ) || null
   );
 }
 
@@ -66,6 +72,7 @@ async function createRecurringPayment({
   description,
   webhookUrl,
   billingRunId,
+  attempt = 1,
   idempotencyKey,
 }) {
   const client = getMollieClient();
@@ -76,7 +83,7 @@ async function createRecurringPayment({
     amount: toMollieAmount(amountInMajorUnits, currency),
     description,
     webhookUrl,
-    metadata: { billing_run_id: billingRunId },
+    metadata: { billing_run_id: billingRunId, attempt },
     idempotencyKey,
   });
 }
