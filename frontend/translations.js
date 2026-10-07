@@ -186,7 +186,11 @@
         project_image: "Project image",
         project_untitled: "Untitled project",
         project_no_desc: "No project description available yet.",
-        local_eyebrow: "Lelystad · Flevoland"
+        local_eyebrow: "Lelystad · Flevoland",
+        consent_text: "May we use Google Analytics? It sets cookies that show us how the website is used. You can change your choice at any time via “Cookie settings” at the bottom of the page. Read our <a href=\"cookies.html\" class=\"font-semibold underline underline-offset-4\">cookie policy</a>.",
+        consent_accept: "Accept",
+        consent_decline: "Decline",
+        consent_settings: "Cookie settings"
       },
       nl: {
         nav_home: "Home",
@@ -372,7 +376,11 @@
         project_image: "Projectafbeelding",
         project_untitled: "Project zonder titel",
         project_no_desc: "Nog geen beschrijving beschikbaar.",
-        local_eyebrow: "Lelystad · Flevoland"
+        local_eyebrow: "Lelystad · Flevoland",
+        consent_text: "Mogen we Google Analytics gebruiken? Dat plaatst cookies waarmee we zien hoe de website wordt gebruikt. U kunt uw keuze altijd wijzigen via “Cookie-instellingen” onderaan de pagina. Lees ons <a href=\"cookies.html\" class=\"font-semibold underline underline-offset-4\">cookiebeleid</a>.",
+        consent_accept: "Accepteren",
+        consent_decline: "Weigeren",
+        consent_settings: "Cookie-instellingen"
       }
     };
 
