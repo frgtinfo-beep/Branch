@@ -160,15 +160,15 @@
         form_privacy_note: "We only use your details to reply to your message and, if you ask for it, to prepare an offer. We keep them for up to 1 year. Read our <a href=\"privacy.html\" class=\"text-branch-blue-dark font-semibold underline underline-offset-4\">privacy policy</a>.",
         info_email: "Email",
         info_phone: "Phone",
-        info_location: "Location",
-        info_location_value: "Lelystad, Flevoland",
+        info_location: "Address",
+        info_location_value: "<a href=\"https://www.google.com/maps/search/?api=1&query=Kustrif+115+8224+BJ+Lelystad\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-branch-blue-dark font-semibold underline decoration-branch-blue/30 decoration-2 underline-offset-4 hover:decoration-branch-blue\">Kustrif 115<br>8224 BJ Lelystad</a>",
         info_kvk: "KVK number",
         form_sending: "Sending…",
         form_success: "Thanks! Your message is on its way. We will get back to you within 24 hours.",
         form_missing: "Please fill in the highlighted fields.",
         form_error: "Your message could not be sent. Please try again, or email contact@infobranch.nl.",
         form_network: "No connection to our server. Check your internet connection and try again.",
-        hero_eyebrow: "Lelystad · Flevoland",
+        hero_eyebrow: "Business development in Lelystad",
         local_title: "From Lelystad, <span class=\"italic font-normal text-branch-blue\">for Lelystad</span>",
         local_desc: "A city is only as strong as its entrepreneurs. That's why Branch works from Lelystad, with business owners from the city and across Flevoland. Not a distant agency, but a partner you can simply sit down with.",
         local1_title: "Face to face",
@@ -185,7 +185,8 @@
         projects_error: "Unable to load projects right now.",
         project_image: "Project image",
         project_untitled: "Untitled project",
-        project_no_desc: "No project description available yet."
+        project_no_desc: "No project description available yet.",
+        local_eyebrow: "Lelystad · Flevoland"
       },
       nl: {
         nav_home: "Home",
@@ -345,15 +346,15 @@
         form_privacy_note: "We gebruiken uw gegevens alleen om op uw bericht te reageren en, als u daarom vraagt, een offerte te maken. We bewaren ze maximaal 1 jaar. Lees ons <a href=\"privacy.html\" class=\"text-branch-blue-dark font-semibold underline underline-offset-4\">privacybeleid</a>.",
         info_email: "E-mail",
         info_phone: "Telefoon",
-        info_location: "Locatie",
-        info_location_value: "Lelystad, Flevoland",
+        info_location: "Adres",
+        info_location_value: "<a href=\"https://www.google.com/maps/search/?api=1&query=Kustrif+115+8224+BJ+Lelystad\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-branch-blue-dark font-semibold underline decoration-branch-blue/30 decoration-2 underline-offset-4 hover:decoration-branch-blue\">Kustrif 115<br>8224 BJ Lelystad</a>",
         info_kvk: "KVK-nummer",
         form_sending: "Verzenden…",
         form_success: "Bedankt! Uw bericht is verzonden. We nemen binnen 24 uur contact met u op.",
         form_missing: "Vul de gemarkeerde velden in.",
         form_error: "Uw bericht kon niet worden verzonden. Probeer het opnieuw, of mail naar contact@infobranch.nl.",
         form_network: "Geen verbinding met onze server. Controleer uw internetverbinding en probeer het opnieuw.",
-        hero_eyebrow: "Lelystad · Flevoland",
+        hero_eyebrow: "Bedrijfsontwikkeling in Lelystad",
         local_title: "Van Lelystad, <span class=\"italic font-normal text-branch-blue\">voor Lelystad</span>",
         local_desc: "Een stad is zo sterk als zijn ondernemers. Daarom werkt Branch vanuit Lelystad, met ondernemers uit de stad en de rest van Flevoland. Geen bureau op afstand, maar een partner die u gewoon kunt spreken.",
         local1_title: "Persoonlijk aan tafel",
@@ -370,7 +371,8 @@
         projects_error: "De projecten kunnen nu niet worden geladen.",
         project_image: "Projectafbeelding",
         project_untitled: "Project zonder titel",
-        project_no_desc: "Nog geen beschrijving beschikbaar."
+        project_no_desc: "Nog geen beschrijving beschikbaar.",
+        local_eyebrow: "Lelystad · Flevoland"
       }
     };
 
