@@ -1,31 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Branch — Turn Ideas Into Successful Projects</title>
-  <meta name="description" content="Branch helps entrepreneurs and businesses turn ideas into real, scalable projects — with the strategy, structure, and execution to grow sustainably.">
+  <title>Branch Lelystad | Bedrijfsontwikkeling en groeistrategie voor ondernemers</title>
+  <meta name="description" content="Branch helpt ondernemers in Lelystad en Flevoland ideeën om te zetten in succesvolle, groeiende bedrijven, met strategie, structuur en uitvoering. Persoonlijk en dichtbij.">
   <link rel="canonical" href="https://infobranch.nl/">
   <meta property="og:type" content="website">
+  <meta property="og:locale" content="nl_NL">
   <meta property="og:site_name" content="Branch">
-  <meta property="og:title" content="Branch — Turn Ideas Into Successful Projects">
-  <meta property="og:description" content="Branch helps entrepreneurs and businesses turn ideas into real, scalable projects — with the strategy, structure, and execution to grow sustainably.">
+  <meta property="og:title" content="Branch Lelystad | Bedrijfsontwikkeling en groeistrategie voor ondernemers">
+  <meta property="og:description" content="Branch helpt ondernemers in Lelystad en Flevoland ideeën om te zetten in succesvolle, groeiende bedrijven, met strategie, structuur en uitvoering. Persoonlijk en dichtbij.">
   <meta property="og:url" content="https://infobranch.nl/">
   <meta property="og:image" content="https://infobranch.nl/images/logo-text.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Branch — Turn Ideas Into Successful Projects">
-  <meta name="twitter:description" content="Branch helps entrepreneurs and businesses turn ideas into real, scalable projects — with the strategy, structure, and execution to grow sustainably.">
+  <meta name="twitter:title" content="Branch Lelystad | Bedrijfsontwikkeling en groeistrategie voor ondernemers">
+  <meta name="twitter:description" content="Branch helpt ondernemers in Lelystad en Flevoland ideeën om te zetten in succesvolle, groeiende bedrijven, met strategie, structuur en uitvoering. Persoonlijk en dichtbij.">
   <meta name="twitter:image" content="https://infobranch.nl/images/logo-text.png">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "ProfessionalService",
     "name": "Branch",
+    "description": "Bedrijfsontwikkeling, digitale oplossingen en groeistrategie voor ondernemers in Lelystad en Flevoland.",
     "url": "https://infobranch.nl/",
     "logo": "https://infobranch.nl/images/logo-text.png",
+    "image": "https://infobranch.nl/images/logo-text.png",
     "email": "contact@infobranch.nl",
     "telephone": "+31645055904",
-    "address": { "@type": "PostalAddress", "addressCountry": "NL" },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Kustrif 115",
+      "postalCode": "8224 BJ",
+      "addressLocality": "Lelystad",
+      "addressRegion": "Flevoland",
+      "addressCountry": "NL"
+    },
+    "areaServed": [
+      { "@type": "City", "name": "Lelystad" },
+      { "@type": "AdministrativeArea", "name": "Flevoland" }
+    ],
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    "knowsLanguage": ["nl", "en"],
     "sameAs": []
   }
   </script>
@@ -93,7 +114,7 @@
 </head>
 <body class="bg-paper text-text-dark font-sans leading-relaxed overflow-x-hidden">
 
-  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-white focus:text-ink focus:font-bold focus:px-4 focus:py-2 focus:shadow-lg">Skip to content</a>
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-white focus:text-ink focus:font-bold focus:px-4 focus:py-2 focus:shadow-lg" data-i18n="skip_link">Naar de inhoud</a>
 
   <nav id="site-nav" class="fixed top-0 left-0 w-full z-50 bg-white/30 backdrop-blur-sm backdrop-saturate-150 border-b border-white/40 shadow-[0_8px_32px_rgba(3,47,138,0.08)] transition-shadow duration-300">
     <div class="flex justify-between items-center px-5 md:px-[60px] py-4 max-w-[1400px] mx-auto">
@@ -103,7 +124,7 @@
 
       <ul class="hidden md:flex items-center gap-1 list-none" aria-label="Primary">
         <li><a href="index.html" aria-current="page" class="text-[0.95rem] font-bold uppercase tracking-wide px-4 py-2 text-text-dark transition-colors duration-300 hover:text-branch-blue" data-i18n="nav_home">Home</a></li>
-        <li><a href="about.html" class="text-[0.95rem] font-bold uppercase tracking-wide px-4 py-2 text-text-dark transition-colors duration-300 hover:text-branch-blue" data-i18n="nav_about">About</a></li>
+        <li><a href="about.html" class="text-[0.95rem] font-bold uppercase tracking-wide px-4 py-2 text-text-dark transition-colors duration-300 hover:text-branch-blue" data-i18n="nav_about">Over Ons</a></li>
         <li><a href="contact.html" class="text-[0.95rem] font-bold uppercase tracking-wide px-4 py-2 text-text-dark transition-colors duration-300 hover:text-branch-blue" data-i18n="nav_contact">Contact</a></li>
       </ul>
 
@@ -111,17 +132,17 @@
         <div class="relative" id="language-dropdown-container">
           <button id="language-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center gap-2 text-[0.85rem] font-bold uppercase tracking-wide text-text-dark hover:text-branch-blue transition-colors px-3 py-1.5">
             <i class="fa-solid fa-globe text-base"></i>
-            <span id="current-lang-text">English</span>
+            <span id="current-lang-text">Nederlands</span>
             <i id="lang-arrow" class="fa-solid fa-chevron-down text-[0.65rem] transition-transform duration-200"></i>
           </button>
 
           <div id="language-menu" class="hidden absolute right-0 mt-2 w-44 rounded-xl overflow-hidden bg-white/92 backdrop-blur-2xl backdrop-saturate-150 border border-white/75 shadow-[0_8px_32px_rgba(3,47,138,0.18)] py-1 z-50">
-            <button class="lang-option w-full text-left px-4 py-2.5 text-sm font-bold text-branch-blue bg-blue-50 flex justify-between items-center transition-colors hover:bg-gray-50" data-lang="en">
-              <span>English</span>
+            <button class="lang-option w-full text-left px-4 py-2.5 text-sm font-bold text-branch-blue bg-blue-50 flex justify-between items-center transition-colors hover:bg-gray-50" data-lang="nl">
+              <span>Nederlands</span>
               <i class="fa-solid fa-check text-xs check-icon"></i>
             </button>
-            <button class="lang-option w-full text-left px-4 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition-colors" data-lang="nl">
-              <span>Nederlands</span>
+            <button class="lang-option w-full text-left px-4 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 flex justify-between items-center transition-colors" data-lang="en">
+              <span>English</span>
               <i class="fa-solid fa-check text-xs check-icon hidden"></i>
             </button>
           </div>
@@ -140,7 +161,7 @@
     <div id="mobile-menu" class="md:hidden border-t border-white/65 bg-white/92 backdrop-blur-2xl backdrop-saturate-150">
       <ul class="flex flex-col px-5 py-3" aria-label="Primary mobile">
         <li><a href="index.html" aria-current="page" class="block py-3 text-[1.05rem] font-bold uppercase tracking-wide text-text-dark" data-i18n="nav_home">Home</a></li>
-        <li><a href="about.html" class="block py-3 text-[1.05rem] font-bold uppercase tracking-wide text-text-dark border-t border-black/10" data-i18n="nav_about">About</a></li>
+        <li><a href="about.html" class="block py-3 text-[1.05rem] font-bold uppercase tracking-wide text-text-dark border-t border-black/10" data-i18n="nav_about">Over Ons</a></li>
         <li><a href="contact.html" class="block py-3 text-[1.05rem] font-bold uppercase tracking-wide text-text-dark border-t border-black/10" data-i18n="nav_contact">Contact</a></li>
       </ul>
     </div>
@@ -152,22 +173,15 @@
     <div class="relative z-10 max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-10 md:gap-12 items-center">
 
       <div>
-        <h1 class="text-white text-[3rem] sm:text-[3.6rem] md:text-[5.25rem] font-black leading-[0.98] tracking-[-0.035em] mb-7 [text-wrap:balance]" data-i18n="hero_title">
-          Turn ideas into<br>
-          <span class="italic font-normal text-branch-cyan">successful projects</span>
-        </h1>
+        <p class="inline-flex items-center gap-2 mb-6 text-branch-green text-xs font-bold uppercase tracking-[0.16em]"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span data-i18n="hero_eyebrow">Lelystad · Flevoland</span></p>
+        <h1 class="text-white text-[3rem] sm:text-[3.6rem] md:text-[5.25rem] font-black leading-[0.98] tracking-[-0.035em] mb-7 [text-wrap:balance]" data-i18n="hero_title">Maak van ideeën<br>
+<span class="italic font-normal text-branch-cyan">succesvolle projecten</span></h1>
 
-        <p class="text-white/75 text-[1.15rem] md:text-[1.2rem] leading-relaxed max-w-[34rem] mb-10" data-i18n="hero_desc">
-          Branch connects businesses, entrepreneurs, and individuals with the expertise, strategy, and execution needed to launch, grow, and succeed.
-        </p>
+        <p class="text-white/75 text-[1.15rem] md:text-[1.2rem] leading-relaxed max-w-[34rem] mb-10" data-i18n="hero_desc">Lelystad groeit door ondernemers zoals u. Wij zoeken ondernemers met een idee en de wil om te bouwen, en zetten daar onze strategie, kennis en uitvoering naast. Persoonlijk en dichtbij.</p>
 
         <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
-          <a href="contact.html" class="btn inline-flex items-center gap-2 py-4 px-8 text-base font-bold uppercase tracking-wide text-ink bg-branch-green hover:bg-white" data-i18n="hero_cta">
-            Start a Project &rarr;
-          </a>
-          <a href="#packages" class="btn inline-flex items-center py-2 text-base font-bold uppercase tracking-wide text-white underline decoration-white/35 decoration-2 underline-offset-[6px] hover:decoration-branch-green" data-i18n="hero_cta2">
-            View packages
-          </a>
+          <a href="contact.html" class="btn inline-flex items-center gap-2 py-4 px-8 text-base font-bold uppercase tracking-wide text-ink bg-branch-green hover:bg-white" data-i18n="hero_cta">Start een project &rarr;</a>
+          <a href="#packages" class="btn inline-flex items-center py-2 text-base font-bold uppercase tracking-wide text-white underline decoration-white/35 decoration-2 underline-offset-[6px] hover:decoration-branch-green" data-i18n="hero_cta2">Bekijk pakketten</a>
         </div>
       </div>
 
@@ -201,155 +215,188 @@
 
     <div class="relative border-t border-white/15 py-6 mt-16 md:mt-20">
       <ul class="max-w-[1400px] mx-auto flex items-center gap-x-8 gap-y-3 flex-wrap list-none">
-        <li class="text-white/70 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_1">Business Development</li>
+        <li class="text-white/70 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_1">Bedrijfsontwikkeling</li>
         <li class="w-px h-3.5 bg-white/20" aria-hidden="true"></li>
-        <li class="text-white/70 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_2">Digital Solutions</li>
+        <li class="text-white/70 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_2">Digitale oplossingen</li>
         <li class="w-px h-3.5 bg-white/20" aria-hidden="true"></li>
-        <li class="text-white/70 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_3">Growth Strategy</li>
+        <li class="text-white/70 text-xs font-bold uppercase tracking-[0.14em]" data-i18n="service_3">Groeistrategie</li>
       </ul>
     </div>
   </section>
 
   <section class="py-24 md:py-32 px-5 md:px-[60px] bg-paper">
     <div class="max-w-[1200px] mx-auto">
-      <h2 class="text-ink text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] tracking-[-0.03em] mb-14 md:mb-20 max-w-[600px]" data-i18n="why_title">Why choose <span class="italic font-normal text-branch-blue" translate="no">Branch</span></h2>
+      <h2 class="text-ink text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] tracking-[-0.03em] mb-14 md:mb-20 max-w-[600px]" data-i18n="why_title">Waarom kiezen voor <span class="italic font-normal text-branch-blue" translate="no">Branch</span></h2>
 
       <ol class="steps grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-10 list-none pl-9 md:pl-0">
         <li class="relative">
           <span class="step-node text-branch-blue -ml-9 md:ml-0 mb-0 md:mb-8 absolute md:relative" aria-hidden="true"></span>
           <span class="block text-sm font-bold text-branch-blue mb-2 price" aria-hidden="true">01</span>
-          <h3 class="text-ink mb-3 text-[1.4rem] font-bold tracking-tight" data-i18n="card1_title">Find Opportunities</h3>
-          <p class="text-text-light text-[1.05rem] leading-relaxed max-w-[32ch]" data-i18n="card1_desc">We help identify and secure the right projects for strategic growth.</p>
+          <h3 class="text-ink mb-3 text-[1.4rem] font-bold tracking-tight" data-i18n="card1_title">Kansen vinden</h3>
+          <p class="text-text-light text-[1.05rem] leading-relaxed max-w-[32ch]" data-i18n="card1_desc">Wij helpen de juiste kansen in Lelystad en de regio te vinden en te benutten voor strategische groei.</p>
         </li>
         <li class="relative">
           <span class="step-node text-branch-cyan -ml-9 md:ml-0 mb-0 md:mb-8 absolute md:relative" aria-hidden="true"></span>
           <span class="block text-sm font-bold text-[#0A7699] mb-2 price" aria-hidden="true">02</span>
-          <h3 class="text-ink mb-3 text-[1.4rem] font-bold tracking-tight" data-i18n="card2_title">Expert Guidance</h3>
-          <p class="text-text-light text-[1.05rem] leading-relaxed max-w-[32ch]" data-i18n="card2_desc">End-to-end strategic planning and high-level project execution.</p>
+          <h3 class="text-ink mb-3 text-[1.4rem] font-bold tracking-tight" data-i18n="card2_title">Deskundige begeleiding</h3>
+          <p class="text-text-light text-[1.05rem] leading-relaxed max-w-[32ch]" data-i18n="card2_desc">Strategische planning van begin tot eind en projectuitvoering op hoog niveau.</p>
         </li>
         <li class="relative">
           <span class="step-node text-branch-green -ml-9 md:ml-0 mb-0 md:mb-8 absolute md:relative" aria-hidden="true"></span>
           <span class="block text-sm font-bold text-[#347A1F] mb-2 price" aria-hidden="true">03</span>
-          <h3 class="text-ink mb-3 text-[1.4rem] font-bold tracking-tight" data-i18n="card3_title">Real Growth</h3>
-          <p class="text-text-light text-[1.05rem] leading-relaxed max-w-[32ch]" data-i18n="card3_desc">Laser-focused on delivering measurable, long-term business success.</p>
+          <h3 class="text-ink mb-3 text-[1.4rem] font-bold tracking-tight" data-i18n="card3_title">Echte groei</h3>
+          <p class="text-text-light text-[1.05rem] leading-relaxed max-w-[32ch]" data-i18n="card3_desc">Volledig gericht op meetbaar, blijvend zakelijk succes.</p>
         </li>
       </ol>
     </div>
   </section>
 
-  <section id="packages" class="scroll-mt-20 py-24 md:py-32 px-5 md:px-[60px] bg-[#F4F7FB]">
+  <section class="py-24 md:py-32 px-5 md:px-[60px] bg-branch-blue-dark">
+    <div class="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20">
+      <div>
+        <p class="inline-flex items-center gap-2 mb-5 text-branch-green text-xs font-bold uppercase tracking-[0.16em]"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span data-i18n="hero_eyebrow">Lelystad · Flevoland</span></p>
+        <h2 class="text-white text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] tracking-[-0.03em] mb-6 [text-wrap:balance] [&_span]:text-branch-cyan" data-i18n="local_title">Van Lelystad, <span class="italic font-normal text-branch-blue">voor Lelystad</span></h2>
+        <p class="text-white/75 text-[1.1rem] leading-relaxed max-w-[40ch]" data-i18n="local_desc">Een stad is zo sterk als zijn ondernemers. Daarom werkt Branch vanuit Lelystad, met ondernemers uit de stad en de rest van Flevoland. Geen bureau op afstand, maar een partner die u gewoon kunt spreken.</p>
+      </div>
+      <ul class="flex flex-col list-none border-t border-white/15">
+        <li class="py-7 border-b border-white/15 grid grid-cols-[2.5rem_1fr] gap-4">
+          <i class="fa-solid fa-handshake text-branch-green text-xl mt-1" aria-hidden="true"></i>
+          <div>
+            <h3 class="text-white text-[1.3rem] font-bold tracking-tight mb-2" data-i18n="local1_title">Persoonlijk aan tafel</h3>
+            <p class="text-white/70 text-[1.02rem] leading-relaxed max-w-[48ch]" data-i18n="local1_desc">We komen bij u langs of spreken af in Lelystad. Zo leren we uw bedrijf echt kennen.</p>
+          </div>
+        </li>
+        <li class="py-7 border-b border-white/15 grid grid-cols-[2.5rem_1fr] gap-4">
+          <i class="fa-solid fa-people-group text-branch-cyan text-xl mt-1" aria-hidden="true"></i>
+          <div>
+            <h3 class="text-white text-[1.3rem] font-bold tracking-tight mb-2" data-i18n="local2_title">Een lokaal netwerk</h3>
+            <p class="text-white/70 text-[1.02rem] leading-relaxed max-w-[48ch]" data-i18n="local2_desc">Via ons ondernemersnetwerk komt u in contact met andere ondernemers uit Lelystad en omgeving.</p>
+          </div>
+        </li>
+        <li class="py-7 border-b border-white/15 grid grid-cols-[2.5rem_1fr] gap-4">
+          <i class="fa-solid fa-seedling text-branch-green text-xl mt-1" aria-hidden="true"></i>
+          <div>
+            <h3 class="text-white text-[1.3rem] font-bold tracking-tight mb-2" data-i18n="local3_title">Kennis van de regio</h3>
+            <p class="text-white/70 text-[1.02rem] leading-relaxed max-w-[48ch]" data-i18n="local3_desc">Flevoland groeit snel. Wij helpen u inspelen op de kansen die dat oplevert voor uw bedrijf.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="packages"class="scroll-mt-20 py-24 md:py-32 px-5 md:px-[60px] bg-[#F4F7FB]">
     <div class="max-w-[1200px] mx-auto">
       <div class="mb-12 max-w-[700px]">
-        <h2 class="text-ink text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] tracking-[-0.03em] mb-4" data-i18n="pkg_title">Our Packages</h2>
-        <p class="text-text-light text-[1.1rem] leading-relaxed" data-i18n="pkg_desc">Pick the level of support that fits where your business is right now.</p>
-        <p class="text-text-light text-[0.95rem] mt-3" data-i18n="pkg_vat_note">All prices are per month, excluding 21% VAT. Our packages are for businesses and entrepreneurs.</p>
+        <h2 class="text-ink text-[2.3rem] md:text-[3.25rem] font-black leading-[1.02] tracking-[-0.03em] mb-4" data-i18n="pkg_title">Onze pakketten</h2>
+        <p class="text-text-light text-[1.1rem] leading-relaxed" data-i18n="pkg_desc">Kies het niveau van ondersteuning dat past bij waar uw bedrijf nu staat.</p>
+        <p class="text-text-light text-[0.95rem] mt-3" data-i18n="pkg_vat_note">Alle prijzen zijn per maand, exclusief 21% btw. Onze pakketten zijn bedoeld voor bedrijven en ondernemers.</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
 
         <!-- Pakket 1 -->
         <article class="flex flex-col bg-white border border-black/10 border-t-4 border-t-branch-blue p-7">
-          <h3 class="text-ink text-[1.2rem] font-bold tracking-tight mb-2" data-i18n="pkg1_name">Package 1</h3>
-          <p class="mb-6 pb-6 border-b border-black/10"><span class="price text-ink text-[2.5rem] leading-none font-black tracking-tight" translate="no">&euro;95</span> <span class="text-text-light text-sm font-medium" data-i18n="pkg_period">per month</span></p>
+          <h3 class="text-ink text-[1.2rem] font-bold tracking-tight mb-2" data-i18n="pkg1_name">Pakket 1</h3>
+          <p class="mb-6 pb-6 border-b border-black/10"><span class="price text-ink text-[2.5rem] leading-none font-black tracking-tight" translate="no">&euro;95</span> <span class="text-text-light text-sm font-medium" data-i18n="pkg_period">per maand</span></p>
           <ul class="flex flex-col gap-2.5 mb-5 grow">
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f1">Simple 2-page website — or: upkeep and light optimization of your existing website (choose one during intake)</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f2">12-month Plan of Action</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f3">Revenue-generation calls (quarterly)</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f4">Coaching throughout the program</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f5">6 shoot days</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f1">Eenvoudige website van 2 pagina's, óf onderhoud en lichte optimalisatie van uw bestaande website (u kiest bij de intake)</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f2">12 maanden Plan van Aanpak</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f3">Gesprekken over omzetgroei (per kwartaal)</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f4">Coaching tijdens het hele traject</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-branch-blue text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg1_f5">6 draaidagen</span></li>
           </ul>
-          <p class="text-text-light text-[0.85rem] mb-5" data-i18n="pkg1_note">Extra shoot day: +€100</p>
-          <a href="contact.html" class="btn mt-auto inline-flex justify-center items-center py-3.5 px-5 text-sm font-bold uppercase tracking-wide text-branch-blue-dark border-2 border-branch-blue-dark hover:bg-branch-blue-dark hover:text-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
+          <p class="text-text-light text-[0.85rem] mb-5" data-i18n="pkg1_note">Extra draaidag: +€100</p>
+          <a href="contact.html" class="btn mt-auto inline-flex justify-center items-center py-3.5 px-5 text-sm font-bold uppercase tracking-wide text-branch-blue-dark border-2 border-branch-blue-dark hover:bg-branch-blue-dark hover:text-white" data-i18n="pkg_cta_btn">Neem contact op →</a>
         </article>
 
         <!-- Pakket 2 -->
         <article class="flex flex-col bg-white border border-black/10 border-t-4 border-t-branch-cyan p-7">
-          <h3 class="text-ink text-[1.2rem] font-bold tracking-tight mb-2" data-i18n="pkg2_name">Package 2</h3>
-          <p class="mb-6 pb-6 border-b border-black/10"><span class="price text-ink text-[2.5rem] leading-none font-black tracking-tight" translate="no">&euro;185</span> <span class="text-text-light text-sm font-medium" data-i18n="pkg_period">per month</span></p>
+          <h3 class="text-ink text-[1.2rem] font-bold tracking-tight mb-2" data-i18n="pkg2_name">Pakket 2</h3>
+          <p class="mb-6 pb-6 border-b border-black/10"><span class="price text-ink text-[2.5rem] leading-none font-black tracking-tight" translate="no">&euro;185</span> <span class="text-text-light text-sm font-medium" data-i18n="pkg_period">per maand</span></p>
           <ul class="flex flex-col gap-2.5 mb-6 grow">
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f1">12-month Plan of Action</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f2">Monthly revenue-generation calls</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f3">Revenue-generation plans</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f4">Monthly HR business check-up</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f5">Coaching throughout the program</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f6">Leads advice</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f7">Access to the entrepreneurs' network</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f8">20% discount on film and video/photo production projects</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f9">Custom website</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f10">Quarterly website updates</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f1">12 maanden Plan van Aanpak</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f2">Gesprekken over omzetgroei (per kwartaal)</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f3">Plannen voor omzetgroei</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f4">Maandelijkse HR-check-up van uw bedrijf</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f5">Coaching tijdens het hele traject</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f6">Advies over leads</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f7">Toegang tot ondernemersnetwerk</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f8">20% korting op film- en video-/fotoproductieprojecten</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f9">Website op maat</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-[#374151] leading-snug"><i class="fa-solid fa-check text-[#0B8DB8] text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg2_f10">Website-updates per kwartaal</span></li>
           </ul>
-          <a href="contact.html" class="btn mt-auto inline-flex justify-center items-center py-3.5 px-5 text-sm font-bold uppercase tracking-wide text-branch-blue-dark border-2 border-branch-blue-dark hover:bg-branch-blue-dark hover:text-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
+          <a href="contact.html" class="btn mt-auto inline-flex justify-center items-center py-3.5 px-5 text-sm font-bold uppercase tracking-wide text-branch-blue-dark border-2 border-branch-blue-dark hover:bg-branch-blue-dark hover:text-white" data-i18n="pkg_cta_btn">Neem contact op →</a>
         </article>
 
         <!-- Pakket 3 -->
         <article class="flex flex-col bg-branch-blue-dark border-t-4 border-t-branch-green p-7 shadow-[0_24px_48px_-16px_rgba(3,47,138,0.45)]">
-          <h3 class="text-white text-[1.2rem] font-bold tracking-tight mb-2" data-i18n="pkg3_name">Package 3</h3>
-          <p class="mb-6 pb-6 border-b border-white/15"><span class="price text-white text-[2.5rem] leading-none font-black tracking-tight" translate="no">&euro;300</span> <span class="text-white/70 text-sm font-medium" data-i18n="pkg_period">per month</span></p>
+          <h3 class="text-white text-[1.2rem] font-bold tracking-tight mb-2" data-i18n="pkg3_name">Pakket 3</h3>
+          <p class="mb-6 pb-6 border-b border-white/15"><span class="price text-white text-[2.5rem] leading-none font-black tracking-tight" translate="no">&euro;300</span> <span class="text-white/70 text-sm font-medium" data-i18n="pkg_period">per maand</span></p>
           <ul class="flex flex-col gap-2.5 mb-5 grow">
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f1">Business take-over and build-up</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f2">24-month Plan of Action</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f3">12-month Plan of Action</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f4">Objectives</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f5">Monthly revenue-generation calls</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f6">Revenue-generation plans</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f7">Monthly HR business check-up</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f8">Coaching throughout the program</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f9">Leads advice</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f10">Lead generation</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f1">Volledige ondersteuning: overname en opbouw</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f2">Plan van Aanpak voor 24 maanden</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f3">Plan van Aanpak voor 12 maanden</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f4">Doelstellingen</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f5">Maandelijkse gesprekken over omzetgroei</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f6">Plannen voor omzetgroei</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f7">Maandelijkse HR-check-up van uw bedrijf</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f8">Coaching tijdens het hele traject</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f9">Advies over leads</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f10">Leadgeneratie</span></li>
           </ul>
           <details class="group mb-6">
             <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none inline-flex items-center gap-2 py-1 text-[0.8rem] font-bold uppercase tracking-wide text-branch-green">
-              <span data-i18n="pkg_view_all">View all features</span>
+              <span data-i18n="pkg_view_all">Bekijk alle onderdelen</span>
               <i class="fa-solid fa-chevron-down text-[0.6rem] transition-transform duration-200 group-open:rotate-180" aria-hidden="true"></i>
             </summary>
             <ul class="flex flex-col gap-2.5 mt-3">
               <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f11">Google SEO</span></li>
-              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f12">Google Ads implementation (excluded from the subscription fee)</span></li>
-              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f13">Access to the entrepreneurs' network</span></li>
-              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f14">30% discount on film and video/photo production projects</span></li>
-              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f15">Custom website (monthly updates)</span></li>
-              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f16">Dedicated account manager with priority support (response within 24 hours)</span></li>
-              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f17">Weekly progress report</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f12">Implementatie van Google Ads (niet inbegrepen in het abonnementsbedrag)</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f13">Toegang tot ondernemersnetwerk</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f14">30% korting op film- en video-/fotoproductieprojecten</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f15">Website op maat (maandelijkse aanpassingen)</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f16">Vaste accountmanager met voorrang bij support (reactie binnen 24 uur)</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg3_f17">Wekelijkse voortgangsrapportage</span></li>
             </ul>
           </details>
-          <a href="contact.html" class="btn mt-auto inline-flex justify-center items-center py-3.5 px-5 text-sm font-bold uppercase tracking-wide text-ink bg-branch-green hover:bg-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
+          <a href="contact.html" class="btn mt-auto inline-flex justify-center items-center py-3.5 px-5 text-sm font-bold uppercase tracking-wide text-ink bg-branch-green hover:bg-white" data-i18n="pkg_cta_btn">Neem contact op →</a>
         </article>
       </div>
 
       <!-- Pakket 4 -->
       <article class="mt-5 grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-8 lg:gap-12 bg-ink border-t-4 border-t-branch-green p-7 md:p-10">
         <div class="flex flex-col">
-          <span class="inline-flex w-fit items-center mb-4 text-white text-[0.7rem] font-bold tracking-[0.12em] uppercase bg-white/10 border border-white/20 rounded-full px-3 py-1" data-i18n="pkg4_badge">Selected clients only</span>
-          <h3 class="text-white text-[1.6rem] font-bold tracking-tight leading-tight mb-4" data-i18n="pkg4_name">Package 4 — Partnership</h3>
-          <p class="text-white/80 text-[1rem] leading-relaxed mb-3 max-w-[46ch]" data-i18n="pkg4_intro">Same commitment and results as Package 3 — no fixed monthly fee. The terms of collaboration are agreed in a personal conversation.</p>
-          <p class="text-white/60 text-[0.85rem] mb-8 max-w-[46ch]" data-i18n="pkg4_note">Only available to clients who qualify, following an assessment by Branch.</p>
-          <a href="contact.html" class="btn mt-auto w-fit inline-flex justify-center items-center py-3.5 px-7 text-sm font-bold uppercase tracking-wide text-ink bg-branch-green hover:bg-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
+          <span class="inline-flex w-fit items-center mb-4 text-white text-[0.7rem] font-bold tracking-[0.12em] uppercase bg-white/10 border border-white/20 rounded-full px-3 py-1" data-i18n="pkg4_badge">Alleen voor geselecteerde klanten</span>
+          <h3 class="text-white text-[1.6rem] font-bold tracking-tight leading-tight mb-4" data-i18n="pkg4_name">Pakket 4: Partnership</h3>
+          <p class="text-white/80 text-[1rem] leading-relaxed mb-3 max-w-[46ch]" data-i18n="pkg4_intro">Dezelfde inzet en diensten als Pakket 3, maar zonder vast maandbedrag. De samenwerkingsvoorwaarden bepalen we in een persoonlijk gesprek.</p>
+          <p class="text-white/60 text-[0.85rem] mb-8 max-w-[46ch]" data-i18n="pkg4_note">Alleen beschikbaar voor klanten die hiervoor in aanmerking komen, na beoordeling door Branch.</p>
+          <a href="contact.html" class="btn mt-auto w-fit inline-flex justify-center items-center py-3.5 px-7 text-sm font-bold uppercase tracking-wide text-ink bg-branch-green hover:bg-white" data-i18n="pkg_cta_btn">Neem contact op →</a>
         </div>
         <div>
           <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f1">Business take-over and build-up</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f2">24-month Plan of Action</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f3">12-month Plan of Action</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f4">Objectives</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f5">Monthly revenue-generation calls</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f6">Revenue-generation plans</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f7">Monthly HR business check-up</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f8">Coaching throughout the program</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f9">Leads advice</span></li>
-            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f10">Lead generation</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f1">Volledige ondersteuning: overname en opbouw</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f2">Plan van Aanpak voor 24 maanden</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f3">Plan van Aanpak voor 12 maanden</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f4">Doelstellingen</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f5">Maandelijkse gesprekken over omzetgroei</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f6">Plannen voor omzetgroei</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f7">Maandelijkse HR-check-up van uw bedrijf</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f8">Coaching tijdens het hele traject</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f9">Advies over leads</span></li>
+            <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f10">Leadgeneratie</span></li>
           </ul>
           <details class="group mt-5">
             <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none inline-flex items-center gap-2 py-1 text-[0.8rem] font-bold uppercase tracking-wide text-branch-green">
-              <span data-i18n="pkg_view_all">View all features</span>
+              <span data-i18n="pkg_view_all">Bekijk alle onderdelen</span>
               <i class="fa-solid fa-chevron-down text-[0.6rem] transition-transform duration-200 group-open:rotate-180" aria-hidden="true"></i>
             </summary>
             <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 mt-3">
               <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f11">Google SEO</span></li>
-              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f12">Google Ads implementation</span></li>
-              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f13">Access to the entrepreneurs' network</span></li>
-              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f14">30% discount on film and video/photo production projects</span></li>
-              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f15">Custom website (monthly updates)</span></li>
-              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f16">24/7 access to Branch coaches</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f12">Implementatie van Google Ads</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f13">Toegang tot ondernemersnetwerk</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f14">30% korting op film- en video-/fotoproductieprojecten</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f15">Website op maat (maandelijkse aanpassingen)</span></li>
+              <li class="flex gap-2.5 text-[0.92rem] text-white/85 leading-snug"><i class="fa-solid fa-check text-branch-green text-xs mt-[5px] shrink-0" aria-hidden="true"></i><span data-i18n="pkg4_f16">24/7 toegang tot Branch coaches</span></li>
             </ul>
           </details>
         </div>
@@ -358,17 +405,17 @@
       <!-- Pakket 5 -->
       <article class="mt-5 flex flex-col md:flex-row md:items-center gap-6 md:gap-10 bg-white border-2 border-dashed border-branch-cyan p-7 md:px-10">
         <div class="md:w-[16rem] shrink-0">
-          <h3 class="text-ink text-[1.2rem] font-bold tracking-tight mb-1" data-i18n="pkg5_name">Package 5 — Custom Package</h3>
+          <h3 class="text-ink text-[1.2rem] font-bold tracking-tight mb-1" data-i18n="pkg5_name">Pakket 5: Maatwerkpakket</h3>
           <h4 class="text-text-light text-[0.9rem]" data-i18n="pkg5_addons_title">Add-ons</h4>
         </div>
         <ul class="flex flex-wrap gap-2 grow">
-          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon1">Client-focused</span></li>
-          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon2">Content management</span></li>
-          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon3">Marketing campaign</span></li>
-          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon4">Business portal</span></li>
-          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon5">Acquisition funnels</span></li>
+          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon1">Klantgericht</span></li>
+          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon2">Contentbeheer</span></li>
+          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon3">Marketingcampagne</span></li>
+          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon4">Bedrijfsportaal</span></li>
+          <li class="inline-flex items-center gap-2 text-[0.9rem] text-[#374151] bg-[#F4F7FB] border border-black/10 rounded-full px-3.5 py-1.5"><i class="fa-solid fa-plus text-[#0B8DB8] text-[0.7rem]" aria-hidden="true"></i><span data-i18n="pkg5_addon5">Acquisitiefunnels</span></li>
         </ul>
-        <a href="contact.html" class="btn shrink-0 inline-flex justify-center items-center py-3.5 px-6 text-sm font-bold uppercase tracking-wide text-branch-blue-dark border-2 border-branch-blue-dark hover:bg-branch-blue-dark hover:text-white" data-i18n="pkg_cta_btn">Get in touch &rarr;</a>
+        <a href="contact.html" class="btn shrink-0 inline-flex justify-center items-center py-3.5 px-6 text-sm font-bold uppercase tracking-wide text-branch-blue-dark border-2 border-branch-blue-dark hover:bg-branch-blue-dark hover:text-white" data-i18n="pkg_cta_btn">Neem contact op →</a>
       </article>
     </div>
   </section>
@@ -376,12 +423,10 @@
   <section class="bg-cta-gradient py-24 md:py-28 px-5 md:px-[60px]">
     <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
       <div class="max-w-[650px]">
-        <h2 class="text-ink text-[2.4rem] md:text-[3.5rem] font-black leading-[1.02] tracking-[-0.03em] mb-5 [text-wrap:balance]" data-i18n="cta_title">Ready to build something great?</h2>
-        <p class="text-ink/80 text-[1.1rem] leading-relaxed font-medium" data-i18n="cta_desc">Whether you're launching a business, growing a company, or starting a new project, Branch is ready to help.</p>
+        <h2 class="text-ink text-[2.4rem] md:text-[3.5rem] font-black leading-[1.02] tracking-[-0.03em] mb-5 [text-wrap:balance]" data-i18n="cta_title">Klaar om iets moois te bouwen?</h2>
+        <p class="text-ink/80 text-[1.1rem] leading-relaxed font-medium" data-i18n="cta_desc">Branch groeit alleen als onze ondernemers groeien. Daarom zoeken we ondernemers in Lelystad die willen bouwen, of het nu gaat om een nieuw bedrijf, een groeiende onderneming of een nieuw project.</p>
       </div>
-      <a href="contact.html" class="btn shrink-0 inline-flex items-center bg-branch-blue-dark text-white font-bold uppercase tracking-wide text-base py-5 px-10 whitespace-nowrap hover:bg-ink" data-i18n="cta_button">
-        Get Started Today
-      </a>
+      <a href="contact.html" class="btn shrink-0 inline-flex items-center bg-branch-blue-dark text-white font-bold uppercase tracking-wide text-base py-5 px-10 whitespace-nowrap hover:bg-ink" data-i18n="cta_button">Vandaag nog beginnen</a>
     </div>
   </section>
 
@@ -392,42 +437,42 @@
 
       <div>
         <span class="block mb-5 font-black text-3xl text-white" translate="no">Branch<span class="text-branch-cyan">.</span></span>
-        <p class="max-w-[300px] text-white/70 leading-relaxed text-sm" data-i18n="footer_about">Helping businesses turn strategic opportunities into successful, scalable projects.</p>
+        <p class="max-w-[300px] text-white/70 leading-relaxed text-sm" data-i18n="footer_about">Lelystad groeit door zijn ondernemers. Branch bouwt met ze mee, van idee tot groeiend bedrijf.</p>
       </div>
 
       <div>
-        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_quicklinks">Quick Links</h2>
+        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_quicklinks">Snel naar</h2>
         <nav class="flex flex-col gap-3" aria-label="Footer">
           <a href="index.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="nav_home">Home</a>
-          <a href="about.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="nav_about">About</a>
+          <a href="about.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="nav_about">Over Ons</a>
           <a href="contact.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="nav_contact">Contact</a>
         </nav>
       </div>
 
       <div>
-        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_services">Services</h2>
+        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_services">Diensten</h2>
         <ul class="flex flex-col gap-3 list-none">
-          <li class="text-white/75 text-sm font-medium" data-i18n="service_1">Business Development</li>
-          <li class="text-white/75 text-sm font-medium" data-i18n="service_2">Digital Solutions</li>
-          <li class="text-white/75 text-sm font-medium" data-i18n="service_3">Growth Strategy</li>
+          <li class="text-white/75 text-sm font-medium" data-i18n="service_1">Bedrijfsontwikkeling</li>
+          <li class="text-white/75 text-sm font-medium" data-i18n="service_2">Digitale oplossingen</li>
+          <li class="text-white/75 text-sm font-medium" data-i18n="service_3">Groeistrategie</li>
         </ul>
       </div>
 
       <div>
-        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_legal">Legal</h2>
+        <h2 class="mb-5 font-bold tracking-[0.15em] text-branch-green uppercase text-xs" data-i18n="footer_legal">Juridisch</h2>
         <nav class="flex flex-col gap-3" aria-label="Legal">
-          <a href="privacy.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_privacy">Privacy Policy</a>
-          <a href="terms.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_terms">Terms and Conditions</a>
-          <a href="refund.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_refund">Refund Policy</a>
-          <a href="cookies.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_cookies">Cookie Policy</a>
+          <a href="privacy.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_privacy">Privacybeleid</a>
+          <a href="terms.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_terms">Algemene voorwaarden</a>
+          <a href="refund.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_refund">Restitutiebeleid</a>
+          <a href="cookies.html" class="text-white/75 text-sm font-medium transition-colors duration-200 hover:text-branch-cyan w-fit" data-i18n="legal_cookies">Cookiebeleid</a>
         </nav>
       </div>
     </div>
 
     <div class="max-w-[1200px] mx-auto pt-8 border-t border-white/20 flex flex-col gap-3 text-white/60 text-[0.85rem] font-medium md:flex-row md:justify-between">
-      <p><span translate="no">Branch</span> · <span data-i18n="biz_form">Sole proprietorship</span> · KVK 42001190 · <span data-i18n="biz_vat">VAT</span> [BTW-ID] · [ADRES]</p>
+      <p><span translate="no">Branch</span> · <span data-i18n="biz_form">Eenmanszaak</span> · KVK 42001190 · <span data-i18n="biz_vat">Btw-id</span> NL005424795B25 · Kustrif 115, 8224 BJ Lelystad</p>
       <p>
-        &copy; 2026 <span translate="no">Branch</span>. <span data-i18n="footer_rights">All rights reserved.</span>
+        &copy; 2026 <span translate="no">Branch</span>. <span data-i18n="footer_rights">Alle rechten voorbehouden.</span>
         · <a href="https://branchdb.onrender.com/admin" class="text-white/60 underline-offset-4 hover:text-white hover:underline transition-colors duration-200">Staff login</a>
         · <a href="https://branchdb.onrender.com/portal/login" class="text-white/60 underline-offset-4 hover:text-white hover:underline transition-colors duration-200">Team login</a>
       </p>

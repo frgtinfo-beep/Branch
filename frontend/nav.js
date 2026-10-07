@@ -1,4 +1,4 @@
-// Shared mobile nav toggle — same markup/behavior on every page (#hamburger-btn + #mobile-menu)
+// Shared mobile nav toggle: same markup/behavior on every page (#hamburger-btn + #mobile-menu)
 (function () {
   function init() {
     const hamburgerBtn = document.getElementById('hamburger-btn');

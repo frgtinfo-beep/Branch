@@ -7,14 +7,14 @@
   const submitLabel = document.getElementById('submitLabel');
   const fields = ['name', 'email', 'company', 'projectType', 'message'].map((id) => document.getElementById(id));
 
-  // translations.js exposes the active language; fall back to English copy if it hasn't loaded
+  // translations.js exposes the active language; fall back to Dutch copy if it hasn't loaded
   const FALLBACK = {
-    form_sending: 'Sending…',
-    form_success: 'Thanks! Your message is on its way. We will get back to you within 24 hours.',
-    form_missing: 'Please fill in the highlighted fields.',
-    form_error: 'Your message could not be sent. Please try again, or email contact@infobranch.nl.',
-    form_network: 'No connection to our server. Check your internet connection and try again.',
-    btn_send: 'Send Inquiry →',
+    form_sending: 'Verzenden…',
+    form_success: 'Bedankt! Uw bericht is verzonden. We nemen binnen 24 uur contact met u op.',
+    form_missing: 'Vul de gemarkeerde velden in.',
+    form_error: 'Uw bericht kon niet worden verzonden. Probeer het opnieuw, of mail naar contact@infobranch.nl.',
+    form_network: 'Geen verbinding met onze server. Controleer uw internetverbinding en probeer het opnieuw.',
+    btn_send: 'Aanvraag verzenden →',
   };
   const t = (key) => (window.branchT && window.branchT(key)) || FALLBACK[key];
 

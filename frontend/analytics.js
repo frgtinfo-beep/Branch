@@ -18,7 +18,8 @@
     return w < 768 ? "mobile" : w < 1024 ? "tablet" : "desktop";
   }
   function lang() {
-    try { return localStorage.getItem("branch_lang") === "nl" ? "nl" : "en"; } catch (e) { return "en"; }
+    // Same rule as translations.js: Dutch unless the visitor picked English
+    try { return localStorage.getItem("branch_language") === "en" ? "en" : "nl"; } catch (e) { return "nl"; }
   }
   function path() {
     var p = location.pathname.replace(/\/+$/, "") || "/";
