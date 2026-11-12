@@ -64,6 +64,11 @@ async function analytics() {
   return (await getDatabase()).collection("analytics");
 }
 
+// "Gratis website" sign-ups from frontend/gratis-website.html, worked through in /portal/registrations
+async function registrations() {
+  return (await getDatabase()).collection("registrations");
+}
+
 // Small key/value documents for portal-wide settings (e.g. the calendar feed token)
 async function settings() {
   return (await getDatabase()).collection("settings");
@@ -94,6 +99,7 @@ async function ensureIndexes() {
     journeyStagesCol,
     eventsCol,
     analyticsCol,
+    registrationsCol,
   ] = await Promise.all([
     clients(),
     transactions(),
@@ -107,6 +113,7 @@ async function ensureIndexes() {
     journeyStages(),
     events(),
     analytics(),
+    registrations(),
   ]);
 
   await Promise.all([
@@ -137,6 +144,8 @@ async function ensureIndexes() {
     // Calendar range queries: events overlapping [from, to)
     eventsCol.createIndex({ start: 1, end: 1 }),
     analyticsCol.createIndex({ day: 1, type: 1 }),
+    registrationsCol.createIndex({ createdAt: -1 }),
+    registrationsCol.createIndex({ status: 1, createdAt: -1 }),
     // Retention: raw analytics are deleted automatically after ~13 months
     analyticsCol.createIndex({ ts: 1 }, { expireAfterSeconds: 400 * 24 * 60 * 60 }),
     // Singleton settings doc — never overwrites an admin's existing
@@ -164,6 +173,7 @@ module.exports = {
   events,
   settings,
   analytics,
+  registrations,
   contractsBucket,
   ensureIndexes,
 };
