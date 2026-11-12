@@ -10,11 +10,12 @@
   // translations.js exposes the active language; fall back to Dutch copy if it hasn't loaded
   const FALLBACK = {
     form_sending: 'Verzenden…',
-    form_success: 'Bedankt! Uw bericht is verzonden. We nemen binnen 24 uur contact met u op.',
+    form_success: 'Bedankt, je bericht is verzonden. We nemen binnen 24 uur contact met je op.',
     form_missing: 'Vul de gemarkeerde velden in.',
-    form_error: 'Uw bericht kon niet worden verzonden. Probeer het opnieuw, of mail naar contact@infobranch.nl.',
-    form_network: 'Geen verbinding met onze server. Controleer uw internetverbinding en probeer het opnieuw.',
+    form_error: 'Je bericht kon niet worden verzonden. Probeer het opnieuw, of mail naar contact@infobranch.nl.',
+    form_network: 'Geen verbinding met onze server. Controleer je internetverbinding en probeer het opnieuw.',
     btn_send: 'Aanvraag verzenden →',
+    form_slow: 'Nog even geduld, je bericht wordt verstuurd…',
   };
   const t = (key) => (window.branchT && window.branchT(key)) || FALLBACK[key];
 
@@ -29,6 +30,31 @@
     submitBtn.disabled = sending;
     submitBtn.setAttribute('aria-busy', String(sending));
     submitLabel.textContent = sending ? t('form_sending') : t('btn_send');
+  }
+
+  const SLOW_KEY = 'form_slow';
+
+  // The API runs on a host that sleeps when idle; the first request can take up to a minute.
+  // Wake it as soon as someone starts filling in the form, tell them if a send is slow,
+  // and retry once or twice if the host answers "not ready yet" (502/503/504).
+  const API_BASE = 'https://branchdb.onrender.com';
+  let warmedUp = false;
+  form.addEventListener('focusin', () => {
+    if (warmedUp) return;
+    warmedUp = true;
+    fetch(API_BASE + '/api/health', { mode: 'no-cors' }).catch(() => {});
+  });
+  async function postWithPatience(url, payload) {
+    const slowTimer = setTimeout(() => setStatus(t(SLOW_KEY), 'info'), 4000);
+    try {
+      for (let attempt = 0; ; attempt++) {
+        const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        if (![502, 503, 504].includes(response.status) || attempt === 2) return response;
+        await new Promise((resolve) => setTimeout(resolve, 4000));
+      }
+    } finally {
+      clearTimeout(slowTimer);
+    }
   }
 
   // Clear the error mark as soon as the visitor fixes a field
@@ -58,11 +84,7 @@
     setStatus(t('form_sending'), 'info');
 
     try {
-      const response = await fetch('https://branchdb.onrender.com/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const response = await postWithPatience(API_BASE + '/api/contact', formData);
 
       if (response.ok) {
         form.reset();

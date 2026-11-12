@@ -6,7 +6,7 @@
 
   // Dutch fallback; translations.js swaps the data-i18n text when another language is active
   var FALLBACK = {
-    consent_text: 'Mogen we Google Analytics gebruiken? Dat plaatst cookies waarmee we zien hoe de website wordt gebruikt. U kunt uw keuze altijd wijzigen via “Cookie-instellingen” onderaan de pagina. Lees ons <a href="cookies.html" class="font-semibold underline underline-offset-4">cookiebeleid</a>.',
+    consent_text: 'Mogen we Google Analytics gebruiken? Dat plaatst cookies waarmee we zien hoe de website wordt gebruikt. Je kunt je keuze altijd wijzigen via “Cookie-instellingen” onderaan de pagina. Lees ons <a href="cookies.html" class="font-semibold underline underline-offset-4">cookiebeleid</a>.',
     consent_accept: 'Accepteren',
     consent_decline: 'Weigeren',
   };

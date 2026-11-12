@@ -81,6 +81,7 @@ ${PORTAL_SCRIPT}
       '<div class="reg-head"><div><h2>' + escapeHtmlClient(r.companyName) + '</h2><p class="muted">' + escapeHtmlClient(r.sector) + " · " + formatDateTime(r.createdAt) + "</p></div>" +
       '<span class="badge ' + status.badge + '">' + escapeHtmlClient(status.label) + "</span></div>" +
       '<dl class="reg-facts">' +
+        (r.contactName ? "<dt>Naam</dt><dd>" + escapeHtmlClient(r.contactName) + "</dd>" : "") +
         "<dt>Telefoon</dt><dd><a class=\\"num\\" href=\\"tel:" + escapeHtmlClient(tel) + "\\">" + escapeHtmlClient(r.phone) + "</a></dd>" +
         "<dt>E-mail</dt><dd><a href=\\"mailto:" + escapeHtmlClient(r.email) + "\\">" + escapeHtmlClient(r.email) + "</a></dd>" +
         "<dt>KvK</dt><dd>" + escapeHtmlClient(r.kvk) + "</dd>" +

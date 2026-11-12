@@ -18,6 +18,7 @@ if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
 }
 
 const example = {
+  contactName: "Jay de Vries",
   companyName: "TEST · Prime Cuts",
   sector: "Kapper / barber",
   kvk: "Ja",
