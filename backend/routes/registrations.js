@@ -8,7 +8,7 @@ const { registrationsPage } = require("../views/portal/registrations");
 
 const router = express.Router();
 
-const FIELDS = ["companyName", "sector", "kvk", "clientsPerMonth", "phone", "email"];
+const FIELDS = ["contactName", "companyName", "sector", "kvk", "clientsPerMonth", "phone", "email"];
 const PHONE_PATTERN = /^\+?[0-9 ()-]{9,20}$/;
 const EMAIL_PATTERN = /^[^\s@"<>]+@[^\s@"<>]+\.[^\s@"<>]+$/;
 const STATUSES = ["nieuw", "gebeld", "in_aanbouw", "live", "geen_interesse"];
@@ -24,6 +24,7 @@ function toObjectId(value) {
 function serialize(doc) {
   return {
     id: doc._id.toString(),
+    contactName: doc.contactName || "",
     companyName: doc.companyName,
     sector: doc.sector,
     kvk: doc.kvk,

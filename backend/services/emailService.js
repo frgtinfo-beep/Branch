@@ -93,6 +93,7 @@ function registrationShell(innerHtml) {
 function registrationRows(registration) {
   const telHref = registration.phone.replace(/[^0-9+]/g, "");
   const rows = [
+    ["Naam", escapeHtml(registration.contactName)],
     ["Naam bedrijf", escapeHtml(registration.companyName)],
     ["Werksector", escapeHtml(registration.sector)],
     ["KvK geregistreerd", escapeHtml(registration.kvk)],
@@ -120,7 +121,7 @@ async function sendRegistrationTeamEmail(registration) {
     subject: `Nieuwe aanmelding gratis website: ${subjectCompany}`,
     html: registrationShell(`
       <p style="margin: 0 0 6px; color: #6b7280; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">Nieuwe aanmelding</p>
-      <h1 style="margin: 0 0 22px; font-size: 22px;">${escapeHtml(registration.companyName)} wil een gratis website</h1>
+      <h1 style="margin: 0 0 22px; font-size: 22px;">${escapeHtml(registration.contactName)} van ${escapeHtml(registration.companyName)} wil een gratis website</h1>
       ${registrationRows(registration)}
       <p style="margin: 24px 0 0; font-size: 14px; color: #374151;">Bel binnen 24 uur terug, dat hebben we op de site beloofd.</p>
       ${portalUrl ? `<p style="margin: 20px 0 0;"><a href="${escapeHtml(portalUrl)}" style="display: inline-block; background: #0B57D0; color: #ffffff; font-weight: 700; text-decoration: none; padding: 12px 22px; border-radius: 999px;">Bekijk in de portal →</a></p>` : ""}
@@ -136,7 +137,7 @@ async function sendRegistrationConfirmationEmail(registration) {
     replyTo: REGISTRATION_TEAM_EMAIL,
     subject: "We hebben je aanvraag voor een gratis website ontvangen",
     html: registrationShell(`
-      <h1 style="margin: 0 0 14px; font-size: 24px; letter-spacing: -0.5px;">Je aanvraag is binnen</h1>
+      <h1 style="margin: 0 0 14px; font-size: 24px; letter-spacing: -0.5px;">Hoi ${escapeHtml(registration.contactName.split(/\s+/)[0])}, je aanvraag is binnen</h1>
       <p style="margin: 0 0 14px; font-size: 16px; line-height: 1.6; color: #374151;">Bedankt voor je aanmelding voor een gratis website met online boeken. We bellen je <strong>binnen 24 uur</strong> op ${escapeHtml(registration.phone)} om je diensten, prijzen en stijl door te nemen.</p>
       <p style="margin: 0 0 22px; font-size: 16px; line-height: 1.6; color: #374151;"><strong style="color: #15803D;">+ Bonus:</strong> voor elke klant maken we 1 gratis ad of een draaidag voor een interview met jou.</p>
       <p style="margin: 0 0 10px; font-size: 13px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 1px;">Dit heb je ingevuld</p>
