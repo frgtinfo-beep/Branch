@@ -27,6 +27,7 @@ const portalReportsRouter = require("./routes/portal/reports");
 const portalCalendarRouter = require("./routes/portal/calendar");
 const portalCalendarFeedRouter = require("./routes/portal/calendarFeed");
 const analyticsRouter = require("./routes/analytics");
+const registrationsRouter = require("./routes/registrations");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -66,6 +67,7 @@ app.use(portalReportsRouter);
 app.use(portalCalendarRouter);
 app.use(portalCalendarFeedRouter);
 app.use(analyticsRouter);
+app.use(registrationsRouter);
 
 // --- API Endpoints ---
 
@@ -232,6 +234,7 @@ app.post("/api/contact", async (request, response) => {
         response.status(500).json({ success: false, error: "Failed to send email." });
     }
 });
+
 
 // Start Server
 async function start() {

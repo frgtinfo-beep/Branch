@@ -1,6 +1,8 @@
 // Build: npm run build:css  (writes frontend/tailwind.css; commit the output)
 // translations.js and the page scripts are scanned too: their strings carry class names.
 module.exports = {
+  // :hover only on devices that can hover, so taps don't leave buttons stuck in hover
+  future: { hoverOnlyWhenSupported: true },
   content: ['./frontend/*.html', './frontend/*.js'],
   theme: {
     extend: {

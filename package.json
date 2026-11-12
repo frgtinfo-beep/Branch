@@ -12,7 +12,8 @@
     "run-billing": "node backend/scripts/run-billing.js",
     "preview-invoice": "node backend/scripts/preview-invoice.js",
     "record-manual-invoice": "node backend/scripts/record-manual-invoice.js",
-    "build:css": "npx -y tailwindcss@3.4.17 -c frontend/tailwind.config.js -i frontend/tailwind.input.css -o frontend/tailwind.css --minify"
+    "build:css": "npx -y tailwindcss@3.4.17 -c frontend/tailwind.config.js -i frontend/tailwind.input.css -o frontend/tailwind.css --minify",
+    "test-registration-email": "node backend/scripts/send-test-registration-email.js"
   },
   "dependencies": {
     "@mollie/api-client": "^4.6.0",

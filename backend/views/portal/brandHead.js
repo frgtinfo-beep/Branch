@@ -173,6 +173,7 @@ const PORTAL_BRAND_HEAD = `
   .badge-laag { background: var(--chip); color: var(--text-2); }
   .badge-overdue { background: var(--danger-solid); color: #fff; }
   .badge-blue { background: var(--accent-soft); color: var(--accent-text); }
+  .badge-success { background: var(--success-bg); color: var(--success); }
 
   /* Tables */
   table.data { width: 100%; border-collapse: collapse; }
@@ -318,6 +319,7 @@ const NAV_ITEMS = [
   { href: "/portal/calendar", label: "Kalender", key: "calendar" },
   { href: "/portal/availability", label: "Beschikbaarheid", key: "availability" },
   { href: "/portal/clients", label: "Klanten", key: "clients" },
+  { href: "/portal/registrations", label: "Aanmeldingen", key: "registrations" },
   { href: "/portal/reports", label: "Rapportages", key: "reports" },
 ];
 
